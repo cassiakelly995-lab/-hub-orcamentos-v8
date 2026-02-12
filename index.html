@@ -3,74 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA V8 - ELITE PROCUREMENT</title>
+    <title>SISTEMA V8 - PROCUREMENT ELITE</title>
     <style>
-        :root { --neon: #00f2ff; --bg: #020617; --card: #0f172a; --text: #f1f5f9; --border: #1e293b; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        :root { --neon: #00f2ff; --bg: #020617; --card: #0f172a; --text: #f1f5f9; --border: #1e293b; --accent: #22c55e; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        header { background: #000; border-bottom: 3px solid var(--neon); padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0, 242, 255, 0.2); }
-        header h1 { font-size: 16px; letter-spacing: 5px; color: var(--neon); margin: 0; font-weight: 900; }
+        /* Layout de Elite */
+        header { background: #000; border-bottom: 3px solid var(--neon); padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        header h1 { font-size: 14px; letter-spacing: 5px; color: var(--neon); margin: 0; font-weight: 900; }
+        .system-status { font-size: 10px; color: var(--accent); font-weight: bold; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; }
 
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
 
-        /* Painel Interativo de Busca */
-        .glass-panel { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px; }
-        .input-group { display: flex; gap: 15px; margin-bottom: 20px; }
-        input { flex: 1; background: #020617; border: 1px solid var(--border); padding: 18px; border-radius: 8px; color: #fff; font-size: 16px; outline: none; transition: 0.3s; }
+        /* Painel de Comando Interativo */
+        .glass-panel { background: var(--card); border: 1px solid var(--border); padding: 35px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 40px; }
+        .input-group { display: flex; gap: 15px; margin-bottom: 10px; }
+        input { flex: 1; background: #020617; border: 2px solid var(--border); padding: 18px; border-radius: 8px; color: #fff; font-size: 16px; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--neon); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
         
-        .btn-main { background: var(--neon); color: #000; border: none; padding: 0 40px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-main:hover { transform: scale(1.03); filter: brightness(1.2); }
+        .btn-v8 { background: var(--neon); color: #000; border: none; padding: 0 40px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-v8:hover { transform: translateY(-2px); filter: brightness(1.2); box-shadow: 0 5px 20px rgba(0, 242, 255, 0.4); }
 
-        /* Grade de Resultados */
-        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; display: none; }
+        /* Grade de Resultados Técnicos */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; display: none; animation: fadeIn 0.6s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         .card-stores { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 12px; }
-        .store-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); transition: 0.2s; }
-        .store-item:hover { background: rgba(255,255,255,0.02); }
-        .store-name { font-weight: 700; color: var(--neon); }
-        .btn-link { color: #fff; text-decoration: none; font-size: 12px; background: #1e293b; padding: 8px 15px; border-radius: 5px; border: 1px solid var(--neon); }
+        .store-row { display: flex; justify-content: space-between; align-items: center; padding: 18px; border-bottom: 1px solid var(--border); transition: 0.3s; }
+        .store-row:hover { background: rgba(255,255,255,0.03); }
+        .store-name { font-weight: 800; color: var(--neon); font-size: 14px; }
+        .btn-scan { color: #fff; text-decoration: none; font-size: 11px; font-weight: bold; background: #1e293b; padding: 10px 18px; border-radius: 6px; border: 1px solid var(--neon); transition: 0.3s; }
+        .btn-scan:hover { background: var(--neon); color: #000; }
 
-        /* Lacuna de Geração de Relatório */
-        .report-builder { background: #0f172a; border: 2px dashed var(--neon); padding: 25px; border-radius: 12px; margin-top: 30px; }
-        .report-builder h3 { margin-top: 0; font-size: 14px; color: var(--neon); }
+        /* Lacuna de Geração de Relatório de Orçamento */
+        .builder-box { background: rgba(0, 242, 255, 0.02); border: 2px dashed var(--neon); padding: 30px; border-radius: 12px; }
+        .builder-box h3 { margin: 0 0 20px 0; font-size: 14px; color: var(--neon); text-transform: uppercase; }
+        .field-label { font-size: 11px; color: #64748b; margin-bottom: 5px; display: block; text-transform: uppercase; }
+        .builder-input { width: 100%; box-sizing: border-box; background: #020617; border: 1px solid var(--border); padding: 12px; border-radius: 6px; color: #fff; margin-bottom: 20px; }
 
-        .final-report { background: white; color: #000; padding: 40px; border-radius: 8px; margin-top: 30px; display: none; font-family: 'Courier New', Courier, monospace; }
-        .report-header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
-        
-        .print-btn { background: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        /* Relatório Oficial para Impressão */
+        #printableArea { background: white; color: #000; padding: 50px; border-radius: 4px; margin-top: 50px; display: none; line-height: 1.6; border: 1px solid #ccc; }
+        .rep-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .rep-footer { margin-top: 50px; text-align: center; border-top: 1px solid #000; padding-top: 20px; }
+        .print-btn { background: var(--accent); color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; }
+
+        @media print { 
+            body * { visibility: hidden; } 
+            #printableArea, #printableArea * { visibility: visible; } 
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; border: none; }
+            .print-btn { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>V8 ELITE EDITION // PROCUREMENT SYSTEM</h1>
-    <div style="font-size: 10px; color: #64748b;">STALKER MODE ATIVO</div>
+    <h1>V8 // GOD MODE PROCUREMENT</h1>
+    <div class="system-status">SISTEMA ATIVO</div>
 </header>
 
 <div class="container">
     <div class="glass-panel">
         <div class="input-group">
-            <input type="text" id="prodName" placeholder="O que deseja orçar? (Ex: Monitor Dell 27 polegadas)">
-            <button class="btn-main" onclick="varrerMercado()">EXECUTAR VARREDURA</button>
+            <input type="text" id="itemName" placeholder="Digite o produto para cotação técnica (Ex: Papel A4 Report 75g)">
+            <button class="btn-v8" onclick="iniciarV8()">VARREDA GERAL</button>
         </div>
-        <p style="font-size: 12px; color: #64748b;">O sistema abrirá o "pente fino" nas bases de dados oficiais.</p>
+        <p style="font-size: 12px; color: #64748b; margin: 0;">O sistema realizará o pente fino nas bases oficiais da Kalunga, Gimba, Amazon e KaBuM.</p>
     </div>
 
-    <div id="displayArea" class="results-grid">
+    <div id="v8Dashboard" class="dashboard-grid">
+        
         <div class="card-stores">
-            <h3 style="color: var(--neon); font-size: 14px; margin-bottom: 20px;">VARRER PREÇOS REAIS</h3>
+            <h3 style="color: var(--neon); font-size: 13px; margin-bottom: 25px; text-transform: uppercase;">Pente Fino nos Fornecedores</h3>
             <div id="storeList"></div>
         </div>
 
-        <div class="report-builder">
-            <h3>GERADOR DE RELATÓRIO OFICIAL</h3>
-            <p style="font-size: 12px; color: #94a3b8;">Escolha a loja acima, copie o link do produto barato e cole abaixo:</p>
-            <input type="text" id="finalLink" placeholder="Cole o link do produto aqui..." style="width: 100%; margin-bottom: 15px;">
-            <input type="text" id="finalPrice" placeholder="Digite o preço encontrado (R$)" style="width: 100%; margin-bottom: 15px;">
-            <button class="btn-main" style="width: 100%; padding: 15px 0;" onclick="gerarRelatorio()">GERAR DOCUMENTO DE APROVAÇÃO</button>
+        <div class="builder-box">
+            <h3>Gerador de Relatório Formal</h3>
+            <span class="field-label">1. Cole o link do menor preço encontrado:</span>
+            <input type="text" id="linkFinal" class="builder-input" placeholder="http://...">
+            
+            <span class="field-label">2. Insira o valor unitário da proposta:</span>
+            <input type="text" id="precoFinal" class="builder-input" placeholder="R$ 0,00">
+            
+            <span class="field-label">3. Escolha o Fornecedor Vencedor:</span>
+            <select id="lojaFinal" class="builder-input">
+                <option value="Kalunga">Kalunga</option>
+                <option value="Gimba">Gimba</option>
+                <option value="Amazon Brasil">Amazon Brasil</option>
+                <option value="KaBuM!">KaBuM!</option>
+                <option value="Outros">Outros</option>
+            </select>
+
+            <button class="btn-v8" style="width: 100%; padding: 18px 0;" onclick="gerarDocumento()">GERAR MAPA DE COTAÇÃO</button>
         </div>
     </div>
 
-    <div id="printableReport" class="final-report">
-        <div class="report-
+    <div id="printableArea">
+        <div class="rep-header">
+            <h1 style="margin:0; font-size: 24px;">MAPA COMPARATIVO DE COTAÇÃO</h1>
+            <p style="margin:5px 0;">DEPARTAMENTO DE SUPRIMENTOS - V8 ELITE EDITION</p>
+        </div>
+        <div id="repBody"></div>
+        <div class="rep-footer">
+            <p><strong>DOCUMENTO PARA USO INTERNO E APROVAÇÃO DE DIRETORIA</strong></p>
+            <p>Gerado via Cássia Prompt V8 - Procurement System</p>
+        </div>
+        <button class="print-btn" onclick="window.print()">IMPRIMIR RELATÓRIO OFICIAL</button>
+    </div>
+</div>
+
+<script>
+    function iniciarV8() {
+        const item = document.getElementById('itemName').value;
+        if(!item) return alert("Cássia, defina o objeto da varredura.");
+
+        document.getElementById('v8Dashboard').style.display = 'grid';
+        
+        const linksLojas = [
+            {n: "KALUNGA (Oficial)", u: "https://www.kalunga.com.br/busca/1?q="},
+            {n: "GIMBA (Atacado)", u: "https://www.gimba.com.br/busca/?ft="},
+            {n: "AMAZON (Prime)", u: "https://www.amazon.com.br/s?k="},
+            {n: "KABUM! (Tecnologia)", u: "https://www.kabum.com.br/busca/"}
+        ];
+
+        let html = "";
+        linksLojas.forEach(l => {
+            html += `
+                <div class="store-row">
+                    <span class="store-name">${l.n}</span>
+                    <a href="${l.u + encodeURIComponent(item)}" target="_blank" class="btn-scan">VARRER SITE ↗</a>
+                </div>
+            `;
+        });
+        document.getElementById('storeList').innerHTML = html;
+        window.scrollTo({ top: 500, behavior: 'smooth' });
+    }
+
+    function gerarDocumento() {
+        const item = document.getElementById('itemName').value;
+        const link = document.getElementById('linkFinal').value;
+        const preco = document.getElementById('precoFinal').value;
+        const loja = document.getElementById('lojaFinal').value;
+
+        if(!link || !preco) return alert("Preencha o link e o valor para consolidar o relatório.");
+
+        const hoje = new Date().toLocaleDateString('pt-br');
+
+        document.getElementById('repBody').innerHTML = `
+            <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+                <tr><td style="padding: 10px; border: 1px solid #000;"><strong>DATA DA COTAÇÃO:</strong></td><td style="padding: 10px; border: 1px solid #000;">${hoje}</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #000;"><strong>PRODUTO ANALISADO:</strong></td><td style="padding: 10px; border: 1px solid #000;">${item.toUpperCase()}</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #000;"><strong>FORNECEDOR SELECIONADO:</strong></td><td style="padding: 10px; border: 1px solid #000;">${loja}</td></tr>
+                <tr><td style="padding: 10px; border: 1px solid #000;"><strong>VALOR UNITÁRIO:</strong></td><td style="padding: 10px; border: 1px solid #000; color: green; font-weight:bold;">${preco}</td></tr>
+            </table>
+            <div style="margin-top: 30px; background: #f9f9f9; padding: 20px; border: 1px solid #ddd;">
+                <p><strong>JUSTIFICATIVA TÉCNICA:</strong></p>
+                <p>Após varredura realizada via Hub V8 nas bases da Kalunga, Gimba, Amazon e Kabum, identificou-se que a oferta da <strong>${loja}</strong> apresenta as melhores condições de preço e disponibilidade imediata. O item é essencial para a manutenção das atividades administrativas e jurídicas do escritório.</p>
+                <p><strong>LINK DE VALIDAÇÃO:</strong> <br><small style="word-break: break-all;">${link}</small></p>
+            </div>
+            <br><br><br>
+            <div style="text-align: center;">
+                <p>_____________________________________________________</p>
+                <p>RESPONSÁVEL PELO SETOR DE SUPRIMENTOS</p>
+            </div>
+        `;
+
+        document.getElementById('printableArea').style.display = 'block';
+        window.scrollTo({ top: 1200, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
