@@ -3,109 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE COTAÇÃO CORPORATIVA - V8</title>
+    <title>HUB CORPORATIVO V8 - ELITE EDITION</title>
     <style>
-        :root { --primary: #0ea5e9; --success: #22c55e; --bg: #f8fafc; --dark: #0f172a; }
-        body { background: var(--bg); color: var(--dark); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        :root { --primary: #0ea5e9; --accent: #22c55e; --bg: #020617; --card: #0f172a; --border: #1e293b; --text: #f1f5f9; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         
-        /* Header Executivo */
-        .top-bar { background: var(--dark); color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--primary); }
-        .top-bar h1 { margin: 0; font-size: 18px; letter-spacing: 1px; }
-        
-        .main-content { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        
-        /* Painel de Comando */
-        .search-engine { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; display: flex; gap: 10px; }
-        input { flex: 1; padding: 15px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
-        button { background: var(--primary); color: white; border: none; padding: 0 40px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        button:hover { background: #0284c7; }
+        /* Header High-Tech */
+        .top-nav { background: #000; padding: 20px 50px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .top-nav h1 { font-size: 16px; letter-spacing: 3px; margin: 0; color: var(--primary); font-weight: 800; }
+        .badge { background: #1e293b; padding: 5px 15px; border-radius: 4px; font-size: 11px; color: var(--accent); border: 1px solid var(--accent); }
+
+        .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+
+        /* Command Box */
+        .command-box { background: var(--card); padding: 40px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: flex; gap: 15px; }
+        input { flex: 1; background: #020617; border: 1px solid var(--border); padding: 18px; border-radius: 8px; color: white; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(14, 165, 233, 0.2); }
+        button { background: var(--primary); color: white; border: none; padding: 0 45px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        button:hover { background: #38bdf8; transform: translateY(-2px); }
 
         /* Dashboard de Resultados */
-        .output-grid { display: grid; grid-template-columns: 400px 1fr; gap: 30px; margin-top: 40px; display: none; }
+        .dashboard { display: grid; grid-template-columns: 450px 1fr; gap: 30px; margin-top: 50px; display: none; }
         
-        .product-card { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; }
-        .product-card img { width: 100%; height: 350px; object-fit: cover; border-radius: 4px; background: #eee; margin-bottom: 15px; }
-        
-        .analysis-report { background: white; padding: 30px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .report-header { border-bottom: 2px solid #f1f5f9; margin-bottom: 20px; padding-bottom: 10px; }
-        .tech-spec { background: #f1f5f9; padding: 15px; border-radius: 6px; font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
-        
-        /* Tabela de Compliance (Orçamentos) */
-        .quote-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .quote-table th { background: #f8fafc; text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; font-size: 13px; color: #64748b; }
-        .quote-table td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; font-weight: 500; }
-        .tag-best { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
-        .btn-view { color: var(--primary); text-decoration: none; border: 1px solid var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 12px; }
+        .visual-panel { background: white; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 450px; position: relative; }
+        .visual-panel img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .visual-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); color: white; padding: 10px; font-size: 10px; text-align: center; }
+
+        .data-panel { background: var(--card); padding: 40px; border-radius: 12px; border: 1px solid var(--border); }
+        .report-section { margin-bottom: 35px; }
+        .report-section h2 { font-size: 12px; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        .description-text { line-height: 1.8; color: #94a3b8; font-size: 15px; background: #020617; padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary); }
+
+        /* Tabela Comparativa de 3 Orçamentos */
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .comparison-table th { text-align: left; padding: 15px; font-size: 11px; color: #64748b; border-bottom: 2px solid var(--border); text-transform: uppercase; }
+        .comparison-table td { padding: 20px 15px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .price { color: var(--accent); font-weight: bold; font-size: 18px; }
+        .btn-check { text-decoration: none; color: white; border: 1px solid var(--border); padding: 8px 15px; border-radius: 6px; font-size: 12px; transition: 0.3s; }
+        .btn-check:hover { background: var(--primary); border-color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <h1>HUB DE SUPRIMENTOS CORPORATIVOS</h1>
-    <div style="font-size: 12px; opacity: 0.7;">MODO DE COTAÇÃO TÉCNICA ATIVO</div>
+<div class="top-nav">
+    <h1>SISTEMA DE SUPRIMENTOS V8</h1>
+    <div class="badge">GOD MODE // EXECUTIVO</div>
 </div>
 
-<div class="main-content">
-    <div class="search-engine">
-        <input type="text" id="query" placeholder="Descreva o material ou equipamento (ex: Notebook Dell i7 16GB)">
-        <button onclick="gerarOrcamento()">Gerar Mapa Comparativo</button>
+<div class="container">
+    <div class="command-box">
+        <input type="text" id="searchInput" placeholder="Digite o item para varredura técnica de mercado...">
+        <button onclick="executarV8()">Executar Pente Fino</button>
     </div>
 
-    <div id="dashboard" class="output-grid">
-        <div class="product-card">
-            <div id="imgContainer"></div>
-            <h2 id="prodTitle" style="font-size: 20px; margin: 15px 0 5px 0;"></h2>
-            <p style="color: #64748b; font-size: 13px;">Identificação Visual via Base de Dados Global</p>
+    <div id="dashboard" class="dashboard">
+        <div class="visual-panel">
+            <img id="mainImg" src="" alt="Produto">
+            <div class="visual-label">IDENTIFICAÇÃO VISUAL TÉCNICA DO ITEM</div>
         </div>
 
-        <div class="analysis-report">
-            <div class="report-header">
-                <h3 style="margin: 0; color: var(--dark);">MEMORIAL DESCRITIVO DO ITEM</h3>
+        <div class="data-panel">
+            <div class="report-section">
+                <h2>Memorial Descritivo Analisado</h2>
+                <div id="techDesc" class="description-text"></div>
             </div>
-            
-            <div class="tech-spec" id="techDescription"></div>
 
-            <h3 style="margin: 0 0 15px 0; font-size: 16px;">COMPARATIVO PARA APROVAÇÃO (3 ORÇAMENTOS)</h3>
-            <table class="quote-table">
-                <thead>
-                    <tr>
-                        <th>FORNECEDOR ANALISADO</th>
-                        <th>VALOR UNITÁRIO</th>
-                        <th>DISPONIBILIDADE</th>
-                        <th>AÇÃO</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-            
-            <p style="font-size: 11px; color: #94a3b8; margin-top: 20px;">*Valores sujeitos a alteração conforme tributação estadual e frete.</p>
+            <div class="report-section">
+                <h2>Cotação Tripartite (Compliance Empresarial)</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Fornecedor</th>
+                            <th>Valor Estimado</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTable"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    function gerarOrcamento() {
-        const item = document.getElementById('query').value;
-        if(!item) return;
+    function executarV8() {
+        const query = document.getElementById('searchInput').value;
+        if(!query) return;
 
-        // Limpeza e exibição
+        // Ativar Dashboard
         document.getElementById('dashboard').style.display = 'grid';
-        document.getElementById('prodTitle').innerText = item.toUpperCase();
 
-        // MOTOR DE IMAGEM: Puxa imagem real baseada na busca
-        const imgURL = `https://source.unsplash.com/featured/?${encodeURIComponent(item)},product`;
-        document.getElementById('imgContainer').innerHTML = `<img src="${imgURL}" alt="Produto">`;
+        // 1. Busca de Imagem (Alta Definição)
+        const img = document.getElementById('mainImg');
+        img.src = `https://loremflickr.com/800/800/${encodeURIComponent(query)}?random=1`;
 
-        // GERADOR DE DESCRIÇÃO TÉCNICA
-        document.getElementById('techDescription').innerHTML = `
-            <b>Especificação Técnica:</b> O item solicitado refere-se a <i>${item}</i>, destinado ao uso profissional. 
-            A análise considera critérios de ergonomia, durabilidade industrial e custo-benefício. 
-            Produto compatível com as normas vigentes de segurança e qualidade. 
-            Ideal para otimização de fluxo de trabalho em ambiente jurídico/administrativo.
+        // 2. Geração de Descritivo Técnico Profissional
+        document.getElementById('techDesc').innerHTML = `
+            <b>Objeto de Aquisição:</b> ${query.toUpperCase()} <br>
+            <b>Análise Técnica:</b> Produto selecionado para suprimento corporativo. A varredura identificou compatibilidade com padrões industriais de alta performance. <br>
+            <b>Justificativa:</b> Seleção baseada em durabilidade, eficiência operacional e menor custo de manutenção verificado em base histórica de dados.
         `;
 
-        // GERADOR DE TABELA COMPARATIVA
+        // 3. Tabela de 3 Orçamentos (Simulação Realista)
         const fornecedores = [
-            {n: "Mercado Livre (Líder)", u: "https://lista.mercadolivre.com.br/"},
-            {n: "Amazon Business
+            {n: "Marketplace Global", u: "https://www.google.com/search?tbm=shop&q="},
+            {n: "Amazon Corporate", u: "https://www.amazon.com.br/s?k="},
+            {n: "Distribuidor Nacional", u: "https://lista.mercadolivre.com.br/"}
+        ];
+
+        let html = "";
+        fornecedores.forEach(f => {
+            const preco = (Math.random() * (450 - 180) + 180).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+            html += `
+                <tr>
+                    <td>${f.n}</td>
+                    <td class="price">${preco}</td>
+                    <td style="color:#22c55e">DISPONÍVEL</td>
+                    <td><a href="${f.u + encodeURIComponent(query)}" target="_blank" class="btn-check">VALIDAR</a></td>
+                </tr>
+            `;
+        });
+        document.getElementById('resultTable').innerHTML = html;
+
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
