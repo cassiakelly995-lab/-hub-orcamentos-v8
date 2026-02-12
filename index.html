@@ -3,139 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA V8 - OAB SANTANA DE PARNAÍBA</title>
+    <title>SISTEMA DE AUDITORIA V8 - OAB SANTANA DE PARNAÍBA</title>
     <style>
-        :root { --neon: #00f2ff; --bg: #020617; --card: #0f172a; --text: #f1f5f9; --border: #1e293b; --accent: #22c55e; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        :root { --primary: #00f2ff; --bg: #05070a; --card: #0d1117; --text: #e6edf3; --border: #30363d; --accent: #238636; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         
-        header { background: #000; border-bottom: 3px solid var(--neon); padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        header h1 { font-size: 14px; letter-spacing: 3px; color: var(--neon); margin: 0; font-weight: 900; }
-        .oab-tag { font-size: 10px; color: #fff; background: #c2410c; padding: 4px 10px; border-radius: 4px; font-weight: bold; }
+        /* Cabeçalho de Autoridade */
+        header { background: #000; border-bottom: 3px solid var(--primary); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; }
+        .oab-header h1 { font-size: 14px; letter-spacing: 3px; color: var(--primary); margin: 0; }
+        .sub-text { font-size: 10px; color: #8b949e; text-transform: uppercase; }
 
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 20px; }
 
-        /* Painel de Comando */
-        .glass-panel { background: var(--card); border: 1px solid var(--border); padding: 35px; border-radius: 16px; margin-bottom: 40px; }
-        .input-group { display: flex; gap: 15px; }
-        input { flex: 1; background: #020617; border: 2px solid var(--border); padding: 18px; border-radius: 8px; color: #fff; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--neon); }
-        .btn-v8 { background: var(--neon); color: #000; border: none; padding: 0 40px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        /* Painel de Entrada de Dados */
+        .admin-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .main-input { width: 100%; background: #000; border: 1px solid var(--primary); padding: 20px; border-radius: 8px; color: #fff; font-size: 20px; margin-bottom: 30px; box-sizing: border-box; outline: none; }
 
-        /* Resultados Automáticos */
-        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; display: none; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .store-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
+        .store-box h3 { font-size: 12px; color: var(--primary); margin: 0 0 15px 0; text-transform: uppercase; }
         
-        .card-stores { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 12px; }
-        .store-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); }
-        .store-name { font-weight: 800; color: var(--neon); }
-        .price-val { color: var(--accent); font-family: monospace; font-size: 18px; }
+        input[type="text"], input[type="number"] { width: 100%; background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 4px; color: #fff; margin-bottom: 10px; box-sizing: border-box; }
+        input:focus { border-color: var(--primary); }
 
-        /* Relatório de Impressão */
-        #printableArea { background: white; color: #000; padding: 50px; border-radius: 4px; margin-top: 50px; display: none; border: 1px solid #ccc; }
-        .rep-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; }
+        .btn-generate { background: var(--primary); color: #000; border: none; width: 100%; padding: 20px; border-radius: 8px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-generate:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        /* Relatório Formal (Estilo A4) */
+        #reportArea { background: white; color: #000; padding: 60px; border-radius: 0; margin-top: 50px; display: none; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+        .report-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .report-header h2 { margin: 0; font-size: 22px; }
         
-        .print-btn { background: #000; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #f2f2f2; border: 1px solid #000; padding: 12px; text-align: left; font-size: 12px; }
+        td { border: 1px solid #000; padding: 12px; font-size: 13px; }
+        .winner { background: #e6ffed; font-weight: bold; color: #1a7f37; }
+
+        .footer-sig { margin-top: 60px; text-align: center; }
+        .print-cmd { background: #000; color: #fff; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; font-weight: bold; width: 100%; }
 
         @media print { 
             body * { visibility: hidden; } 
-            #printableArea, #printableArea * { visibility: visible; } 
-            #printableArea { position: absolute; left: 0; top: 0; width: 100%; border: none; }
-            .print-btn { display: none; }
+            #reportArea, #reportArea * { visibility: visible; } 
+            #reportArea { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; padding: 20px; }
+            .print-cmd { display: none; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>V8 PROMPT // PROCUREMENT SYSTEM</h1>
-    <div class="oab-tag">OAB SANTANA DE PARNAÍBA</div>
+    <div class="oab-header">
+        <h1>V8 GOD MODE // OAB SANTANA DE PARNAÍBA</h1>
+        <div class="sub-text">SISTEMA DE AUDITORIA E COMPLIANCE DE SUPRIMENTOS</div>
+    </div>
 </header>
 
 <div class="container">
-    <div class="glass-panel">
-        <div class="input-group">
-            <input type="text" id="itemName" placeholder="O que deseja orçar agora?">
-            <button class="btn-v8" onclick="iniciarV8()">EXECUTAR</button>
+    <div class="admin-panel">
+        <input type="text" id="mainItem" class="main-input" placeholder="NOME TÉCNICO DO PRODUTO (EX: TONER HP LASERJET 105A)">
+
+        <div class="input-grid">
+            <div class="store-box">
+                <h3>1. KALUNGA</h3>
+                <input type="text" id="link1" placeholder="Link do produto na Kalunga">
+                <input type="number" id="price1" placeholder="Valor R$ (Ex: 150.90)">
+            </div>
+            <div class="store-box">
+                <h3>2. GIMBA</h3>
+                <input type="text" id="link2" placeholder="Link do produto na Gimba">
+                <input type="number" id="price2" placeholder="Valor R$ (Ex: 145.00)">
+            </div>
+            <div class="store-box">
+                <h3>3. AMAZON</h3>
+                <input type="text" id="link3" placeholder="Link do produto na Amazon">
+                <input type="number" id="price3" placeholder="Valor R$ (Ex: 139.90)">
+            </div>
+            <div class="store-box">
+                <h3>4. KABUM!</h3>
+                <input type="text" id="link4" placeholder="Link do produto na KaBuM">
+                <input type="number" id="price4" placeholder="Valor R$ (Ex: 160.00)">
+            </div>
+            <div class="store-box" style="border-color: var(--primary);">
+                <h3>5. OUTRO FORNECEDOR</h3>
+                <input type="text" id="link5" placeholder="Link de outra loja">
+                <input type="number" id="price5" placeholder="Valor R$">
+            </div>
         </div>
+
+        <button class="btn-generate" onclick="processarV8()">GERAR DOSSIÊ COMPLETO E COMPARATIVO</button>
     </div>
 
-    <div id="v8Dashboard" class="dashboard">
-        <div class="card-stores">
-            <h3 style="color: var(--neon); font-size: 13px; margin-bottom: 20px;">VARREDURA DE PREÇOS ESTIMADOS</h3>
-            <div id="storeList"></div>
+    <div id="reportArea">
+        <div class="report-header">
+            <h2>ORDEM DE ADVOGADOS DO BRASIL</h2>
+            <p>SUBSEÇÃO SANTANA DE PARNAÍBA</p>
+            <p style="font-size: 14px; font-weight: bold; margin-top: 10px;">MAPA COMPARATIVO DE PREÇOS - SISTEMA V8</p>
         </div>
 
-        <div class="card-stores" style="border: 2px dashed var(--neon);">
-            <h3 style="color: var(--neon); font-size: 13px; margin-bottom: 20px;">CONSOLIDAÇÃO FINAL</h3>
-            <input type="text" id="finalPrice" placeholder="Confirme o valor final (R$)" style="width:100%; margin-bottom:10px; background:#000; border:1px solid var(--border); padding:10px; color:#fff;">
-            <select id="finalLoja" style="width:100%; margin-bottom:20px; background:#000; border:1px solid var(--border); padding:10px; color:#fff;">
-                <option value="Kalunga">Kalunga</option>
-                <option value="Gimba">Gimba</option>
-                <option value="Amazon">Amazon</option>
-                <option value="Kabum">Kabum</option>
-            </select>
-            <button class="btn-v8" style="width: 100%; padding: 15px;" onclick="gerarRelatorio()">GERAR RELATÓRIO OAB</button>
-        </div>
-    </div>
+        <div id="reportContent"></div>
 
-    <div id="printableArea">
-        <div class="rep-header">
-            <h2 style="margin:0;">OAB SANTANA DE PARNAÍBA</h2>
-            <p>MAPA DE COTAÇÃO DE PREÇOS - V8 ELITE</p>
+        <div class="footer-sig">
+            <p>__________________________________________________________________</p>
+            <p>RESPONSÁVEL PELA COTAÇÃO / AUDITORIA</p>
+            <p style="font-size: 10px;">Documento gerado eletronicamente via V8 Elite Mode</p>
         </div>
-        <div id="repBody"></div>
-        <div style="margin-top:40px; text-align:center;">
-            <p>_________________________________________________<br>RESPONSÁVEL PELA COTAÇÃO</p>
-        </div>
-        <button class="print-btn" onclick="window.print()">IMPRIMIR RELATÓRIO</button>
+        
+        <button class="print-cmd" onclick="window.print()">FINALIZAR E IMPRIMIR RELATÓRIO (PDF)</button>
     </div>
 </div>
 
 <script>
-    function iniciarV8() {
-        const item = document.getElementById('itemName').value;
-        if(!item) return;
+    function processarV8() {
+        const item = document.getElementById('mainItem').value;
+        if(!item) return alert("Cássia, digite o nome do produto.");
 
-        document.getElementById('v8Dashboard').style.display = 'grid';
-        
-        const lojas = ["Kalunga", "Gimba", "Amazon", "Kabum"];
-        let html = "";
-        
-        lojas.forEach(l => {
-            // Gera um preço automático baseado no nome do produto (simulação técnica)
-            const precoBase = (Math.random() * (300 - 50) + 50).toLocaleString('pt-br', {minimumFractionDigits: 2});
+        const dados = [
+            { loja: "KALUNGA", link: document.getElementById('link1').value, preco: parseFloat(document.getElementById('price1').value) || 0 },
+            { loja: "GIMBA", link: document.getElementById('link2').value, preco: parseFloat(document.getElementById('price2').value) || 0 },
+            { loja: "AMAZON", link: document.getElementById('link3').value, preco: parseFloat(document.getElementById('price3').value) || 0 },
+            { loja: "KABUM!", link: document.getElementById('link4').value, preco: parseFloat(document.getElementById('price4').value) || 0 },
+            { loja: "OUTRO", link: document.getElementById('link5').value, preco: parseFloat(document.getElementById('price5').value) || 0 }
+        ].filter(d => d.preco > 0);
+
+        if(dados.length < 3) return alert("Cássia, insira pelo menos 3 orçamentos para compliance.");
+
+        // Acha o menor preço
+        const vencedor = dados.reduce((prev, curr) => (prev.preco < curr.preco) ? prev : curr);
+
+        const dataAtual = new Date().toLocaleDateString('pt-br');
+
+        let html = `
+            <p><strong>PRODUTO:</strong> ${item.toUpperCase()}</p>
+            <p><strong>DATA DA COTAÇÃO:</strong> ${dataAtual}</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>FORNECEDOR</th>
+                        <th>VALOR UNITÁRIO</th>
+                        <th>REFERÊNCIA (LINK)</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        dados.forEach(d => {
+            const isWinner = d.preco === vencedor.preco;
             html += `
-                <div class="store-row">
-                    <span class="store-name">${l}</span>
-                    <span class="price-val">R$ ${precoBase}</span>
-                </div>
+                <tr class="${isWinner ? 'winner' : ''}">
+                    <td>${d.loja} ${isWinner ? ' (VENCEDOR)' : ''}</td>
+                    <td>R$ ${d.preco.toLocaleString('pt-br', {minimumFractionDigits: 2})}</td>
+                    <td style="font-size: 10px; word-break: break-all;">${d.link || 'Informado em anexo'}</td>
+                </tr>
             `;
         });
-        document.getElementById('storeList').innerHTML = html;
-    }
 
-    function gerarRelatorio() {
-        const item = document.getElementById('itemName').value;
-        const preco = document.getElementById('finalPrice').value;
-        const loja = document.getElementById('finalLoja').value;
-        const data = new Date().toLocaleDateString('pt-br');
-
-        document.getElementById('repBody').innerHTML = `
-            <div style="margin-top:30px;">
-                <p><strong>DATA:</strong> ${data}</p>
-                <p><strong>PRODUTO:</strong> ${item.toUpperCase()}</p>
-                <p><strong>FORNECEDOR VENCEDOR:</strong> ${loja}</p>
-                <p><strong>VALOR UNITÁRIO:</strong> R$ ${preco}</p>
-                <hr>
-                <p><strong>JUSTIFICATIVA TÉCNICA:</strong></p>
-                <p>Após análise comparativa realizada nas bases de dados da Kalunga, Gimba, Amazon e Kabum, 
-                identificou-se que a proposta da <strong>${loja}</strong> apresenta o menor valor e melhores condições 
-                de fornecimento para a <strong>OAB Santana de Parnaíba</strong>.</p>
+        html += `
+                </tbody>
+            </table>
+            <div style="margin-top: 30px; padding: 20px; border: 1px solid #000;">
+                <p><strong>PARECER TÉCNICO:</strong></p>
+                <p>Após consulta às bases de fornecedores homologados, a proposta enviada pela <strong>${vencedor.loja}</strong> 
+                apresentou a maior vantagem econômica para a <strong>OAB Santana de Parnaíba</strong>, totalizando o valor unitário de 
+                <strong>R$ ${vencedor.preco.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>.</p>
             </div>
         `;
 
-        document.getElementById('printableArea').style.display = 'block';
-        window.scrollTo({ top: 1000, behavior: 'smooth' });
+        document.getElementById('reportContent').innerHTML = html;
+        document.getElementById('reportArea').style.display = 'block';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 </script>
 
