@@ -1,50 +1,46 @@
-import streamlit as st
-import pandas as pd
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cássia Prompt V8 - Orçamentos</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0f172a; color: #f8fafc; padding: 20px; text-align: center; }
+        .container { max-width: 800px; margin: auto; background: #1e293b; padding: 30px; border-radius: 12px; border: 1px solid #38bdf8; }
+        h2 { color: #38bdf8; }
+        input { width: 60%; padding: 12px; border-radius: 6px; border: none; font-size: 16px; margin-bottom: 10px; }
+        button { padding: 12px 25px; background-color: #38bdf8; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #0f172a; }
+        th, td { padding: 12px; border: 1px solid #334155; text-align: left; }
+        th { color: #38bdf8; }
+        a { color: #22c55e; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🛡️ Cássia Prompt V8 | Orçamentos</h2>
+        <input type="text" id="produto" placeholder="O que deseja orçar?">
+        <button onclick="buscar()">EXECUTAR VARREDURA</button>
+        <div id="resultado"></div>
+    </div>
 
-# Configuração da Página - Cássia Prompt V8 God Mode
-st.set_page_config(page_title="Cássia Prompt V8 - Hub de Orçamentos", layout="wide")
-
-st.title("🛡️ Cássia Prompt V8 | Elite Edition")
-st.subheader("Facilitador de Orçamentos Inteligente (Antônio)")
-
-# Interface de Comando
-with st.container():
-    st.markdown("### 📥 Caixa de Comando: Pesquisa de Preços")
-    produto = st.text_input("O que você deseja orçar agora?", placeholder="Ex: Lixeira Inox 12L")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        criterio = st.selectbox("Critério de busca:", ["Menor Preço Global", "Melhor Avaliação", "Entrega Mais Rápida"])
-    with col2:
-        filtros = st.multiselect("Filtrar sites:", ["Amazon", "Mercado Livre", "Magalu", "Shopee", "Leroy Merlin", "Sites Especializados"], default=["Amazon", "Mercado Livre", "Magalu", "Shopee", "Leroy Merlin"])
-
-# Lógica de Processamento (Simulação de Varredura)
-if st.button("EXECUTAR VARREDURA"):
-    if produto:
-        st.info(f"Antônio processando busca por: **{produto}**...")
-        
-        # Simulação de dados (Em produção, aqui entraria a API de busca)
-        dados_orcamento = {
-            "Ranking": ["1º (Líder)", "2º Opção", "3º Opção", "4º Opção", "5º Opção"],
-            "Loja / Site": ["Mercado Livre", "Amazon", "Shopee", "Magalu", "Leroy Merlin"],
-            "Preço Unitário": ["R$ 45,90", "R$ 49,90", "R$ 52,00", "R$ 58,90", "R$ 64,00"],
-            "Frete Estimado": ["R$ 12,00", "Grátis", "R$ 8,00", "Retirada Grátis", "R$ 15,00"],
-            "Link": ["Clique para Ver", "Clique para Ver", "Clique para Ver", "Clique para Ver", "Clique para Ver"]
+    <script>
+        function buscar() {
+            const p = document.getElementById('produto').value;
+            if(!p) return alert("Digite um produto!");
+            const sites = [
+                {n: "Mercado Livre", u: "https://lista.mercadolivre.com.br/"},
+                {n: "Amazon", u: "https://www.amazon.com.br/s?k="},
+                {n: "Google Shopping", u: "https://www.google.com/search?tbm=shop&q="},
+                {n: "Magalu", u: "https://www.magaluevoce.com.br/busca/"},
+                {n: "Shopee", u: "https://shopee.com.br/search?keyword="}
+            ];
+            let html = "<table><tr><th>Ranking</th><th>Site</th><th>Link</th></tr>";
+            sites.forEach((s, i) => {
+                html += `<tr><td>${i+1}º</td><td>${s.n}</td><td><a href="${s.u+p}" target="_blank">VER PREÇOS ↗</a></td></tr>`;
+            });
+            document.getElementById('resultado').innerHTML = html + "</table>";
         }
-        
-        df = pd.DataFrame(dados_orcamento)
-        
-        # Exibição dos Resultados em Tabela Elite
-        st.markdown("---")
-        st.success("✅ Varredura concluída. 5 Menores preços encontrados em sites distintos.")
-        st.table(df)
-        
-        # Resumo Executivo para a Cássia
-        st.warning(f"**Insight do Antônio:** O menor preço atual é no **Mercado Livre**, mas a **Amazon** oferece o melhor custo-benefício se você tiver pressa (Frete Grátis).")
-    else:
-        st.error("Erro: Digite o nome de um produto para iniciar a varredura.")
-
-# Rodapé Técnico
-st.markdown("---")
-
-st.caption("Versão V8 God Mode | Desenvolvido para Cássia | Modo Caixa de Comando Ativo")
+    </script>
+</body>
+</html>
