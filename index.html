@@ -6,38 +6,43 @@
     <title>Cássia Prompt V8 - Orçamentos</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0f172a; color: #f8fafc; padding: 20px; text-align: center; }
-        .container { max-width: 800px; margin: auto; background: #1e293b; padding: 30px; border-radius: 12px; border: 1px solid #38bdf8; }
-        h2 { color: #38bdf8; }
-        input { width: 60%; padding: 12px; border-radius: 6px; border: none; font-size: 16px; margin-bottom: 10px; }
-        button { padding: 12px 25px; background-color: #38bdf8; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #0f172a; }
-        th, td { padding: 12px; border: 1px solid #334155; text-align: left; }
-        th { color: #38bdf8; }
+        .container { max-width: 800px; margin: auto; background: #1e293b; padding: 30px; border-radius: 12px; border: 1px solid #38bdf8; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h2 { color: #38bdf8; margin-bottom: 20px; }
+        input { width: 70%; padding: 12px; border-radius: 6px; border: none; font-size: 16px; margin-bottom: 15px; outline: none; }
+        button { padding: 12px 25px; background-color: #38bdf8; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0f172a; transition: 0.3s; }
+        button:hover { background-color: #0ea5e9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; background: #1e293b; }
+        th, td { padding: 15px; border: 1px solid #334155; text-align: left; }
+        th { background: #334155; color: #38bdf8; }
         a { color: #22c55e; text-decoration: none; font-weight: bold; }
+        .footer { margin-top: 30px; font-size: 12px; color: #94a3b8; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🛡️ Cássia Prompt V8 | Orçamentos</h2>
-        <input type="text" id="produto" placeholder="O que deseja orçar?">
+        <h2>🛡️ Cássia Prompt V8 | Elite Edition</h2>
+        <p>Facilitador de Orçamentos Inteligente (Antônio)</p>
+        <input type="text" id="produto" placeholder="O que você deseja orçar agora?">
+        <br>
         <button onclick="buscar()">EXECUTAR VARREDURA</button>
         <div id="resultado"></div>
+        <div class="footer">Modo Caixa de Comando Ativo | GitHub Pages v1.0</div>
     </div>
 
     <script>
         function buscar() {
             const p = document.getElementById('produto').value;
-            if(!p) return alert("Digite um produto!");
+            if(!p) return alert("Cássia, digite o nome do produto!");
             const sites = [
                 {n: "Mercado Livre", u: "https://lista.mercadolivre.com.br/"},
-                {n: "Amazon", u: "https://www.amazon.com.br/s?k="},
+                {n: "Amazon Brasil", u: "https://www.amazon.com.br/s?k="},
                 {n: "Google Shopping", u: "https://www.google.com/search?tbm=shop&q="},
                 {n: "Magalu", u: "https://www.magaluevoce.com.br/busca/"},
                 {n: "Shopee", u: "https://shopee.com.br/search?keyword="}
             ];
-            let html = "<table><tr><th>Ranking</th><th>Site</th><th>Link</th></tr>";
+            let html = "<table><tr><th>Ranking</th><th>Loja / Site</th><th>Ação</th></tr>";
             sites.forEach((s, i) => {
-                html += `<tr><td>${i+1}º</td><td>${s.n}</td><td><a href="${s.u+p}" target="_blank">VER PREÇOS ↗</a></td></tr>`;
+                html += `<tr><td><b>${i+1}º</b></td><td>${s.n}</td><td><a href="${s.u+encodeURIComponent(p)}" target="_blank">VER PREÇOS ↗</a></td></tr>`;
             });
             document.getElementById('resultado').innerHTML = html + "</table>";
         }
