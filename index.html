@@ -1,442 +1,723 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V9 POWER EDITION | CÁSSIA PROMPT</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <style>
-        :root {
-            --bg: #050505; --card: rgba(12,12,12,0.98); --text: #ffffff;
-            --subtext: rgba(255,255,255,0.5);
-            --gold: linear-gradient(135deg, #bf953f 0%, #fcf6ba 45%, #b38728 70%, #fbf5b7 100%);
-            --gold-solid: #bf953f; --border: rgba(191,149,63,0.3);
-            --input-bg: rgba(255,255,255,0.02); --focus-overlay: rgba(0,0,0,0);
-            --warn-bg: rgba(191,149,63,0.08); --res-bg: #000; --res-color: #fcf6ba;
-            --hist-bg: rgba(191,149,63,0.05);
-        }
-        body.light-mode {
-            --bg: #f0ece3; --card: rgba(255,255,255,0.97); --text: #1a1209;
-            --subtext: rgba(0,0,0,0.45); --border: rgba(139,100,20,0.35);
-            --input-bg: rgba(0,0,0,0.03); --warn-bg: rgba(191,149,63,0.12);
-            --res-bg: #1a1209; --res-color: #fcf6ba; --hist-bg: rgba(191,149,63,0.08);
-        }
-        body.light-mode .glass-panel { box-shadow: 0 25px 80px rgba(0,0,0,0.12); }
-        body.light-mode .progress-container,
-        body.light-mode .quality-track,
-        body.light-mode .efetividade-track { background: rgba(0,0,0,0.06); }
-        .focus-mode { --bg: #000000; --focus-overlay: rgba(0,0,0,0.85); }
-        .focus-mode footer, .focus-mode .logo-v9 { opacity: 0; pointer-events: none; transition: 0.5s; }
-        * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s, color 0.5s; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
-        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--focus-overlay); z-index: 1; pointer-events: none; transition: 0.8s; }
-        #app-content { display: none; flex-grow: 1; flex-direction: column; align-items: center; justify-content: center; width: 100%; z-index: 2; position: relative; }
-        #carregando { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        .logo-v9 { font-size: 26px; font-weight: 900; letter-spacing: 10px; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin: 40px 0; text-align: center; transition: 0.5s; }
-        .glass-panel { background: var(--card); width: 92%; max-width: 950px; border-radius: 12px; border: 1px solid var(--border); padding: clamp(20px,5vw,50px); box-shadow: 0 25px 80px rgba(0,0,0,1); backdrop-filter: blur(25px); margin-bottom: 40px; position: relative; transition: 0.5s; }
-        .focus-mode .glass-panel { border-color: #bf953f; box-shadow: 0 0 100px rgba(191,149,63,0.1); }
-        .progress-group { margin-bottom: 30px; display: none; width: 100%; }
-        .label-rigor { font-size: 10px; font-weight: 800; color: #bf953f; letter-spacing: 2px; margin-bottom: 8px; display: block; text-transform: uppercase; }
-        .progress-container { width: 100%; background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(191,149,63,0.1); }
-        .progress-bar { width: 0%; height: 100%; background: var(--gold); transition: width 0.2s ease; }
-        .btn-supreme { width: 100%; background: var(--gold); color: #000; border: none; padding: 22px; border-radius: 4px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 4px; font-size: 14px; margin-top: 15px; transition: 0.3s; }
-        .btn-supreme:hover { filter: brightness(1.2); }
-        .btn-secondary { width: 100%; background: transparent; color: var(--gold-solid); border: 1px solid var(--gold-solid); padding: 14px; border-radius: 4px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; font-size: 12px; margin-top: 10px; transition: 0.3s; }
-        .btn-secondary:hover { background: rgba(191,149,63,0.1); }
-        .btn-copy { background: transparent; color: #bf953f; border: 1px solid #bf953f; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-bottom: 10px; width: fit-content; align-self: flex-end; transition: 0.3s; }
-        .btn-copy.copied { background: var(--gold); color: #000; border-color: transparent; }
-        input, textarea, select { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 18px; border-radius: 4px; color: var(--text); font-size: 15px; margin-bottom: 10px; outline: none; transition: 0.3s; }
-        input:focus, textarea:focus, select:focus { border-color: var(--gold-solid); }
-        input.invalid, select.invalid { border-color: #e05252 !important; }
-        select { cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23bf953f' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; background-color: var(--input-bg); }
-        select option { background: #111; color: #fff; }
-        body.light-mode select option { background: #fff; color: #111; }
-        .char-count { font-size: 10px; color: #bf953f; text-align: right; margin-bottom: 5px; font-weight: bold; letter-spacing: 1px; }
-        .quality-bar-wrap { width: 100%; margin-bottom: 20px; }
-        .quality-label { font-size: 10px; font-weight: 800; color: var(--gold-solid); letter-spacing: 2px; text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 6px; }
-        .quality-track { width: 100%; background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(191,149,63,0.1); }
-        .quality-fill { height: 100%; border-radius: 10px; transition: width 0.4s, background 0.4s; }
-        .quality-warn { font-size: 11px; color: #e0a052; margin-top: 6px; display: none; font-weight: 600; background: var(--warn-bg); padding: 8px 12px; border-radius: 4px; border-left: 3px solid #bf953f; }
-        .efetividade-wrap { display: none; margin-bottom: 20px; padding: 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--warn-bg); }
-        .efetividade-label { font-size: 10px; font-weight: 800; color: var(--gold-solid); letter-spacing: 2px; text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .efetividade-track { width: 100%; background: rgba(255,255,255,0.05); height: 8px; border-radius: 10px; overflow: hidden; }
-        .efetividade-fill { height: 100%; border-radius: 10px; background: var(--gold); transition: width 0.8s; }
-        .efetividade-msg { font-size: 11px; color: var(--subtext); margin-top: 8px; }
-        .tom-label { font-size: 10px; font-weight: 800; color: var(--gold-solid); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .tom-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        .tom-btn { flex: 1; min-width: 80px; background: var(--input-bg); border: 1px solid var(--border); padding: 10px 8px; border-radius: 4px; color: var(--subtext); font-size: 10px; font-weight: 800; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; text-align: center; transition: 0.2s; }
-        .tom-btn.active { background: var(--gold); color: #000; border-color: transparent; }
-        #res { height: 300px; border-color: #bf953f !important; color: var(--res-color); background: var(--res-bg); font-family: 'Courier New', monospace; resize: vertical; min-height: 200px; }
-        .hist-section { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 24px; display: none; }
-        .hist-title { font-size: 10px; font-weight: 800; color: var(--gold-solid); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
-        .hist-item { background: var(--hist-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .hist-item:hover { border-color: var(--gold-solid); background: rgba(191,149,63,0.12); }
-        .hist-info { flex: 1; min-width: 0; }
-        .hist-acao { font-size: 12px; font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .hist-meta { font-size: 10px; color: var(--subtext); margin-top: 3px; }
-        .hist-arrow { color: var(--gold-solid); font-size: 16px; flex-shrink: 0; }
-        .top-controls { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 1001; flex-wrap: wrap; justify-content: flex-end; }
-        .ctrl-btn { background: none; border: 1px solid #bf953f; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 9px; letter-spacing: 1px; font-weight: 900; color: #bf953f; transition: 0.2s; }
-        .ctrl-btn:hover { background: rgba(191,149,63,0.1); }
-        .ctrl-btn.active { background: var(--gold); color: #000; border-color: transparent; }
-        footer { padding: 40px 20px; text-align: center; font-size: 10px; letter-spacing: 2px; border-top: 1px solid var(--border); width: 100%; transition: 0.5s; }
-        .footer-licenca { background: rgba(191,149,63,0.06); border: 1px solid rgba(191,149,63,0.2); border-radius: 4px; padding: 14px 24px; margin-bottom: 20px; display: inline-block; }
-        .footer-licenca-label { font-size: 8px; color: rgba(191,149,63,0.6); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px; }
-        .footer-licenca-nome { font-size: 13px; font-weight: 900; background: linear-gradient(135deg,#bf953f,#fcf6ba,#b38728); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 3px; text-transform: uppercase; }
-        .footer-aviso { font-size: 9px; color: rgba(255,255,255,0.22); line-height: 2; max-width: 750px; margin: 0 auto; letter-spacing: 0.5px; }
-        .footer-aviso strong { color: rgba(255,255,255,0.38); }
-        .pdf-action { color: #fcf6ba; font-weight: 900; cursor: pointer; font-size: 12px; text-transform: uppercase; display: block; text-align: left; margin-bottom: 15px; }
-        body.light-mode .pdf-action { color: #8a6010; }
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--gold); color: #000; padding: 12px 28px; border-radius: 4px; font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: 0.3s; z-index: 9999; pointer-events: none; white-space: nowrap; }
-        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Orçamentos — OAB Santana de Parnaíba</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0f1419;--cream:#faf8f3;--cream-dark:#f0ece1;
+  --gold:#b8922a;--gold-light:#d4a843;--gold-pale:#f5ead4;
+  --teal:#1a6b6b;--teal-light:#e8f4f4;
+  --rose:#8b2a2a;--rose-light:#f8eded;
+  --slate:#4a5568;--border:#d4c9b0;
+  --shadow:0 4px 24px rgba(15,20,25,0.08);
+  --shadow-lg:0 12px 48px rgba(15,20,25,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+
+.site-header{background:var(--ink);color:white;padding:0 40px;display:flex;align-items:stretch;min-height:80px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.4);}
+.header-brand{display:flex;align-items:center;gap:20px;padding:16px 0;border-right:1px solid rgba(255,255,255,0.1);padding-right:30px;margin-right:30px;}
+.oab-seal{width:48px;height:48px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--gold);flex-shrink:0;}
+.brand-text h1{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;letter-spacing:0.05em;color:white;}
+.brand-text p{font-size:10px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.15em;margin-top:2px;}
+.header-nav{display:flex;align-items:center;gap:4px;}
+.nav-tab{padding:8px 18px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,0.6);transition:all 0.2s;border:none;background:none;white-space:nowrap;}
+.nav-tab:hover{color:white;background:rgba(255,255,255,0.08);}
+.nav-tab.active{color:var(--gold);background:rgba(184,146,42,0.15);}
+.header-date{margin-left:auto;display:flex;align-items:center;font-size:12px;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace;}
+
+.sync-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:7px;font-size:12px;font-weight:500;background:#1a2744;color:#7aa7ff;}
+.sync-bar.ok{background:#0d2b1a;color:#4ade80;}
+.sync-bar.error{background:#2b0d0d;color:#f87171;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.dashboard-bar{background:white;border-bottom:1px solid var(--border);padding:20px 40px;display:flex;gap:24px;flex-wrap:wrap;}
+.stat-card{display:flex;align-items:center;gap:14px;padding:12px 20px;border-radius:8px;background:var(--cream);border:1px solid var(--border);min-width:150px;}
+.stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stat-icon.gold{background:var(--gold-pale);}
+.stat-icon.teal{background:var(--teal-light);}
+.stat-icon.rose{background:var(--rose-light);}
+.stat-info .num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;line-height:1;}
+.stat-info .label{font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;}
+
+.main{padding:40px;}
+.panel{display:none;}
+.panel.active{display:block;}
+.panel-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px;}
+.panel-sub{font-size:13px;color:var(--slate);margin-bottom:30px;}
+
+.form-card{background:white;border:1px solid var(--border);border-radius:12px;padding:32px;margin-bottom:30px;box-shadow:var(--shadow);}
+.form-card h3{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--slate);}
+label .req{color:var(--rose);}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);transition:border-color 0.2s,box-shadow 0.2s;outline:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,146,42,0.12);background:white;}
+textarea{resize:vertical;min-height:80px;}
+
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-pending{background:#fff7e6;color:#b45309;border:1px solid #fcd34d;}
+.badge-approved{background:#e6fff0;color:#065f46;border:1px solid #6ee7b7;}
+.badge-rejected{background:#fff0f0;color:#991b1b;border:1px solid #fca5a5;}
+.badge-adjust{background:#eff6ff;color:#1d4ed8;border:1px solid #93c5fd;}
+.badge-done{background:#f5f3ff;color:#5b21b6;border:1px solid #c4b5fd;}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;}
+.btn-primary{background:var(--gold);color:white;}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(184,146,42,0.3);}
+.btn-secondary{background:white;color:var(--ink);border:1px solid var(--border);}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+.btn-danger{background:white;color:var(--rose);border:1px solid var(--border);}
+.btn-danger:hover{background:var(--rose-light);border-color:var(--rose);}
+.btn-teal{background:var(--teal);color:white;}
+.btn-teal:hover{background:#155a5a;transform:translateY(-1px);}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
+
+.table-wrap{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+.table-toolbar{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--cream);flex-wrap:wrap;}
+.table-toolbar h3{font-family:'Playfair Display',serif;font-size:15px;margin:0;}
+.search-box input{padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:200px;background:white;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--cream-dark);padding:12px 16px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--slate);border-bottom:1px solid var(--border);}
+td{padding:13px 16px;font-size:13px;border-bottom:1px solid rgba(212,201,176,0.4);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--cream);}
+tr.winner-row td{background:#e6fff0;}
+tr.winner-row td:first-child{border-left:3px solid #065f46;}
+
+.suppliers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:30px;}
+.supplier-card{background:white;border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow);transition:all 0.2s;}
+.supplier-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.supplier-avatar{width:44px;height:44px;border-radius:10px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold);}
+.sc-actions{display:flex;gap:6px;}
+.supplier-card h4{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:4px;}
+.sc-cat{font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;}
+.sc-detail{font-size:12px;color:var(--slate);margin-bottom:5px;}
+.sc-detail span{color:var(--ink);font-weight:500;}
+.stars{color:var(--gold);font-size:14px;letter-spacing:2px;}
+
+.checklist-table-wrap{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
+.add-item-row{display:grid;grid-template-columns:2fr 1fr 1fr 2fr 1fr 80px;gap:8px;padding:16px;background:var(--cream);border-top:1px solid var(--border);align-items:center;}
+.add-item-row input{padding:8px 10px;font-size:13px;background:white;}
+.item-checked td{opacity:0.5;}
+.item-checked td:nth-child(2){text-decoration:line-through;color:var(--slate);}
+
+.status-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:16px 24px;background:var(--cream);border-top:1px solid var(--border);}
+.status-step{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.status-step.active{border-color:var(--gold);background:var(--gold-pale);color:var(--gold);}
+.status-step:not(.active){background:var(--cream-dark);color:var(--slate);border-color:var(--border);}
+.arrow{color:var(--slate);font-size:14px;}
+
+.filter-row{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.filter-chip{padding:7px 16px;border-radius:100px;border:1px solid var(--border);background:white;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--slate);}
+.filter-chip.active{background:var(--gold);border-color:var(--gold);color:white;}
+.filter-chip:hover:not(.active){border-color:var(--gold);color:var(--gold);}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--slate);}
+.empty-state .icon{font-size:48px;margin-bottom:16px;opacity:0.4;}
+.empty-state h4{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;}
+.empty-state p{font-size:13px;}
+
+.toast-container{position:fixed;bottom:30px;right:30px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+.toast{background:var(--ink);color:white;padding:14px 20px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.3);animation:slideIn 0.3s ease;min-width:260px;max-width:400px;}
+.toast.success{border-left:4px solid #22c55e;}
+.toast.error{border-left:4px solid var(--rose);}
+.toast.info{border-left:4px solid var(--gold);}
+@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.report-preview{background:white;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-lg);}
+.report-preview-header{background:var(--ink);color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;}
+.report-body{padding:50px;}
+.report-oab-header{text-align:center;padding-bottom:24px;border-bottom:2px solid var(--ink);margin-bottom:30px;}
+.report-oab-header h2{font-family:'Playfair Display',serif;font-size:20px;}
+
+@media print{.site-header,.dashboard-bar,.sync-bar,.print-hide{display:none!important;}body{background:white;}.report-body{padding:20px;}}
+@media(max-width:768px){.site-header{padding:0 16px;}.main{padding:20px;}.add-item-row{grid-template-columns:1fr 1fr;}.dashboard-bar{padding:16px;}}
+</style>
 </head>
 <body>
-<div id="toast"></div>
-<div class="top-controls">
-    <button class="ctrl-btn" id="btnFoco" onclick="toggleFoco()">MODO FOCO</button>
-    <button class="ctrl-btn" id="btnTema" onclick="toggleTema()">☀️ CLARO</button>
+
+<header class="site-header">
+  <div class="header-brand">
+    <div class="oab-seal">OAB</div>
+    <div class="brand-text">
+      <h1>OAB Santana de Parnaíba</h1>
+      <p>Painel Integrado de Orçamentos</p>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <button class="nav-tab active" onclick="showPanel('site',this)">📄 Orç. Sites</button>
+    <button class="nav-tab" onclick="showPanel('fornecedores',this)">🏢 Fornecedores</button>
+    <button class="nav-tab" onclick="showPanel('compras',this)">🛒 Compras Gimba</button>
+  </nav>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<div class="sync-bar" id="syncBar">
+  <div class="sync-dot"></div>
+  <span id="syncMsg">Conectando ao banco de dados Firebase...</span>
 </div>
-<div id="carregando">
-    <div class="logo-v9">CÁSSIA PROMPT • V9 POWER</div>
+
+<div class="dashboard-bar">
+  <div class="stat-card"><div class="stat-icon gold">📋</div><div class="stat-info"><div class="num" id="statOrc">0</div><div class="label">Orçamentos</div></div></div>
+  <div class="stat-card"><div class="stat-icon teal">✅</div><div class="stat-info"><div class="num" id="statAprov">0</div><div class="label">Aprovados</div></div></div>
+  <div class="stat-card"><div class="stat-icon gold">🏢</div><div class="stat-info"><div class="num" id="statForn">0</div><div class="label">Fornecedores</div></div></div>
+  <div class="stat-card"><div class="stat-icon rose">🛒</div><div class="stat-info"><div class="num" id="statListas">0</div><div class="label">Listas de Compra</div></div></div>
 </div>
-<div id="app-content">
-    <div class="logo-v9">V9 POWER EDITION</div>
-    <main style="width:100%;display:flex;flex-direction:column;align-items:center;padding:0 10px;">
-        <div class="glass-panel" style="display:flex;flex-direction:column;">
-            <div class="progress-group" id="prog-area">
-                <span class="label-rigor">Análise de Dados: <span id="val1">0%</span></span>
-                <div class="progress-container"><div class="progress-bar" id="bar1"></div></div>
-                <span class="label-rigor">Calibração de Expertise: <span id="val2">0%</span></span>
-                <div class="progress-container"><div class="progress-bar" id="bar2"></div></div>
-            </div>
-            <span class="pdf-action" onclick="document.getElementById('pdf-up').click()">📎 IMPORTAR PDF (MÁXIMA PRECISÃO)</span>
-            <input type="file" id="pdf-up" accept="application/pdf" style="display:none" onchange="lerPDF(this)">
-            <select id="area" onchange="limparInvalid(this);calcEfetividade()">
-                <option value="" disabled selected>SELECIONE SUA ÁREA PROFISSIONAL</option>
-                <option value="juridico">⚖️ Jurídico / Advocacia</option>
-                <option value="medico">🏥 Medicina / Saúde</option>
-                <option value="contabil">📊 Contabilidade / Finanças</option>
-                <option value="engenharia">🔧 Engenharia / Arquitetura</option>
-                <option value="educacao">📚 Educação / Pedagogia</option>
-                <option value="negocios">💼 Negócios / Gestão / RH</option>
-                <option value="ti">💻 Tecnologia / TI</option>
-                <option value="marketing">📣 Marketing / Comunicação</option>
-                <option value="psicologia">🧠 Psicologia / Assistência Social</option>
-                <option value="outro">✳️ Outra área</option>
-            </select>
-            <input type="text" id="gerado" placeholder="O QUE DEVE SER GERADO? (EX: RELATÓRIO, PARECER, LAUDO...)" oninput="limparInvalid(this);calcEfetividade()">
-            <input type="text" id="destino" placeholder="QUAL O OBJETIVO? (EX: CONVENCER, INFORMAR, RESOLVER...)" oninput="calcEfetividade()">
-            <input type="text" id="publico" placeholder="PARA QUEM É? (EX: CLIENTE, JUIZ, DIRETOR, PACIENTE...)" oninput="calcEfetividade()">
-            <span class="tom-label">TOM DA ESCRITA</span>
-            <div class="tom-group">
-                <button class="tom-btn active" data-tom="formal" onclick="selecionarTom(this)">FORMAL</button>
-                <button class="tom-btn" data-tom="semiformal" onclick="selecionarTom(this)">SEMIFORMAL</button>
-                <button class="tom-btn" data-tom="simples" onclick="selecionarTom(this)">SIMPLES</button>
-                <button class="tom-btn" data-tom="persuasivo" onclick="selecionarTom(this)">PERSUASIVO</button>
-            </div>
-            <textarea id="fatos" rows="10" placeholder="COLE AQUI AS INFORMAÇÕES, FATOS OU USE O PDF ACIMA" oninput="countChars();calcQualidade();calcEfetividade()"></textarea>
-            <div class="char-count" id="count">Caracteres: 0</div>
-            <div class="quality-bar-wrap">
-                <div class="quality-label"><span>QUALIDADE DOS DADOS</span><span id="quality-pct">0%</span></div>
-                <div class="quality-track"><div class="quality-fill" id="quality-fill" style="width:0%"></div></div>
-                <div class="quality-warn" id="quality-warn">⚠ Seus dados estão incompletos. Quanto mais detalhes, melhor o resultado.</div>
-            </div>
-            <div class="efetividade-wrap" id="efetividade-wrap">
-                <div class="efetividade-label"><span>EFETIVIDADE DO PROMPT</span><span id="efet-pct">0%</span></div>
-                <div class="efetividade-track"><div class="efetividade-fill" id="efet-fill" style="width:0%"></div></div>
-                <div class="efetividade-msg" id="efet-msg"></div>
-            </div>
-            <button class="btn-supreme" onclick="executarV9()">EXECUTAR ENGENHARIA V9 POWER</button>
-            <div id="res-box" style="display:none;margin-top:40px;border-top:1px solid var(--border);padding-top:30px;flex-direction:column;">
-                <button class="btn-copy" id="btnCopy" onclick="copyRes()">COPIAR COMANDO PARA IA</button>
-                <textarea id="res" readonly></textarea>
-                <button class="btn-supreme" onclick="baixar()">EXPORTAR PARA WORD (.DOC)</button>
-                <button class="btn-secondary" onclick="novaConsulta()">+ NOVA CONSULTA</button>
-            </div>
-            <div class="hist-section" id="hist-section">
-                <div class="hist-title">⏱ ÚLTIMAS CONSULTAS</div>
-                <div id="hist-lista"></div>
-            </div>
-        </div>
-    </main>
-    <footer>
-        <div class="footer-licenca">
-            <div class="footer-licenca-label">Licença nominal concedida a</div>
-            <div class="footer-licenca-nome" id="footer-nome">carregando...</div>
-        </div>
-        <div class="footer-aviso">
-            <strong>CÁSSIA PROMPT ® | V9 POWER EDITION</strong><br>
-            Este software é licenciado de forma nominal, individual e intransferível.<br>
-            O acesso é vinculado exclusivamente ao titular da licença identificado acima.<br>
-            <strong>É expressamente proibido</strong> o compartilhamento, repasse, cessão ou qualquer forma de transferência deste acesso a terceiros.<br>
-            O uso indevido desta licença implica revogação imediata do acesso, sem aviso prévio.<br>
-            <strong>Este programa gera prompts para uso em inteligências artificiais.</strong> A responsabilidade pelo conteúdo gerado e pela sua aplicação é exclusivamente do usuário licenciado.<br>
-            Cássia Prompt não se responsabiliza por decisões tomadas com base nos prompts gerados.<br>
-            © 2025 Cássia Prompt. Todos os direitos reservados.
-        </div>
-    </footer>
+
+<main class="main">
+
+<div id="panel-site" class="panel active">
+  <div class="panel-title">Orçamentos para Sites</div>
+  <div class="panel-sub">Registre e compare propostas para desenvolvimento e manutenção de sites.</div>
+  <div class="form-card">
+    <h3>Novo Orçamento</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Nº do Orçamento <span class="req">*</span></label><input type="text" id="s_num" placeholder="ORC-001"></div>
+      <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="s_data"></div>
+      <div class="form-group"><label>Fornecedor <span class="req">*</span></label><input type="text" id="s_fornecedor" placeholder="Nome da empresa"></div>
+      <div class="form-group"><label>CNPJ</label><input type="text" id="s_cnpj" placeholder="00.000.000/0000-00"></div>
+      <div class="form-group full"><label>Descrição do Serviço <span class="req">*</span></label><textarea id="s_descricao" placeholder="Descreva o serviço cotado..."></textarea></div>
+      <div class="form-group"><label>Valor Total (R$) <span class="req">*</span></label><input type="number" id="s_valor" placeholder="0.00" step="0.01"></div>
+      <div class="form-group"><label>Prazo de Execução</label><input type="text" id="s_prazo" placeholder="Ex: 30 dias"></div>
+      <div class="form-group"><label>Condições de Pagamento</label><input type="text" id="s_pagamento" placeholder="Ex: 50% entrada + 50% entrega"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="s_status"><option value="pendente">Pendente</option><option value="aprovado">Aprovado</option><option value="reprovado">Reprovado</option></select>
+      </div>
+      <div class="form-group full"><label>Observações <span class="req">*</span></label><textarea id="s_obs" placeholder="Campo obrigatório — registre qualquer informação relevante..."></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarOrcamento()">💾 Salvar Orçamento</button>
+      <button class="btn btn-secondary" onclick="limparFormSite()">↺ Limpar</button>
+    </div>
+  </div>
+  <div class="filter-row" id="siteFilters">
+    <span class="filter-chip active" onclick="filtrarSite('todos',this)">Todos</span>
+    <span class="filter-chip" onclick="filtrarSite('pendente',this)">Pendentes</span>
+    <span class="filter-chip" onclick="filtrarSite('aprovado',this)">Aprovados</span>
+    <span class="filter-chip" onclick="filtrarSite('reprovado',this)">Reprovados</span>
+  </div>
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <h3>Histórico de Orçamentos</h3>
+      <div class="search-box"><input type="text" id="searchSite" placeholder="🔍 Buscar..." oninput="renderOrcamentos()"></div>
+      <button class="btn btn-secondary btn-sm print-hide" onclick="gerarRelatorioSites()">📄 Gerar PDF</button>
+    </div>
+    <table><thead><tr><th>Nº</th><th>Data</th><th>Fornecedor</th><th>Serviço</th><th>Valor</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="tabelaOrc"><tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><h4>Conectando...</h4></div></td></tr></tbody>
+    </table>
+  </div>
+  <div id="compareSection" style="display:none;margin-top:30px;">
+    <div class="form-card"><h3>📊 Comparativo de Propostas</h3><div id="compareContent"></div></div>
+  </div>
 </div>
-<script>
-    const firebaseConfig = { databaseURL: "https://cassia-v9-default-rtdb.firebaseio.com" };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
 
-    function verificarAcesso() {
-        const id = new URLSearchParams(window.location.search).get('id');
-        if (!id) { bloqueado("ACESSO NEGADO", "Nenhum código de acesso encontrado.<br>Solicite seu link autorizado."); return; }
-        db.ref('acessos_v9/' + id).once('value').then(snap => {
-            if (snap.exists()) {
-                const dados = snap.val();
-                db.ref('acessos_v9/' + id).update({ ultimoUso: Date.now(), usos: (dados.usos || 0) + 1 });
-                const nomeEl = document.getElementById('footer-nome');
-                if (nomeEl) nomeEl.innerText = dados.nome || 'LICENCIADO';
-                document.getElementById('carregando').style.display = 'none';
-                document.getElementById('app-content').style.display = 'flex';
-                renderHistorico();
-            } else {
-                bloqueado("ACESSO REVOGADO", "Seu acesso foi desativado.<br>Entre em contato para mais informações.");
-            }
-        }).catch(() => bloqueado("ERRO DE CONEXÃO", "Não foi possível verificar seu acesso.<br>Tente novamente."));
-    }
+<div id="panel-fornecedores" class="panel">
+  <div class="panel-title">Gestão de Fornecedores</div>
+  <div class="panel-sub">Cadastro e controle estratégico de fornecedores homologados.</div>
+  <div class="form-card">
+    <h3>Cadastrar Fornecedor</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Nome Empresarial <span class="req">*</span></label><input type="text" id="f_nome" placeholder="Razão social ou nome fantasia"></div>
+      <div class="form-group"><label>Responsável</label><input type="text" id="f_responsavel" placeholder="Nome do contato"></div>
+      <div class="form-group"><label>Telefone</label><input type="text" id="f_telefone" placeholder="(11) 99999-9999"></div>
+      <div class="form-group"><label>E-mail</label><input type="text" id="f_email" placeholder="contato@empresa.com.br"></div>
+      <div class="form-group"><label>Categoria</label>
+        <select id="f_categoria"><option value="Site">Site / Digital</option><option value="Material de Escritório">Material de Escritório</option><option value="Tecnologia">Tecnologia / TI</option><option value="Outros">Outros</option></select>
+      </div>
+      <div class="form-group"><label>Avaliação</label>
+        <select id="f_avaliacao"><option value="5">⭐⭐⭐⭐⭐ Excelente</option><option value="4">⭐⭐⭐⭐ Bom</option><option value="3">⭐⭐⭐ Regular</option><option value="2">⭐⭐ Ruim</option><option value="1">⭐ Péssimo</option></select>
+      </div>
+      <div class="form-group full"><label>Observações</label><textarea id="f_obs" placeholder="Histórico, condições especiais, notas..."></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarFornecedor()">💾 Salvar Fornecedor</button>
+      <button class="btn btn-secondary" onclick="limparFormForn()">↺ Limpar</button>
+    </div>
+  </div>
+  <div class="filter-row" id="fornFilters">
+    <span class="filter-chip active" onclick="filtrarForn('Todos',this)">Todos</span>
+    <span class="filter-chip" onclick="filtrarForn('Site',this)">Site / Digital</span>
+    <span class="filter-chip" onclick="filtrarForn('Material de Escritório',this)">Mat. de Escritório</span>
+    <span class="filter-chip" onclick="filtrarForn('Tecnologia',this)">Tecnologia</span>
+    <span class="filter-chip" onclick="filtrarForn('Outros',this)">Outros</span>
+  </div>
+  <div class="suppliers-grid" id="fornGrid">
+    <div class="empty-state" style="grid-column:1/-1"><div class="icon">🏢</div><h4>Conectando...</h4></div>
+  </div>
+</div>
 
-    function bloqueado(titulo, msg) {
-        document.getElementById('carregando').innerHTML = `
-            <div style="text-align:center;padding:40px;">
-                <div style="font-size:22px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:30px;">CÁSSIA PROMPT</div>
-                <div style="font-size:14px;font-weight:900;color:#e05252;letter-spacing:3px;margin-bottom:16px;">${titulo}</div>
-                <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.8;">${msg}</div>
-            </div>`;
-    }
+<div id="panel-compras" class="panel">
+  <div class="panel-title">Checklist de Compras — Gimba</div>
+  <div class="panel-sub">Preencha a lista, salve e envie o link para sua chefe. Ela verá tudo em tempo real.</div>
+  <div id="listasGrid" style="margin-bottom:30px;"></div>
+  <div class="form-card" style="border-color:var(--gold);">
+    <h3>📝 Lista Atual</h3>
+    <div class="form-grid" style="margin-bottom:20px;">
+      <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="c_data"></div>
+      <div class="form-group"><label>Responsável <span class="req">*</span></label><input type="text" id="c_responsavel" placeholder="Seu nome"></div>
+      <div class="form-group"><label>Nome da Lista</label><input type="text" id="c_nome" placeholder="Ex: Compras de Fevereiro"></div>
+      <div class="form-group full"><label>Observação Geral <span class="req">*</span></label><input type="text" id="c_obs" placeholder="Contexto, urgência, observações..."></div>
+    </div>
+    <div class="checklist-table-wrap">
+      <table>
+        <thead><tr><th width="40">✓</th><th>Item / Produto</th><th>Qtd. em Estoque</th><th>Qtd. a Comprar</th><th>Link Gimba</th><th>Observação</th><th width="60"></th></tr></thead>
+        <tbody id="checklistBody"></tbody>
+      </table>
+      <div class="add-item-row">
+        <input type="text" id="ci_item" placeholder="Nome do produto">
+        <input type="number" id="ci_atual" placeholder="Qtd. atual">
+        <input type="number" id="ci_necessario" placeholder="Qtd. a comprar">
+        <input type="text" id="ci_link" placeholder="Link Gimba">
+        <input type="text" id="ci_obs" placeholder="Observação">
+        <button class="btn btn-primary btn-sm" onclick="adicionarItem()">+ Add</button>
+      </div>
+    </div>
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);"><strong style="font-size:13px;">Status da Lista:</strong></div>
+      <div class="status-flow">
+        <span class="status-step active" id="ss1" onclick="setStatus('Em análise')">📋 Em análise</span>
+        <span class="arrow">→</span>
+        <span class="status-step" id="ss2" onclick="setStatus('Aprovado pela Chefia')">✅ Aprovado</span>
+        <span class="arrow">→</span>
+        <span class="status-step" id="ss3" onclick="setStatus('Ajustar')">✏️ Ajustar</span>
+        <span class="arrow">→</span>
+        <span class="status-step" id="ss4" onclick="setStatus('Finalizado')">🏁 Finalizado</span>
+      </div>
+      <div style="padding:10px 20px;background:white;border-top:1px solid var(--border);">
+        <strong style="font-size:12px;">Status atual: </strong><span id="statusAtual" class="badge badge-pending">Em análise</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarLista()">💾 Salvar no Banco de Dados</button>
+      <button class="btn btn-secondary" onclick="novaLista()">🗒 Nova Lista</button>
+      <button class="btn btn-teal" onclick="exportarPDFAtual()">📄 Exportar PDF</button>
+      <button class="btn btn-secondary print-hide" onclick="copiarLink()">🔗 Copiar Link para Chefia</button>
+    </div>
+  </div>
+</div>
 
-    setTimeout(verificarAcesso, 800);
+</main>
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg; t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2200);
-    }
-    function toggleTema() {
-        document.body.classList.toggle('light-mode');
-        document.getElementById('btnTema').textContent = document.body.classList.contains('light-mode') ? '🌙 ESCURO' : '☀️ CLARO';
-    }
-    function toggleFoco() {
-        document.body.classList.toggle('focus-mode');
-        document.getElementById('btnFoco').classList.toggle('active');
-    }
-    let tomSelecionado = 'formal';
-    const tomDesc = {
-        formal: "Linguagem formal, técnica e culta. Adequada para documentos oficiais, processos e relatórios institucionais.",
-        semiformal: "Linguagem semiformal: clara e profissional, sem excesso de tecnicidade.",
-        simples: "Linguagem simples e acessível. Adequada para comunicação com leigos e público geral.",
-        persuasivo: "Linguagem persuasiva e estratégica. Foco em convencer, engajar e gerar impacto no leitor."
-    };
-    function selecionarTom(el) {
-        document.querySelectorAll('.tom-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active'); tomSelecionado = el.dataset.tom; calcEfetividade();
-    }
-    function countChars() { document.getElementById('count').innerText = "Caracteres: " + document.getElementById('fatos').value.length; }
-    function calcQualidade() {
-        const texto = document.getElementById('fatos').value.trim();
-        const chars = texto.length;
-        const palavras = texto.split(/\s+/).filter(p => p.length > 0).length;
-        let pct = 0;
-        if (chars >= 50) pct = 20; if (chars >= 200) pct = 40;
-        if (chars >= 500) pct = 60; if (chars >= 900) pct = 80;
-        if (chars >= 1500 && palavras >= 150) pct = 100;
-        const fill = document.getElementById('quality-fill');
-        fill.style.width = pct + '%';
-        fill.style.background = pct < 40 ? '#e05252' : pct < 70 ? '#e0a052' : '#52c452';
-        document.getElementById('quality-pct').innerText = pct + '%';
-        document.getElementById('quality-warn').style.display = (pct < 60 && chars > 0) ? 'block' : 'none';
-    }
-    function calcEfetividade() {
-        const area = document.getElementById('area').value;
-        const acao = document.getElementById('gerado').value.trim();
-        const destino = document.getElementById('destino').value.trim();
-        const publico = document.getElementById('publico').value.trim();
-        const fatos = document.getElementById('fatos').value.trim();
-        let score = 0;
-        if (area) score += 25; if (acao.length > 3) score += 20;
-        if (destino.length > 3) score += 15; if (publico.length > 3) score += 10;
-        if (fatos.length >= 200) score += 15; if (fatos.length >= 800) score += 10;
-        if (tomSelecionado) score += 5;
-        const wrap = document.getElementById('efetividade-wrap');
-        if (score > 0) wrap.style.display = 'block';
-        document.getElementById('efet-fill').style.width = score + '%';
-        document.getElementById('efet-pct').innerText = score + '%';
-        const msg = document.getElementById('efet-msg');
-        if (score < 40) msg.innerText = "Preencha mais campos para aumentar a efetividade.";
-        else if (score < 65) msg.innerText = "Bom começo! Adicione mais detalhes nos dados fornecidos.";
-        else if (score < 85) msg.innerText = "Ótimo! O prompt já tem alta qualidade.";
-        else msg.innerText = "🏆 Prompt no nível máximo. Pronto para resultados excepcionais.";
-    }
-    function limparInvalid(el) { el.classList.remove('invalid'); }
-    function copyRes() {
-        const texto = document.getElementById('res').value;
-        const btn = document.getElementById('btnCopy');
-        const sucesso = () => {
-            btn.innerText = "COPIADO COM SUCESSO!"; btn.classList.add('copied');
-            showToast("PROMPT COPIADO!");
-            setTimeout(() => { btn.innerText = "COPIAR COMANDO PARA IA"; btn.classList.remove('copied'); }, 2000);
-        };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(texto).then(sucesso).catch(() => fallbackCopy(sucesso));
-        } else { fallbackCopy(sucesso); }
-    }
-    function fallbackCopy(cb) {
-        const ta = document.getElementById('res'); ta.select(); ta.setSelectionRange(0, 99999);
-        try { document.execCommand('copy'); cb(); } catch(e) { showToast("SELECIONE E COPIE MANUALMENTE"); }
-    }
-    async function lerPDF(input) {
-        const file = input.files[0]; if (!file) return;
-        showToast("LENDO PDF...");
-        const reader = new FileReader();
-        reader.onload = async function () {
-            const typedarray = new Uint8Array(this.result);
-            const pdf = await pdfjsLib.getDocument(typedarray).promise;
-            let text = "";
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                text += content.items.map(s => s.str).join(" ") + "\n";
-            }
-            document.getElementById('fatos').value = text;
-            countChars(); calcQualidade(); calcEfetividade();
-            showToast("PDF IMPORTADO!");
-        };
-        reader.readAsArrayBuffer(file);
-    }
-    const personas = {
-        juridico: "advogado(a) sênior com 20 anos de experiência em litígios complexos, domínio em argumentação, jurisprudência (STJ, STF, TRTs) e técnica processual.",
-        medico: "médico(a) especialista com 20 anos de experiência clínica e acadêmica, habilidade em laudos, pareceres e relatórios com embasamento científico atualizado.",
-        contabil: "contador(a) sênior com 20 anos de experiência em contabilidade, auditoria e finanças corporativas, domínio das normas IFRS, NBC e legislação tributária.",
-        engenharia: "engenheiro(a) sênior com 20 anos de experiência em projetos complexos, laudos técnicos e normas ABNT.",
-        educacao: "pedagogo(a) sênior com 20 anos de experiência em currículo, didática e avaliação, domínio das melhores práticas pedagógicas e da BNCC.",
-        negocios: "consultor(a) executivo(a) sênior com 20 anos de experiência em gestão estratégica, RH e organizações, com foco em resultados concretos.",
-        ti: "arquiteto(a) de soluções e especialista em TI com 20 anos de experiência, domínio em sistemas, segurança e documentação técnica.",
-        marketing: "estrategista de marketing e comunicação sênior com 20 anos de experiência, especialista em copy persuasivo e conteúdo de alto impacto.",
-        psicologia: "psicólogo(a) com 20 anos de experiência, habilidade em relatórios, pareceres e documentos com linguagem técnica ética e empática.",
-        outro: "especialista sênior com 20 anos de experiência na área solicitada, com capacidade analítica e escrita técnica de alto nível."
-    };
-    const regras = {
-        juridico: "- Cite artigos de lei, códigos e jurisprudência do STJ/STF/TRTs.\n- Nunca invente decisões ou processos.\n- Estrutura: qualificação das partes → fatos → fundamentação → pedidos.",
-        medico: "- Baseie-se em evidências científicas e diretrizes clínicas atuais.\n- Nunca invente dados do paciente ou exames.\n- Estrutura: identificação → histórico → análise técnica → conclusão/conduta.",
-        contabil: "- Cite normas contábeis (NBC, IFRS, CFC) e legislação tributária.\n- Nunca invente valores ou lançamentos.\n- Estrutura: contexto → análise → fundamentação normativa → conclusão.",
-        engenharia: "- Referencie normas ABNT e legislação aplicável.\n- Nunca invente especificações ou medições.\n- Estrutura: objeto → metodologia → análise técnica → recomendações.",
-        educacao: "- Referencie BNCC, teorias pedagógicas e autores reconhecidos.\n- Nunca invente dados de alunos.\n- Estrutura: contexto → diagnóstico → proposta → conclusão.",
-        negocios: "- Linguagem objetiva, orientada a dados e resultados.\n- Nunca invente métricas ou projeções.\n- Estrutura: contexto → análise → recomendações → próximos passos.",
-        ti: "- Terminologia técnica precisa, padrões ISO/IEEE quando aplicável.\n- Nunca invente funcionalidades ou dados técnicos.\n- Estrutura: escopo → análise → solução → considerações finais.",
-        marketing: "- Linguagem adaptada ao público-alvo.\n- Nunca invente dados de mercado ou métricas.\n- Estrutura: contexto → desenvolvimento → call to action.",
-        psicologia: "- Respeite o Código de Ética do CFP.\n- Nunca invente informações sobre o avaliado.\n- Estrutura: identificação → histórico → análise → conclusão/recomendações.",
-        outro: "- Linguagem técnica adequada à área e ao público.\n- Nunca invente dados não fornecidos.\n- Estrutura: contexto → desenvolvimento lógico → conclusão."
-    };
-    const areaLabels = { juridico:'Jurídico', medico:'Medicina', contabil:'Contabilidade', engenharia:'Engenharia', educacao:'Educação', negocios:'Negócios', ti:'TI', marketing:'Marketing', psicologia:'Psicologia', outro:'Outra área' };
-    const HIST_KEY = 'cassia_v9_historico';
-    function salvarHistorico(entry) {
-        let hist = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-        hist.unshift(entry); hist = hist.slice(0, 3);
-        localStorage.setItem(HIST_KEY, JSON.stringify(hist));
-    }
-    function renderHistorico() {
-        const hist = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-        const section = document.getElementById('hist-section');
-        const lista = document.getElementById('hist-lista');
-        if (hist.length === 0) { section.style.display = 'none'; return; }
-        section.style.display = 'block'; lista.innerHTML = '';
-        hist.forEach(item => {
-            const div = document.createElement('div'); div.className = 'hist-item';
-            div.innerHTML = `<div class="hist-info"><div class="hist-acao">${item.acao}</div><div class="hist-meta">${item.area} &bull; ${item.data}</div></div><span class="hist-arrow">↗</span>`;
-            div.onclick = () => restaurarHistorico(item); lista.appendChild(div);
-        });
-    }
-    function restaurarHistorico(item) {
-        document.getElementById('area').value = item.areaVal;
-        document.getElementById('gerado').value = item.acao;
-        document.getElementById('destino').value = item.objetivo;
-        document.getElementById('publico').value = item.publico;
-        document.getElementById('fatos').value = item.fatos;
-        document.querySelectorAll('.tom-btn').forEach(b => b.classList.toggle('active', b.dataset.tom === item.tom));
-        tomSelecionado = item.tom;
-        document.getElementById('res').value = item.prompt;
-        document.getElementById('res-box').style.display = 'flex';
-        countChars(); calcQualidade(); calcEfetividade();
-        showToast("CONSULTA RESTAURADA!");
-        setTimeout(() => document.getElementById('res-box').scrollIntoView({ behavior: 'smooth' }), 200);
-    }
-    function novaConsulta() {
-        ['area','gerado','destino','publico','fatos','res'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('res-box').style.display = 'none';
-        document.getElementById('efetividade-wrap').style.display = 'none';
-        document.getElementById('quality-fill').style.width = '0%';
-        document.getElementById('quality-pct').innerText = '0%';
-        document.getElementById('quality-warn').style.display = 'none';
-        document.getElementById('count').innerText = 'Caracteres: 0';
-        document.querySelectorAll('.tom-btn').forEach(b => b.classList.toggle('active', b.dataset.tom === 'formal'));
-        tomSelecionado = 'formal';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        showToast("PRONTO PARA NOVA CONSULTA!");
-    }
-    function executarV9() {
-        const areaEl = document.getElementById('area'), acaoEl = document.getElementById('gerado'), fatosEl = document.getElementById('fatos');
-        const areaVal = areaEl.value, acaoVal = acaoEl.value.trim(), fatosVal = fatosEl.value.trim();
-        let valido = true;
-        if (!areaVal) { areaEl.classList.add('invalid'); valido = false; }
-        if (!acaoVal) { acaoEl.classList.add('invalid'); valido = false; }
-        if (!fatosVal) { fatosEl.style.borderColor = '#e05252'; valido = false; } else { fatosEl.style.borderColor = ''; }
-        if (!valido) { showToast("PREENCHA OS CAMPOS OBRIGATÓRIOS"); setTimeout(() => { areaEl.classList.remove('invalid'); acaoEl.classList.remove('invalid'); fatosEl.style.borderColor = ''; }, 2500); return; }
-        const progArea = document.getElementById('prog-area');
-        const b1 = document.getElementById('bar1'), b2 = document.getElementById('bar2');
-        const v1 = document.getElementById('val1'), v2 = document.getElementById('val2');
-        progArea.style.display = 'block'; b1.style.width = '0%'; b2.style.width = '0%'; v1.innerText = '0%'; v2.innerText = '0%';
-        const objetivo = document.getElementById('destino').value.trim();
-        const publico = document.getElementById('publico').value.trim();
-        let p1 = 0, p2 = 0;
-        let itv = setInterval(() => {
-            if (p1 < 100) { p1 += 5; b1.style.width = p1+'%'; v1.innerText = p1+'%'; }
-            if (p1 > 50 && p2 < 100) { p2 += 10; b2.style.width = p2+'%'; v2.innerText = p2+'%'; }
-            if (p1 >= 100 && p2 >= 100) {
-                clearInterval(itv);
-                const promptFinal = `[CÁSSIA PROMPT V9 — ENGENHARIA MÁXIMA]
+<div id="reportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;padding:30px;">
+  <div style="max-width:820px;margin:0 auto;">
+    <div class="report-preview">
+      <div class="report-preview-header">
+        <span style="font-weight:600;">📄 Relatório Formal</span>
+        <div style="display:flex;gap:10px;" class="print-hide">
+          <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+          <button class="btn btn-danger btn-sm" onclick="document.getElementById('reportModal').style.display='none'">✕ Fechar</button>
+        </div>
+      </div>
+      <div class="report-body" id="reportBody"></div>
+    </div>
+  </div>
+</div>
 
-PERSONA: Você é ${personas[areaVal]}
+<div class="toast-container" id="toastContainer"></div>
 
-TAREFA: ${acaoVal}
-OBJETIVO: ${objetivo || "não especificado"}
-PÚBLICO-ALVO: ${publico || "não especificado — adapte o tom ao contexto"}
-TOM DA ESCRITA: ${tomDesc[tomSelecionado]}
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-REGRAS OBRIGATÓRIAS:
-1. Leia e interprete TODOS os dados fornecidos antes de escrever qualquer coisa.
-2. Identifique pontos centrais, dados críticos e lacunas existentes.
-3. Adapte o tom, vocabulário e nível técnico ao público-alvo e ao tom de escrita definidos acima.
-${regras[areaVal]}
-4. Se faltar dado essencial, escreva: ⚠ REVISÃO NECESSÁRIA — [descreva o dado ausente].
-5. NUNCA invente informações. Use exclusivamente o que está nos dados abaixo.
-6. Entregue o documento completo, estruturado e pronto para uso. Comece direto pelo conteúdo.
+const firebaseConfig = {
+  apiKey: "AIzaSyC5lTVL5A6_zRN3mWXxK1x-5F0WZBvVss0",
+  authDomain: "oab-santana.firebaseapp.com",
+  databaseURL: "https://oab-santana-default-rtdb.firebaseio.com",
+  projectId: "oab-santana",
+  storageBucket: "oab-santana.firebasestorage.app",
+  messagingSenderId: "587189470292",
+  appId: "1:587189470292:web:20fa9c00329b8afc5559c1"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-DADOS FORNECIDOS:
-${fatosVal}`;
-                document.getElementById('res').value = promptFinal;
-                document.getElementById('res-box').style.display = 'flex';
-                setTimeout(() => { progArea.style.display = 'none'; }, 800);
-                setTimeout(() => document.getElementById('res-box').scrollIntoView({ behavior: 'smooth', block: 'start' }), 900);
-                const now = new Date();
-                const data = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
-                salvarHistorico({ acao: acaoVal, areaVal, area: areaLabels[areaVal], objetivo, publico, fatos: fatosVal, tom: tomSelecionado, prompt: promptFinal, data });
-                renderHistorico();
-            }
-        }, 60);
-    }
-    function baixar() {
-        const conteudo = document.getElementById('res').value;
-        const blob = new Blob(['\ufeff', conteudo], { type: 'application/msword' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob); link.download = 'CASSIA_PROMPT_V9.doc'; link.click();
-        showToast("ARQUIVO EXPORTADO!");
-    }
+const S = {
+  orcamentos:{}, fornecedores:{}, listas:{},
+  checklistItems:[], checklistStatus:'Em análise',
+  editingOrc:null, editingForn:null, editingLista:null,
+  filtroSite:'todos', filtroForn:'Todos'
+};
+
+function setSyncStatus(type,msg){
+  const bar=document.getElementById('syncBar');
+  bar.className='sync-bar '+type;
+  document.getElementById('syncMsg').textContent=msg;
+}
+
+onValue(ref(db,'orcamentos'),snap=>{
+  S.orcamentos=snap.val()||{};
+  renderOrcamentos();updateDash();
+  setSyncStatus('ok','✔ Conectado ao Firebase — dados sincronizados em tempo real');
+},err=>setSyncStatus('error','✗ Erro de conexão: '+err.message));
+
+onValue(ref(db,'fornecedores'),snap=>{S.fornecedores=snap.val()||{};renderFornecedores();updateDash();});
+onValue(ref(db,'listas'),snap=>{S.listas=snap.val()||{};renderListasGrid();updateDash();});
+
+function toast(msg,type='success'){
+  const c=document.getElementById('toastContainer');
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${type==='success'?'✅':type==='error'?'❌':'ℹ️'}</span> ${msg}`;
+  c.appendChild(el);
+  setTimeout(()=>el.remove(),4500);
+}
+
+function fmt(v){return parseFloat(v).toLocaleString('pt-br',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function badgeHtml(status){
+  const map={pendente:'badge-pending',aprovado:'badge-approved',reprovado:'badge-rejected',
+    'Em análise':'badge-pending','Aprovado pela Chefia':'badge-approved',
+    Ajustar:'badge-adjust',Finalizado:'badge-done'};
+  const labels={pendente:'Pendente',aprovado:'Aprovado',reprovado:'Reprovado'};
+  return `<span class="badge ${map[status]||'badge-pending'}">${labels[status]||status}</span>`;
+}
+
+function updateDash(){
+  const orcs=Object.values(S.orcamentos);
+  document.getElementById('statOrc').textContent=orcs.length;
+  document.getElementById('statAprov').textContent=orcs.filter(o=>o.status==='aprovado').length;
+  document.getElementById('statForn').textContent=Object.keys(S.fornecedores).length;
+  document.getElementById('statListas').textContent=Object.keys(S.listas).length;
+}
+
+window.showPanel=(name,btn)=>{
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+};
+
+window.salvarOrcamento=async()=>{
+  const num=document.getElementById('s_num').value.trim();
+  const fornecedor=document.getElementById('s_fornecedor').value.trim();
+  const descricao=document.getElementById('s_descricao').value.trim();
+  const obs=document.getElementById('s_obs').value.trim();
+  const valor=parseFloat(document.getElementById('s_valor').value);
+  if(!num||!fornecedor||!descricao||!obs||isNaN(valor)){toast('Preencha todos os campos obrigatórios (*).','error');return;}
+  const orc={num,data:document.getElementById('s_data').value,fornecedor,cnpj:document.getElementById('s_cnpj').value,
+    descricao,valor,prazo:document.getElementById('s_prazo').value,pagamento:document.getElementById('s_pagamento').value,
+    status:document.getElementById('s_status').value,obs,criadoEm:new Date().toISOString()};
+  try{
+    if(S.editingOrc){await update(ref(db,'orcamentos/'+S.editingOrc),orc);S.editingOrc=null;toast('Orçamento atualizado! ✅');}
+    else{await push(ref(db,'orcamentos'),orc);toast('Orçamento salvo no banco de dados! ✅');}
+    limparFormSite();
+  }catch(e){toast('Erro ao salvar: '+e.message,'error');}
+};
+
+window.limparFormSite=()=>{
+  ['s_num','s_fornecedor','s_cnpj','s_descricao','s_valor','s_prazo','s_pagamento','s_obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('s_data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('s_status').value='pendente';
+  S.editingOrc=null;
+};
+
+window.filtrarSite=(f,chip)=>{
+  S.filtroSite=f;
+  document.querySelectorAll('#siteFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');renderOrcamentos();
+};
+
+function renderOrcamentos(){
+  const search=(document.getElementById('searchSite')?.value||'').toLowerCase();
+  let list=Object.entries(S.orcamentos).map(([id,o])=>({...o,id}));
+  if(S.filtroSite!=='todos')list=list.filter(o=>o.status===S.filtroSite);
+  if(search)list=list.filter(o=>o.fornecedor.toLowerCase().includes(search)||o.num.toLowerCase().includes(search)||o.descricao.toLowerCase().includes(search));
+  const tb=document.getElementById('tabelaOrc');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><h4>Nenhum orçamento cadastrado</h4><p>Preencha o formulário acima para começar.</p></div></td></tr>`;document.getElementById('compareSection').style.display='none';return;}
+  tb.innerHTML=list.map(o=>`<tr>
+    <td><code style="font-size:12px;">${o.num}</code></td>
+    <td>${o.data?new Date(o.data+'T12:00').toLocaleDateString('pt-br'):'—'}</td>
+    <td><strong>${o.fornecedor}</strong><br><span style="font-size:11px;color:var(--slate);">${o.cnpj||''}</span></td>
+    <td style="max-width:180px;white-space:normal;font-size:12px;">${o.descricao}</td>
+    <td><strong>R$ ${fmt(o.valor)}</strong></td>
+    <td>${o.prazo||'—'}</td>
+    <td>${badgeHtml(o.status)}</td>
+    <td><div style="display:flex;gap:4px;">
+      <button class="btn btn-secondary btn-sm" onclick="editarOrc('${o.id}')">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="excluirOrc('${o.id}')">🗑</button>
+    </div></td>
+  </tr>`).join('');
+  renderComparativo(list);
+}
+
+window.editarOrc=id=>{
+  const o=S.orcamentos[id];if(!o)return;
+  document.getElementById('s_num').value=o.num;document.getElementById('s_data').value=o.data||'';
+  document.getElementById('s_fornecedor').value=o.fornecedor;document.getElementById('s_cnpj').value=o.cnpj||'';
+  document.getElementById('s_descricao').value=o.descricao;document.getElementById('s_valor').value=o.valor;
+  document.getElementById('s_prazo').value=o.prazo||'';document.getElementById('s_pagamento').value=o.pagamento||'';
+  document.getElementById('s_status').value=o.status;document.getElementById('s_obs').value=o.obs||'';
+  S.editingOrc=id;window.scrollTo({top:0,behavior:'smooth'});
+  toast('Editando orçamento — faça as alterações e salve.','info');
+};
+
+window.excluirOrc=async id=>{
+  if(!confirm('Excluir este orçamento?\n\nEsta ação não pode ser desfeita.'))return;
+  try{await remove(ref(db,'orcamentos/'+id));toast('Orçamento excluído.');}
+  catch(e){toast('Erro: '+e.message,'error');}
+};
+
+function renderComparativo(list){
+  const sec=document.getElementById('compareSection');
+  if(list.length<2){sec.style.display='none';return;}
+  sec.style.display='block';
+  const sorted=[...list].sort((a,b)=>a.valor-b.valor);const w=sorted[0];
+  document.getElementById('compareContent').innerHTML=`
+    <table><thead><tr><th>Fornecedor</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
+    <tbody>${sorted.map(o=>`<tr class="${o.id===w.id?'winner-row':''}">
+      <td>${o.fornecedor}${o.id===w.id?' 🏆 <strong>(Menor Valor)</strong>':''}</td>
+      <td><strong>R$ ${fmt(o.valor)}</strong></td><td>${o.prazo||'—'}</td><td>${o.pagamento||'—'}</td><td>${badgeHtml(o.status)}</td>
+    </tr>`).join('')}</tbody></table>
+    <p style="margin-top:14px;font-size:13px;color:var(--slate);">ℹ️ Proposta mais vantajosa: <strong>${w.fornecedor}</strong> — R$ ${fmt(w.valor)}${sorted[1]?`. Economia vs 2º: R$ ${fmt(sorted[1].valor-w.valor)}`:''}</p>`;
+}
+
+window.gerarRelatorioSites=()=>{
+  const list=Object.values(S.orcamentos);
+  if(!list.length){toast('Nenhum orçamento para gerar relatório.','error');return;}
+  const sorted=[...list].sort((a,b)=>a.valor-b.valor);const w=sorted[0];
+  const hoje=new Date().toLocaleDateString('pt-br');
+  document.getElementById('reportBody').innerHTML=`
+    <div class="report-oab-header">
+      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2><p>Subseção Santana de Parnaíba</p>
+      <p style="font-size:13px;font-weight:bold;margin-top:8px;">MAPA COMPARATIVO DE PREÇOS — ORÇAMENTOS PARA SITES</p>
+      <p style="font-size:12px;color:#666;margin-top:4px;">Gerado em: ${hoje}</p>
+    </div>
+    <table><thead><tr><th>Nº</th><th>Fornecedor</th><th>Serviço</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
+    <tbody>${sorted.map(o=>`<tr style="${o===w?'background:#e6fff0;':''}">
+      <td>${o.num}</td><td><strong>${o.fornecedor}</strong>${o===w?' ✅':''}</td>
+      <td style="font-size:12px;">${o.descricao}</td><td><strong>R$ ${fmt(o.valor)}</strong></td>
+      <td>${o.prazo||'—'}</td><td style="font-size:12px;">${o.pagamento||'—'}</td><td>${o.status.toUpperCase()}</td>
+    </tr>`).join('')}</tbody></table>
+    <div style="margin-top:26px;padding:18px;border:1px solid #000;">
+      <p><strong>PARECER TÉCNICO:</strong></p>
+      <p style="margin-top:10px;font-size:13px;">Após análise comparativa, a proposta da <strong>${w.fornecedor}</strong> apresentou o menor valor global de <strong>R$ ${fmt(w.valor)}</strong>, sendo indicada para aprovação junto à chefia da OAB Santana de Parnaíba.</p>
+    </div>
+    <div style="margin-top:60px;text-align:center;">
+      <p>________________________________________________________________</p>
+      <p style="font-size:13px;"><strong>RESPONSÁVEL PELA COTAÇÃO</strong></p>
+      <p style="font-size:10px;margin-top:8px;color:#666;">Documento gerado pelo Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>
+    </div>`;
+  document.getElementById('reportModal').style.display='block';
+};
+
+window.salvarFornecedor=async()=>{
+  const nome=document.getElementById('f_nome').value.trim();
+  if(!nome){toast('O nome do fornecedor é obrigatório.','error');return;}
+  const forn={nome,responsavel:document.getElementById('f_responsavel').value,telefone:document.getElementById('f_telefone').value,
+    email:document.getElementById('f_email').value,categoria:document.getElementById('f_categoria').value,
+    avaliacao:parseInt(document.getElementById('f_avaliacao').value),obs:document.getElementById('f_obs').value,
+    criadoEm:new Date().toISOString()};
+  try{
+    if(S.editingForn){await update(ref(db,'fornecedores/'+S.editingForn),forn);S.editingForn=null;toast('Fornecedor atualizado!');}
+    else{await push(ref(db,'fornecedores'),forn);toast('Fornecedor salvo!');}
+    limparFormForn();
+  }catch(e){toast('Erro: '+e.message,'error');}
+};
+
+window.limparFormForn=()=>{
+  ['f_nome','f_responsavel','f_telefone','f_email','f_obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f_categoria').value='Site';document.getElementById('f_avaliacao').value='5';S.editingForn=null;
+};
+
+window.filtrarForn=(cat,chip)=>{
+  S.filtroForn=cat;
+  document.querySelectorAll('#fornFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');renderFornecedores();
+};
+
+function renderFornecedores(){
+  let list=Object.entries(S.fornecedores).map(([id,f])=>({...f,id}));
+  if(S.filtroForn!=='Todos')list=list.filter(f=>f.categoria===S.filtroForn);
+  const grid=document.getElementById('fornGrid');
+  if(!list.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="icon">🏢</div><h4>Nenhum fornecedor</h4><p>Cadastre o primeiro fornecedor acima.</p></div>`;return;}
+  grid.innerHTML=list.map(f=>`<div class="supplier-card">
+    <div class="sc-top">
+      <div class="supplier-avatar">${f.nome.charAt(0).toUpperCase()}</div>
+      <div class="sc-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editarForn('${f.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="excluirForn('${f.id}')">🗑</button>
+      </div>
+    </div>
+    <h4>${f.nome}</h4><div class="sc-cat">${f.categoria}</div>
+    ${f.responsavel?`<div class="sc-detail">👤 <span>${f.responsavel}</span></div>`:''}
+    ${f.telefone?`<div class="sc-detail">📞 <span>${f.telefone}</span></div>`:''}
+    ${f.email?`<div class="sc-detail">📧 <span>${f.email}</span></div>`:''}
+    <div class="stars">${'⭐'.repeat(f.avaliacao)}</div>
+    ${f.obs?`<div style="margin-top:10px;font-size:12px;color:var(--slate);padding-top:10px;border-top:1px solid var(--border);">${f.obs}</div>`:''}
+  </div>`).join('');
+}
+
+window.editarForn=id=>{
+  const f=S.fornecedores[id];if(!f)return;
+  document.getElementById('f_nome').value=f.nome;document.getElementById('f_responsavel').value=f.responsavel||'';
+  document.getElementById('f_telefone').value=f.telefone||'';document.getElementById('f_email').value=f.email||'';
+  document.getElementById('f_categoria').value=f.categoria;document.getElementById('f_avaliacao').value=f.avaliacao;
+  document.getElementById('f_obs').value=f.obs||'';S.editingForn=id;window.scrollTo({top:0,behavior:'smooth'});
+  toast('Editando fornecedor.','info');
+};
+
+window.excluirForn=async id=>{
+  if(!confirm('Excluir este fornecedor?'))return;
+  try{await remove(ref(db,'fornecedores/'+id));toast('Fornecedor removido.');}catch(e){toast('Erro: '+e.message,'error');}
+};
+
+window.adicionarItem=()=>{
+  const item=document.getElementById('ci_item').value.trim();
+  if(!item){toast('Informe o nome do produto.','error');return;}
+  S.checklistItems.push({id:Date.now().toString(),item,
+    atual:document.getElementById('ci_atual').value,
+    necessario:document.getElementById('ci_necessario').value,
+    link:document.getElementById('ci_link').value,
+    obs:document.getElementById('ci_obs').value,checked:false});
+  ['ci_item','ci_atual','ci_necessario','ci_link','ci_obs'].forEach(id=>document.getElementById(id).value='');
+  renderChecklist();
+};
+
+function renderChecklist(){
+  const body=document.getElementById('checklistBody');
+  if(!S.checklistItems.length){body.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="icon">📦</div><h4>Nenhum item ainda</h4><p>Adicione produtos usando a linha abaixo.</p></div></td></tr>`;return;}
+  body.innerHTML=S.checklistItems.map(r=>`<tr class="${r.checked?'item-checked':''}">
+    <td style="text-align:center;"><input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}',this.checked)"></td>
+    <td><strong>${r.item}</strong></td><td>${r.atual||'—'}</td><td>${r.necessario||'—'}</td>
+    <td style="font-size:12px;">${r.link?`<a href="${r.link}" target="_blank" style="color:var(--teal);">🔗 Ver produto</a>`:'—'}</td>
+    <td style="font-size:12px;">${r.obs||'—'}</td>
+    <td><button class="btn btn-danger btn-sm" onclick="removerItem('${r.id}')">🗑</button></td>
+  </tr>`).join('');
+}
+
+window.toggleItem=(id,val)=>{const item=S.checklistItems.find(r=>r.id===id);if(item)item.checked=val;renderChecklist();};
+
+window.removerItem=id=>{
+  if(!confirm('Remover este item da lista?'))return;
+  S.checklistItems=S.checklistItems.filter(r=>r.id!==id);renderChecklist();
+};
+
+window.setStatus=s=>{
+  S.checklistStatus=s;
+  document.querySelectorAll('.status-step').forEach(el=>el.classList.remove('active'));
+  const map={'Em análise':'ss1','Aprovado pela Chefia':'ss2','Ajustar':'ss3','Finalizado':'ss4'};
+  if(map[s])document.getElementById(map[s]).classList.add('active');
+  const bmap={'Em análise':'badge-pending','Aprovado pela Chefia':'badge-approved','Ajustar':'badge-adjust','Finalizado':'badge-done'};
+  const el=document.getElementById('statusAtual');el.className=`badge ${bmap[s]||'badge-pending'}`;el.textContent=s;
+};
+
+window.novaLista=()=>{
+  if(S.checklistItems.length>0&&!confirm('Limpar a lista atual?\n\nSalve antes se não quiser perder os dados.'))return;
+  S.checklistItems=[];S.checklistStatus='Em análise';S.editingLista=null;
+  ['c_data','c_responsavel','c_nome','c_obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c_data').value=new Date().toISOString().split('T')[0];
+  setStatus('Em análise');renderChecklist();toast('Nova lista iniciada.','info');
+};
+
+window.salvarLista=async()=>{
+  const resp=document.getElementById('c_responsavel').value.trim();
+  const obs=document.getElementById('c_obs').value.trim();
+  if(!resp||!obs){toast('Preencha o responsável e a observação geral.','error');return;}
+  if(!S.checklistItems.length){toast('Adicione ao menos um item na lista.','error');return;}
+  const lista={data:document.getElementById('c_data').value,responsavel:resp,
+    nome:document.getElementById('c_nome').value||`Lista de ${resp}`,
+    obs,status:S.checklistStatus,items:S.checklistItems,atualizadoEm:new Date().toISOString()};
+  try{
+    if(S.editingLista){await update(ref(db,'listas/'+S.editingLista),lista);toast('Lista atualizada no banco! ✅');}
+    else{const r=await push(ref(db,'listas'),lista);S.editingLista=r.key;toast('Lista salva no banco! ✅ Envie o link para sua chefe.');}
+  }catch(e){toast('Erro ao salvar: '+e.message,'error');}
+};
+
+function renderListasGrid(){
+  const el=document.getElementById('listasGrid');
+  const listas=Object.entries(S.listas).map(([id,l])=>({...l,id})).sort((a,b)=>new Date(b.atualizadoEm)-new Date(a.atualizadoEm));
+  if(!listas.length){el.innerHTML='';return;}
+  el.innerHTML=`<h3 style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;">📂 Listas Salvas no Banco</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-bottom:10px;">
+    ${listas.map(l=>`<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+        <div><strong style="font-size:14px;">${l.nome}</strong>
+          <div style="font-size:12px;color:var(--slate);margin-top:3px;">${l.data?new Date(l.data+'T12:00').toLocaleDateString('pt-br'):''} · ${l.responsavel}</div>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="excluirLista('${l.id}')">🗑</button>
+      </div>
+      ${badgeHtml(l.status)}
+      <div style="margin-top:10px;font-size:12px;color:var(--slate);">📦 ${(l.items||[]).length} item(ns)</div>
+      <div style="margin-top:5px;font-size:12px;color:var(--slate);font-style:italic;">${l.obs}</div>
+      <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="carregarLista('${l.id}')">📂 Editar</button>
+        <button class="btn btn-teal btn-sm" onclick="pdfLista('${l.id}')">📄 PDF</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+window.excluirLista=async id=>{
+  if(!confirm('Excluir esta lista permanentemente?\n\nEsta ação não pode ser desfeita.'))return;
+  try{await remove(ref(db,'listas/'+id));toast('Lista excluída.');}catch(e){toast('Erro: '+e.message,'error');}
+};
+
+window.carregarLista=id=>{
+  const l=S.listas[id];if(!l)return;
+  document.getElementById('c_data').value=l.data||'';
+  document.getElementById('c_responsavel').value=l.responsavel||'';
+  document.getElementById('c_nome').value=l.nome||'';
+  document.getElementById('c_obs').value=l.obs||'';
+  S.checklistItems=[...(l.items||[])];S.editingLista=id;
+  setStatus(l.status||'Em análise');renderChecklist();
+  document.getElementById('panel-compras').scrollIntoView({behavior:'smooth'});
+  toast('Lista carregada para edição.','info');
+};
+
+window.pdfLista=id=>{const l=S.listas[id];if(!l)return;gerarPDF(l.responsavel,l.nome,l.obs,l.status,l.items||[],l.data);};
+
+window.exportarPDFAtual=()=>{
+  if(!S.checklistItems.length){toast('Nenhum item na lista atual.','error');return;}
+  gerarPDF(document.getElementById('c_responsavel').value||'—',document.getElementById('c_nome').value||'Lista de Compras',
+    document.getElementById('c_obs').value||'—',S.checklistStatus,S.checklistItems,document.getElementById('c_data').value);
+};
+
+function gerarPDF(resp,nome,obs,status,items,data){
+  const hoje=new Date().toLocaleDateString('pt-br');
+  const dataFmt=data?new Date(data+'T12:00').toLocaleDateString('pt-br'):'—';
+  document.getElementById('reportBody').innerHTML=`
+    <div class="report-oab-header">
+      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2><p>Subseção Santana de Parnaíba</p>
+      <p style="font-size:13px;font-weight:bold;margin-top:8px;">LISTA DE COMPRAS — GIMBA</p>
+      <p style="font-size:12px;color:#666;margin-top:4px;">Data: ${dataFmt} · Responsável: ${resp} · Gerado em: ${hoje}</p>
+    </div>
+    <p style="margin-bottom:6px;"><strong>Lista:</strong> ${nome}</p>
+    <p style="margin-bottom:6px;"><strong>Observação:</strong> ${obs}</p>
+    <p style="margin-bottom:20px;"><strong>Status:</strong> ${status}</p>
+    <table><thead><tr><th>✓</th><th>Item / Produto</th><th>Qtd. em Estoque</th><th>Qtd. a Comprar</th><th>Link</th><th>Observação</th></tr></thead>
+    <tbody>${items.map(r=>`<tr><td>${r.checked?'✅':'☐'}</td><td><strong>${r.item}</strong></td>
+      <td>${r.atual||'—'}</td><td>${r.necessario||'—'}</td>
+      <td style="font-size:11px;word-break:break-all;">${r.link||'—'}</td><td>${r.obs||'—'}</td></tr>`).join('')}</tbody></table>
+    <div style="margin-top:60px;text-align:center;">
+      <p>________________________________________________________________</p>
+      <p style="font-size:13px;"><strong>RESPONSÁVEL PELA SOLICITAÇÃO</strong></p>
+      <p style="font-size:11px;margin-top:20px;">________________________________________________________________</p>
+      <p style="font-size:13px;"><strong>APROVAÇÃO — CHEFIA</strong></p>
+      <p style="font-size:10px;margin-top:14px;color:#666;">Documento gerado pelo Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>
+    </div>`;
+  document.getElementById('reportModal').style.display='block';
+}
+
+window.copiarLink=()=>{
+  navigator.clipboard.writeText(window.location.href)
+    .then(()=>toast('Link copiado! Mande para sua chefe — ela verá tudo em tempo real. 🎉','info'))
+    .catch(()=>toast('Copie o link da barra do navegador e envie para sua chefe.','info'));
+};
+
+const now=new Date();
+document.getElementById('headerDate').textContent=now.toLocaleDateString('pt-br',{weekday:'short',year:'numeric',month:'long',day:'numeric'});
+document.getElementById('c_data').value=now.toISOString().split('T')[0];
+document.getElementById('s_data').value=now.toISOString().split('T')[0];
+renderChecklist();
 </script>
 </body>
 </html>
