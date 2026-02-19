@@ -1,180 +1,1419 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE AUDITORIA V8 - OAB SANTANA DE PARNAÍBA</title>
-    <style>
-        :root { --primary: #00f2ff; --bg: #05070a; --card: #0d1117; --text: #e6edf3; --border: #30363d; --accent: #238636; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        
-        /* Cabeçalho de Autoridade */
-        header { background: #000; border-bottom: 3px solid var(--primary); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; }
-        .oab-header h1 { font-size: 14px; letter-spacing: 3px; color: var(--primary); margin: 0; }
-        .sub-text { font-size: 10px; color: #8b949e; text-transform: uppercase; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Orçamentos — OAB Santana de Parnaíba</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1419;
+  --ink-soft: #2d3748;
+  --cream: #faf8f3;
+  --cream-dark: #f0ece1;
+  --gold: #b8922a;
+  --gold-light: #d4a843;
+  --gold-pale: #f5ead4;
+  --teal: #1a6b6b;
+  --teal-light: #e8f4f4;
+  --rose: #8b2a2a;
+  --rose-light: #f8eded;
+  --slate: #4a5568;
+  --border: #d4c9b0;
+  --shadow: 0 4px 24px rgba(15,20,25,0.08);
+  --shadow-lg: 0 12px 48px rgba(15,20,25,0.15);
+}
 
-        .container { max-width: 1200px; margin: 30px auto; padding: 20px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Painel de Entrada de Dados */
-        .admin-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .main-input { width: 100%; background: #000; border: 1px solid var(--primary); padding: 20px; border-radius: 8px; color: #fff; font-size: 20px; margin-bottom: 30px; box-sizing: border-box; outline: none; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
 
-        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .store-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
-        .store-box h3 { font-size: 12px; color: var(--primary); margin: 0 0 15px 0; text-transform: uppercase; }
-        
-        input[type="text"], input[type="number"] { width: 100%; background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 4px; color: #fff; margin-bottom: 10px; box-sizing: border-box; }
-        input:focus { border-color: var(--primary); }
+.site-header {
+  background: var(--ink);
+  color: white;
+  padding: 0 40px;
+  display: flex;
+  align-items: stretch;
+  min-height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
 
-        .btn-generate { background: var(--primary); color: #000; border: none; width: 100%; padding: 20px; border-radius: 8px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-generate:hover { filter: brightness(1.2); transform: translateY(-2px); }
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  padding-right: 30px;
+  margin-right: 30px;
+}
 
-        /* Relatório Formal (Estilo A4) */
-        #reportArea { background: white; color: #000; padding: 60px; border-radius: 0; margin-top: 50px; display: none; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
-        .report-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
-        .report-header h2 { margin: 0; font-size: 22px; }
-        
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th { background: #f2f2f2; border: 1px solid #000; padding: 12px; text-align: left; font-size: 12px; }
-        td { border: 1px solid #000; padding: 12px; font-size: 13px; }
-        .winner { background: #e6ffed; font-weight: bold; color: #1a7f37; }
+.oab-seal {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--gold);
+  flex-shrink: 0;
+}
 
-        .footer-sig { margin-top: 60px; text-align: center; }
-        .print-cmd { background: #000; color: #fff; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; font-weight: bold; width: 100%; }
+.brand-text h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: white;
+}
 
-        @media print { 
-            body * { visibility: hidden; } 
-            #reportArea, #reportArea * { visibility: visible; } 
-            #reportArea { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; padding: 20px; }
-            .print-cmd { display: none; }
-        }
-    </style>
+.brand-text p {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 2px;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-tab {
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  white-space: nowrap;
+}
+
+.nav-tab:hover { color: white; background: rgba(255,255,255,0.08); }
+.nav-tab.active { color: var(--gold); background: rgba(184,146,42,0.15); }
+
+.header-date {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-family: 'DM Mono', monospace;
+}
+
+.dashboard-bar {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 20px 40px;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  min-width: 160px;
+}
+
+.stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.stat-icon.gold { background: var(--gold-pale); }
+.stat-icon.teal { background: var(--teal-light); }
+.stat-icon.rose { background: var(--rose-light); }
+
+.stat-info .num {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-info .label {
+  font-size: 11px;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.main { padding: 40px; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.panel-sub {
+  font-size: 13px;
+  color: var(--slate);
+  margin-bottom: 30px;
+}
+
+.form-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+}
+
+.form-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: var(--ink);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full { grid-column: 1 / -1; }
+
+label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--slate);
+}
+
+label .req { color: var(--rose); }
+
+input[type="text"], input[type="number"], input[type="date"],
+select, textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--cream);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184,146,42,0.12);
+  background: white;
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.badge-pending { background: #fff7e6; color: #b45309; border: 1px solid #fcd34d; }
+.badge-approved { background: #e6fff0; color: #065f46; border: 1px solid #6ee7b7; }
+.badge-rejected { background: #fff0f0; color: #991b1b; border: 1px solid #fca5a5; }
+.badge-adjust { background: #eff6ff; color: #1d4ed8; border: 1px solid #93c5fd; }
+.badge-done { background: #f5f3ff; color: #5b21b6; border: 1px solid #c4b5fd; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary { background: var(--gold); color: white; }
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(184,146,42,0.3); }
+
+.btn-secondary { background: white; color: var(--ink); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+.btn-danger { background: white; color: var(--rose); border: 1px solid var(--border); }
+.btn-danger:hover { background: var(--rose-light); border-color: var(--rose); }
+
+.btn-teal { background: var(--teal); color: white; }
+.btn-teal:hover { background: #155a5a; transform: translateY(-1px); }
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.table-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--cream);
+}
+
+.table-toolbar h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  margin: 0;
+}
+
+.search-box { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.search-box input {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  width: 200px;
+  background: white;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  background: var(--cream-dark);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate);
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 13px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(212,201,176,0.4);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--cream); }
+tr.winner-row td { background: #e6fff0; }
+tr.winner-row td:first-child { border-left: 3px solid #065f46; }
+
+.suppliers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.supplier-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.supplier-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+.supplier-card .sc-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.supplier-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--gold-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.sc-actions { display: flex; gap: 6px; }
+
+.supplier-card h4 { font-family: 'Playfair Display', serif; font-size: 15px; margin-bottom: 4px; }
+
+.supplier-card .sc-cat {
+  font-size: 11px;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.sc-detail { font-size: 12px; color: var(--slate); margin-bottom: 5px; }
+.sc-detail span { color: var(--ink); font-weight: 500; }
+.stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; }
+
+.checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.checklist-meta {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  box-shadow: var(--shadow);
+}
+
+.checklist-table-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.add-item-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr 1fr 80px;
+  gap: 8px;
+  padding: 16px;
+  background: var(--cream);
+  border-top: 1px solid var(--border);
+  align-items: center;
+}
+
+.add-item-row input { padding: 8px 10px; font-size: 13px; background: white; }
+
+.item-checked td { opacity: 0.5; }
+.item-checked td:nth-child(2) { text-decoration: line-through; color: var(--slate); }
+
+.report-preview {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.report-preview-header {
+  background: var(--ink);
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.report-body { padding: 50px; }
+
+.report-oab-header {
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 30px;
+}
+
+.report-oab-header h2 { font-family: 'Playfair Display', serif; font-size: 20px; }
+.report-oab-header p { font-size: 13px; margin-top: 4px; }
+
+.status-flow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 16px 24px;
+  background: var(--cream);
+  border-top: 1px solid var(--border);
+}
+
+.status-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.status-step.active { border-color: var(--gold); background: var(--gold-pale); color: var(--gold); }
+.status-step:not(.active) { background: var(--cream-dark); color: var(--slate); border-color: var(--border); }
+.status-step:hover:not(.active) { border-color: var(--gold); }
+
+.arrow { color: var(--slate); font-size: 14px; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--slate); }
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+.empty-state h4 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 8px; }
+.empty-state p { font-size: 13px; }
+
+.toast-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--ink);
+  color: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s ease;
+  min-width: 260px;
+  max-width: 400px;
+}
+
+.toast.success { border-left: 4px solid #22c55e; }
+.toast.error { border-left: 4px solid var(--rose); }
+.toast.info { border-left: 4px solid var(--gold); }
+
+@keyframes slideIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+
+.filter-chip {
+  padding: 7px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--slate);
+}
+
+.filter-chip.active { background: var(--gold); border-color: var(--gold); color: white; }
+.filter-chip:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+@media print {
+  .site-header, .dashboard-bar, .print-hide { display: none !important; }
+  body { background: white; }
+  .report-body { padding: 20px; }
+}
+
+@media (max-width: 768px) {
+  .site-header { padding: 0 16px; }
+  .main { padding: 20px; }
+  .add-item-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
 </head>
 <body>
 
-<header>
-    <div class="oab-header">
-        <h1>V8 GOD MODE // OAB SANTANA DE PARNAÍBA</h1>
-        <div class="sub-text">SISTEMA DE AUDITORIA E COMPLIANCE DE SUPRIMENTOS</div>
+<header class="site-header">
+  <div class="header-brand">
+    <div class="oab-seal">OAB</div>
+    <div class="brand-text">
+      <h1>OAB Santana de Parnaíba</h1>
+      <p>Painel Integrado de Orçamentos</p>
     </div>
+  </div>
+  <nav class="header-nav">
+    <button class="nav-tab active" onclick="showPanel('site', this)">📄 Orç. Sites</button>
+    <button class="nav-tab" onclick="showPanel('fornecedores', this)">🏢 Fornecedores</button>
+    <button class="nav-tab" onclick="showPanel('compras', this)">🛒 Compras Gimba</button>
+  </nav>
+  <div class="header-date" id="headerDate"></div>
 </header>
 
-<div class="container">
-    <div class="admin-panel">
-        <input type="text" id="mainItem" class="main-input" placeholder="NOME TÉCNICO DO PRODUTO (EX: TONER HP LASERJET 105A)">
-
-        <div class="input-grid">
-            <div class="store-box">
-                <h3>1. KALUNGA</h3>
-                <input type="text" id="link1" placeholder="Link do produto na Kalunga">
-                <input type="number" id="price1" placeholder="Valor R$ (Ex: 150.90)">
-            </div>
-            <div class="store-box">
-                <h3>2. GIMBA</h3>
-                <input type="text" id="link2" placeholder="Link do produto na Gimba">
-                <input type="number" id="price2" placeholder="Valor R$ (Ex: 145.00)">
-            </div>
-            <div class="store-box">
-                <h3>3. AMAZON</h3>
-                <input type="text" id="link3" placeholder="Link do produto na Amazon">
-                <input type="number" id="price3" placeholder="Valor R$ (Ex: 139.90)">
-            </div>
-            <div class="store-box">
-                <h3>4. KABUM!</h3>
-                <input type="text" id="link4" placeholder="Link do produto na KaBuM">
-                <input type="number" id="price4" placeholder="Valor R$ (Ex: 160.00)">
-            </div>
-            <div class="store-box" style="border-color: var(--primary);">
-                <h3>5. OUTRO FORNECEDOR</h3>
-                <input type="text" id="link5" placeholder="Link de outra loja">
-                <input type="number" id="price5" placeholder="Valor R$">
-            </div>
-        </div>
-
-        <button class="btn-generate" onclick="processarV8()">GERAR DOSSIÊ COMPLETO E COMPARATIVO</button>
+<div class="dashboard-bar" id="dashboardBar">
+  <div class="stat-card">
+    <div class="stat-icon gold">📋</div>
+    <div class="stat-info">
+      <div class="num" id="statOrcamentos">0</div>
+      <div class="label">Orçamentos</div>
     </div>
-
-    <div id="reportArea">
-        <div class="report-header">
-            <h2>ORDEM DE ADVOGADOS DO BRASIL</h2>
-            <p>SUBSEÇÃO SANTANA DE PARNAÍBA</p>
-            <p style="font-size: 14px; font-weight: bold; margin-top: 10px;">MAPA COMPARATIVO DE PREÇOS - SISTEMA V8</p>
-        </div>
-
-        <div id="reportContent"></div>
-
-        <div class="footer-sig">
-            <p>__________________________________________________________________</p>
-            <p>RESPONSÁVEL PELA COTAÇÃO / AUDITORIA</p>
-            <p style="font-size: 10px;">Documento gerado eletronicamente via V8 Elite Mode</p>
-        </div>
-        
-        <button class="print-cmd" onclick="window.print()">FINALIZAR E IMPRIMIR RELATÓRIO (PDF)</button>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon teal">✅</div>
+    <div class="stat-info">
+      <div class="num" id="statAprovados">0</div>
+      <div class="label">Aprovados</div>
     </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon gold">🏢</div>
+    <div class="stat-info">
+      <div class="num" id="statFornecedores">0</div>
+      <div class="label">Fornecedores</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon rose">🛒</div>
+    <div class="stat-info">
+      <div class="num" id="statCompras">0</div>
+      <div class="label">Listas de Compra</div>
+    </div>
+  </div>
 </div>
 
+<main class="main">
+
+<!-- MÓDULO 1: SITES -->
+<div id="panel-site" class="panel active">
+  <div class="panel-title">Orçamentos para Sites</div>
+  <div class="panel-sub">Registre e compare propostas para desenvolvimento e manutenção de sites.</div>
+
+  <div class="form-card">
+    <h3>Novo Orçamento</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nº do Orçamento <span class="req">*</span></label>
+        <input type="text" id="s_num" placeholder="ORC-001">
+      </div>
+      <div class="form-group">
+        <label>Data <span class="req">*</span></label>
+        <input type="date" id="s_data">
+      </div>
+      <div class="form-group">
+        <label>Fornecedor <span class="req">*</span></label>
+        <input type="text" id="s_fornecedor" placeholder="Nome da empresa">
+      </div>
+      <div class="form-group">
+        <label>CNPJ</label>
+        <input type="text" id="s_cnpj" placeholder="00.000.000/0000-00">
+      </div>
+      <div class="form-group full">
+        <label>Descrição do Serviço <span class="req">*</span></label>
+        <textarea id="s_descricao" placeholder="Descreva o serviço cotado..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Valor Total (R$) <span class="req">*</span></label>
+        <input type="number" id="s_valor" placeholder="0.00" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>Prazo de Execução</label>
+        <input type="text" id="s_prazo" placeholder="Ex: 30 dias">
+      </div>
+      <div class="form-group">
+        <label>Condições de Pagamento</label>
+        <input type="text" id="s_pagamento" placeholder="Ex: 50% entrada + 50% na entrega">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="s_status">
+          <option value="pendente">Pendente</option>
+          <option value="aprovado">Aprovado</option>
+          <option value="reprovado">Reprovado</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Observações <span class="req">*</span></label>
+        <textarea id="s_obs" placeholder="Campo obrigatório — registre qualquer informação relevante sobre este orçamento..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarOrcamento()">💾 Salvar Orçamento</button>
+      <button class="btn btn-secondary" onclick="limparFormSite()">↺ Limpar</button>
+    </div>
+  </div>
+
+  <div class="filter-row" id="siteFilters">
+    <span class="filter-chip active" onclick="filtrarSite('todos', this)">Todos</span>
+    <span class="filter-chip" onclick="filtrarSite('pendente', this)">Pendentes</span>
+    <span class="filter-chip" onclick="filtrarSite('aprovado', this)">Aprovados</span>
+    <span class="filter-chip" onclick="filtrarSite('reprovado', this)">Reprovados</span>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <h3>Histórico de Orçamentos</h3>
+      <div class="search-box">
+        <input type="text" id="searchSite" placeholder="🔍 Buscar..." oninput="renderOrcamentos()">
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="gerarRelatorioPDF()">📄 Relatório PDF</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nº</th>
+          <th>Data</th>
+          <th>Fornecedor</th>
+          <th>Serviço</th>
+          <th>Valor</th>
+          <th>Prazo</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaOrcamentos">
+        <tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><h4>Nenhum orçamento ainda</h4><p>Cadastre o primeiro orçamento acima.</p></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="compareSection" style="display:none; margin-top:30px;">
+    <div class="form-card">
+      <h3>📊 Comparativo de Propostas</h3>
+      <div id="compareContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO 2: FORNECEDORES -->
+<div id="panel-fornecedores" class="panel">
+  <div class="panel-title">Gestão de Fornecedores</div>
+  <div class="panel-sub">Cadastro e controle estratégico de fornecedores homologados.</div>
+
+  <div class="form-card">
+    <h3>Cadastrar Fornecedor</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nome Empresarial <span class="req">*</span></label>
+        <input type="text" id="f_nome" placeholder="Razão social ou nome fantasia">
+      </div>
+      <div class="form-group">
+        <label>Responsável</label>
+        <input type="text" id="f_responsavel" placeholder="Nome do contato">
+      </div>
+      <div class="form-group">
+        <label>Telefone</label>
+        <input type="text" id="f_telefone" placeholder="(11) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="text" id="f_email" placeholder="contato@empresa.com.br">
+      </div>
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="f_categoria">
+          <option value="Site">Site / Digital</option>
+          <option value="Material de Escritório">Material de Escritório</option>
+          <option value="Tecnologia">Tecnologia / TI</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Avaliação (1–5 ⭐)</label>
+        <select id="f_avaliacao">
+          <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+          <option value="4">⭐⭐⭐⭐ Bom</option>
+          <option value="3">⭐⭐⭐ Regular</option>
+          <option value="2">⭐⭐ Ruim</option>
+          <option value="1">⭐ Péssimo</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Observações</label>
+        <textarea id="f_obs" placeholder="Histórico, condições especiais, notas..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvarFornecedor()">💾 Salvar Fornecedor</button>
+      <button class="btn btn-secondary" onclick="limparFormFornecedor()">↺ Limpar</button>
+    </div>
+  </div>
+
+  <div class="filter-row" id="fornFilters">
+    <span class="filter-chip active" onclick="filtrarForn('Todos', this)">Todos</span>
+    <span class="filter-chip" onclick="filtrarForn('Site', this)">Site / Digital</span>
+    <span class="filter-chip" onclick="filtrarForn('Material de Escritório', this)">Material de Escritório</span>
+    <span class="filter-chip" onclick="filtrarForn('Tecnologia', this)">Tecnologia</span>
+    <span class="filter-chip" onclick="filtrarForn('Outros', this)">Outros</span>
+  </div>
+
+  <div class="suppliers-grid" id="fornecedoresGrid">
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">🏢</div>
+      <h4>Nenhum fornecedor cadastrado</h4>
+      <p>Cadastre o primeiro fornecedor acima.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO 3: COMPRAS GIMBA -->
+<div id="panel-compras" class="panel">
+  <div class="panel-title">Checklist de Compras — Gimba</div>
+  <div class="panel-sub">Controle operacional de compras com checklist estruturado para aprovação pela chefia.</div>
+
+  <div class="checklist-header">
+    <div>
+      <button class="btn btn-primary" onclick="novaLista()">➕ Nova Lista</button>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-secondary btn-sm" onclick="compartilharLink()">🔗 Copiar Link de Compartilhamento</button>
+      <button class="btn btn-teal btn-sm" onclick="downloadListaAprovada()">⬇️ Baixar Lista Aprovada</button>
+    </div>
+  </div>
+
+  <div class="checklist-meta" id="checklistMeta">
+    <div class="form-group">
+      <label>Data da Solicitação <span class="req">*</span></label>
+      <input type="date" id="c_data">
+    </div>
+    <div class="form-group">
+      <label>Responsável <span class="req">*</span></label>
+      <input type="text" id="c_responsavel" placeholder="Nome de quem está solicitando">
+    </div>
+    <div class="form-group">
+      <label>Nome da Lista</label>
+      <input type="text" id="c_nome" placeholder="Ex: Compras de Janeiro">
+    </div>
+    <div class="form-group full">
+      <label>Observação Geral <span class="req">*</span></label>
+      <input type="text" id="c_obs" placeholder="Contexto / urgência / observações gerais da lista">
+    </div>
+  </div>
+
+  <div class="checklist-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th width="40">✓</th>
+          <th>Item / Produto</th>
+          <th>Qtd. Atual em Estoque</th>
+          <th>Qtd. Necessária</th>
+          <th>Link do Produto (Gimba)</th>
+          <th>Observação</th>
+          <th width="60">Ação</th>
+        </tr>
+      </thead>
+      <tbody id="checklistBody"></tbody>
+    </table>
+    <div class="add-item-row" id="addItemRow">
+      <input type="text" id="ci_item" placeholder="Nome do produto">
+      <input type="number" id="ci_atual" placeholder="Qtd. atual">
+      <input type="number" id="ci_necessario" placeholder="Qtd. necessária">
+      <input type="text" id="ci_link" placeholder="Link Gimba">
+      <input type="text" id="ci_obs" placeholder="Observação">
+      <button class="btn btn-primary btn-sm" onclick="adicionarItem()">+ Add</button>
+    </div>
+  </div>
+
+  <div style="background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;">
+    <div style="padding:16px 24px;border-bottom:1px solid var(--border);">
+      <strong style="font-size:13px;">Status da Lista:</strong>
+    </div>
+    <div class="status-flow">
+      <span class="status-step active" id="ss1" onclick="setStatus('Em análise')">📋 Em análise</span>
+      <span class="arrow">→</span>
+      <span class="status-step" id="ss2" onclick="setStatus('Aprovado pela Chefia')">✅ Aprovado pela Chefia</span>
+      <span class="arrow">→</span>
+      <span class="status-step" id="ss3" onclick="setStatus('Ajustar')">✏️ Ajustar</span>
+      <span class="arrow">→</span>
+      <span class="status-step" id="ss4" onclick="setStatus('Finalizado')">🏁 Finalizado</span>
+    </div>
+    <div style="padding:12px 24px;background:var(--cream);border-top:1px solid var(--border);">
+      <strong style="font-size:12px;">Status Atual: </strong>
+      <span id="statusAtual" class="badge badge-pending">Em análise</span>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="salvarLista()">💾 Salvar Lista</button>
+    <button class="btn btn-secondary" onclick="carregarListas()">📂 Ver Listas Salvas</button>
+    <button class="btn btn-teal" onclick="downloadListaAprovada()">⬇️ Exportar PDF</button>
+  </div>
+
+  <div id="listasGrid" style="margin-top:24px;"></div>
+</div>
+
+</main>
+
+<!-- Report Modal -->
+<div id="reportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;padding:30px;">
+  <div style="max-width:800px;margin:0 auto;">
+    <div class="report-preview">
+      <div class="report-preview-header">
+        <span style="font-weight:600;">📄 Relatório Formal</span>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Imprimir / PDF</button>
+          <button class="btn btn-danger btn-sm" onclick="document.getElementById('reportModal').style.display='none'">✕ Fechar</button>
+        </div>
+      </div>
+      <div class="report-body" id="reportBody"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-    function processarV8() {
-        const item = document.getElementById('mainItem').value;
-        if(!item) return alert("Cássia, digite o nome do produto.");
+let state = {
+  orcamentos: [],
+  fornecedores: [],
+  listas: [],
+  checklistItems: [],
+  checklistStatus: 'Em análise',
+  editingOrc: null,
+  editingForn: null,
+  filtroSite: 'todos',
+  filtroForn: 'Todos'
+};
 
-        const dados = [
-            { loja: "KALUNGA", link: document.getElementById('link1').value, preco: parseFloat(document.getElementById('price1').value) || 0 },
-            { loja: "GIMBA", link: document.getElementById('link2').value, preco: parseFloat(document.getElementById('price2').value) || 0 },
-            { loja: "AMAZON", link: document.getElementById('link3').value, preco: parseFloat(document.getElementById('price3').value) || 0 },
-            { loja: "KABUM!", link: document.getElementById('link4').value, preco: parseFloat(document.getElementById('price4').value) || 0 },
-            { loja: "OUTRO", link: document.getElementById('link5').value, preco: parseFloat(document.getElementById('price5').value) || 0 }
-        ].filter(d => d.preco > 0);
+async function loadData() {
+  try { const r1 = await window.storage.get('oab-orcamentos'); if (r1) state.orcamentos = JSON.parse(r1.value); } catch(e) {}
+  try { const r2 = await window.storage.get('oab-fornecedores'); if (r2) state.fornecedores = JSON.parse(r2.value); } catch(e) {}
+  try { const r3 = await window.storage.get('oab-listas'); if (r3) state.listas = JSON.parse(r3.value); } catch(e) {}
+  updateDash();
+  renderOrcamentos();
+  renderFornecedores();
+  renderListasGrid();
+}
 
-        if(dados.length < 3) return alert("Cássia, insira pelo menos 3 orçamentos para compliance.");
+async function persist(key, data) {
+  try { await window.storage.set(key, JSON.stringify(data)); } catch(e) { console.warn('Storage error', e); }
+}
 
-        // Acha o menor preço
-        const vencedor = dados.reduce((prev, curr) => (prev.preco < curr.preco) ? prev : curr);
+function toast(msg, type='success') {
+  const c = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${type==='success'?'✅':type==='error'?'❌':'ℹ️'}</span> ${msg}`;
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
 
-        const dataAtual = new Date().toLocaleDateString('pt-br');
+function fmt(val) {
+  return parseFloat(val).toLocaleString('pt-br', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
 
-        let html = `
-            <p><strong>PRODUTO:</strong> ${item.toUpperCase()}</p>
-            <p><strong>DATA DA COTAÇÃO:</strong> ${dataAtual}</p>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>FORNECEDOR</th>
-                        <th>VALOR UNITÁRIO</th>
-                        <th>REFERÊNCIA (LINK)</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
+function badgeHtml(status) {
+  const map = { 'pendente':'badge-pending','aprovado':'badge-approved','reprovado':'badge-rejected','ajustar':'badge-adjust','Finalizado':'badge-done','Em análise':'badge-pending','Aprovado pela Chefia':'badge-approved','Ajustar':'badge-adjust' };
+  const labels = { pendente:'Pendente', aprovado:'Aprovado', reprovado:'Reprovado' };
+  const cls = map[status] || 'badge-pending';
+  const label = labels[status] || status;
+  return `<span class="badge ${cls}">${label}</span>`;
+}
 
-        dados.forEach(d => {
-            const isWinner = d.preco === vencedor.preco;
-            html += `
-                <tr class="${isWinner ? 'winner' : ''}">
-                    <td>${d.loja} ${isWinner ? ' (VENCEDOR)' : ''}</td>
-                    <td>R$ ${d.preco.toLocaleString('pt-br', {minimumFractionDigits: 2})}</td>
-                    <td style="font-size: 10px; word-break: break-all;">${d.link || 'Informado em anexo'}</td>
-                </tr>
-            `;
-        });
+function updateDash() {
+  document.getElementById('statOrcamentos').textContent = state.orcamentos.length;
+  document.getElementById('statAprovados').textContent = state.orcamentos.filter(o=>o.status==='aprovado').length;
+  document.getElementById('statFornecedores').textContent = state.fornecedores.length;
+  document.getElementById('statCompras').textContent = state.listas.length;
+}
 
-        html += `
-                </tbody>
-            </table>
-            <div style="margin-top: 30px; padding: 20px; border: 1px solid #000;">
-                <p><strong>PARECER TÉCNICO:</strong></p>
-                <p>Após consulta às bases de fornecedores homologados, a proposta enviada pela <strong>${vencedor.loja}</strong> 
-                apresentou a maior vantagem econômica para a <strong>OAB Santana de Parnaíba</strong>, totalizando o valor unitário de 
-                <strong>R$ ${vencedor.preco.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>.</p>
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function salvarOrcamento() {
+  const num = document.getElementById('s_num').value.trim();
+  const fornecedor = document.getElementById('s_fornecedor').value.trim();
+  const descricao = document.getElementById('s_descricao').value.trim();
+  const obs = document.getElementById('s_obs').value.trim();
+  const valor = parseFloat(document.getElementById('s_valor').value);
+  if(!num || !fornecedor || !descricao || !obs || isNaN(valor)) { toast('Preencha todos os campos obrigatórios (marcados com *).', 'error'); return; }
+  const orc = {
+    id: state.editingOrc || Date.now().toString(),
+    num, data: document.getElementById('s_data').value,
+    fornecedor, cnpj: document.getElementById('s_cnpj').value,
+    descricao, valor, prazo: document.getElementById('s_prazo').value,
+    pagamento: document.getElementById('s_pagamento').value,
+    status: document.getElementById('s_status').value, obs,
+    criadoEm: new Date().toISOString()
+  };
+  if(state.editingOrc) {
+    const idx = state.orcamentos.findIndex(o=>o.id===state.editingOrc);
+    if(idx>=0) state.orcamentos[idx] = orc;
+    state.editingOrc = null;
+    toast('Orçamento atualizado com sucesso.');
+  } else {
+    state.orcamentos.push(orc);
+    toast('Orçamento salvo com sucesso.');
+  }
+  persist('oab-orcamentos', state.orcamentos);
+  limparFormSite();
+  renderOrcamentos();
+  updateDash();
+}
+
+function limparFormSite() {
+  ['s_num','s_data','s_fornecedor','s_cnpj','s_descricao','s_valor','s_prazo','s_pagamento','s_obs'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  document.getElementById('s_status').value = 'pendente';
+  state.editingOrc = null;
+}
+
+function filtrarSite(f, chip) {
+  state.filtroSite = f;
+  document.querySelectorAll('#siteFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  renderOrcamentos();
+}
+
+function renderOrcamentos() {
+  const search = (document.getElementById('searchSite')?.value||'').toLowerCase();
+  let list = state.orcamentos;
+  if(state.filtroSite !== 'todos') list = list.filter(o=>o.status===state.filtroSite);
+  if(search) list = list.filter(o=> o.fornecedor.toLowerCase().includes(search) || o.num.toLowerCase().includes(search) || o.descricao.toLowerCase().includes(search));
+  const tb = document.getElementById('tabelaOrcamentos');
+  if(!list.length) { tb.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><h4>Nenhum resultado</h4><p>Tente ajustar os filtros ou cadastre novos orçamentos.</p></div></td></tr>`; return; }
+  tb.innerHTML = list.map(o => `
+    <tr>
+      <td><code style="font-size:12px;">${o.num}</code></td>
+      <td>${o.data ? new Date(o.data+'T12:00').toLocaleDateString('pt-br') : '—'}</td>
+      <td><strong>${o.fornecedor}</strong><br><span style="font-size:11px;color:var(--slate);">${o.cnpj||''}</span></td>
+      <td style="max-width:200px;white-space:normal;font-size:12px;">${o.descricao}</td>
+      <td><strong>R$ ${fmt(o.valor)}</strong></td>
+      <td>${o.prazo||'—'}</td>
+      <td>${badgeHtml(o.status)}</td>
+      <td><div style="display:flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="editarOrc('${o.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="excluirOrc('${o.id}')">🗑</button></div></td>
+    </tr>
+  `).join('');
+  renderComparativo(list);
+}
+
+function editarOrc(id) {
+  const o = state.orcamentos.find(x=>x.id===id);
+  if(!o) return;
+  document.getElementById('s_num').value = o.num;
+  document.getElementById('s_data').value = o.data;
+  document.getElementById('s_fornecedor').value = o.fornecedor;
+  document.getElementById('s_cnpj').value = o.cnpj||'';
+  document.getElementById('s_descricao').value = o.descricao;
+  document.getElementById('s_valor').value = o.valor;
+  document.getElementById('s_prazo').value = o.prazo||'';
+  document.getElementById('s_pagamento').value = o.pagamento||'';
+  document.getElementById('s_status').value = o.status;
+  document.getElementById('s_obs').value = o.obs||'';
+  state.editingOrc = id;
+  window.scrollTo({top:0, behavior:'smooth'});
+  toast('Editando orçamento. Faça as alterações e salve.', 'info');
+}
+
+function excluirOrc(id) {
+  if(!confirm('Tem certeza que deseja excluir este orçamento?')) return;
+  state.orcamentos = state.orcamentos.filter(o=>o.id!==id);
+  persist('oab-orcamentos', state.orcamentos);
+  renderOrcamentos();
+  updateDash();
+  toast('Orçamento excluído.');
+}
+
+function renderComparativo(list) {
+  const sec = document.getElementById('compareSection');
+  if(list.length < 2) { sec.style.display='none'; return; }
+  sec.style.display = 'block';
+  const sorted = [...list].sort((a,b)=>a.valor-b.valor);
+  const winner = sorted[0];
+  document.getElementById('compareContent').innerHTML = `
+    <table>
+      <thead><tr><th>Fornecedor</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
+      <tbody>
+        ${sorted.map(o=>`<tr class="${o.id===winner.id?'winner-row':''}"><td>${o.fornecedor} ${o.id===winner.id?'🏆 <strong>(Menor Valor)</strong>':''}</td><td><strong>R$ ${fmt(o.valor)}</strong></td><td>${o.prazo||'—'}</td><td>${o.pagamento||'—'}</td><td>${badgeHtml(o.status)}</td></tr>`).join('')}
+      </tbody>
+    </table>
+    <p style="margin-top:16px;font-size:13px;color:var(--slate);">ℹ️ A proposta da <strong>${winner.fornecedor}</strong> apresenta o menor valor: <strong>R$ ${fmt(winner.valor)}</strong>. ${sorted[1] ? `Economia em relação ao segundo: <strong>R$ ${fmt(sorted[1].valor - winner.valor)}</strong>.` : ''}</p>
+  `;
+}
+
+function gerarRelatorioPDF() {
+  if(!state.orcamentos.length) { toast('Nenhum orçamento para gerar relatório.', 'error'); return; }
+  const sorted = [...state.orcamentos].sort((a,b)=>a.valor-b.valor);
+  const winner = sorted[0];
+  const hoje = new Date().toLocaleDateString('pt-br');
+  document.getElementById('reportBody').innerHTML = `
+    <div class="report-oab-header">
+      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2>
+      <p>Subseção Santana de Parnaíba</p>
+      <p style="font-size:13px;font-weight:bold;margin-top:8px;">MAPA COMPARATIVO DE PREÇOS — ORÇAMENTOS PARA SITES</p>
+      <p style="font-size:12px;color:var(--slate);margin-top:4px;">Gerado em: ${hoje}</p>
+    </div>
+    <table>
+      <thead><tr><th>Nº</th><th>Fornecedor</th><th>Serviço</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
+      <tbody>${sorted.map(o=>`<tr style="${o.id===winner.id?'background:#e6fff0;':''}"><td>${o.num}</td><td><strong>${o.fornecedor}</strong>${o.id===winner.id?' ✅':''}</td><td style="font-size:12px;">${o.descricao}</td><td><strong>R$ ${fmt(o.valor)}</strong></td><td>${o.prazo||'—'}</td><td style="font-size:12px;">${o.pagamento||'—'}</td><td>${o.status.toUpperCase()}</td></tr>`).join('')}</tbody>
+    </table>
+    <div style="margin-top:30px;padding:20px;border:1px solid #000;">
+      <p><strong>PARECER TÉCNICO:</strong></p>
+      <p style="margin-top:10px;font-size:13px;">Após análise comparativa das propostas recebidas, a proposta da fornecedora <strong>${winner.fornecedor}</strong> apresentou o menor valor global, totalizando <strong>R$ ${fmt(winner.valor)}</strong>, sendo indicada para aprovação junto à chefia da OAB Santana de Parnaíba.</p>
+    </div>
+    <div style="margin-top:60px;text-align:center;">
+      <p>________________________________________________________________</p>
+      <p style="font-size:13px;"><strong>RESPONSÁVEL PELA COTAÇÃO</strong></p>
+      <p style="font-size:10px;margin-top:6px;color:var(--slate);">Documento gerado eletronicamente pelo Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>
+    </div>
+  `;
+  document.getElementById('reportModal').style.display = 'block';
+}
+
+function salvarFornecedor() {
+  const nome = document.getElementById('f_nome').value.trim();
+  if(!nome) { toast('O nome do fornecedor é obrigatório.', 'error'); return; }
+  const forn = {
+    id: state.editingForn || Date.now().toString(),
+    nome, responsavel: document.getElementById('f_responsavel').value,
+    telefone: document.getElementById('f_telefone').value,
+    email: document.getElementById('f_email').value,
+    categoria: document.getElementById('f_categoria').value,
+    avaliacao: parseInt(document.getElementById('f_avaliacao').value),
+    obs: document.getElementById('f_obs').value,
+    criadoEm: new Date().toISOString()
+  };
+  if(state.editingForn) {
+    const idx = state.fornecedores.findIndex(f=>f.id===state.editingForn);
+    if(idx>=0) state.fornecedores[idx] = forn;
+    state.editingForn = null;
+    toast('Fornecedor atualizado.');
+  } else {
+    state.fornecedores.push(forn);
+    toast('Fornecedor cadastrado.');
+  }
+  persist('oab-fornecedores', state.fornecedores);
+  limparFormFornecedor();
+  renderFornecedores();
+  updateDash();
+}
+
+function limparFormFornecedor() {
+  ['f_nome','f_responsavel','f_telefone','f_email','f_obs'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f_categoria').value='Site';
+  document.getElementById('f_avaliacao').value='5';
+  state.editingForn=null;
+}
+
+function filtrarForn(cat, chip) {
+  state.filtroForn = cat;
+  document.querySelectorAll('#fornFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  renderFornecedores();
+}
+
+function renderFornecedores() {
+  let list = state.fornecedores;
+  if(state.filtroForn !== 'Todos') list = list.filter(f=>f.categoria===state.filtroForn);
+  const grid = document.getElementById('fornecedoresGrid');
+  if(!list.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🏢</div><h4>Nenhum fornecedor nesta categoria</h4><p>Ajuste o filtro ou cadastre um fornecedor.</p></div>`; return; }
+  grid.innerHTML = list.map(f => `
+    <div class="supplier-card">
+      <div class="sc-top">
+        <div class="supplier-avatar">${f.nome.charAt(0).toUpperCase()}</div>
+        <div class="sc-actions">
+          <button class="btn btn-secondary btn-sm" onclick="editarForn('${f.id}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="excluirForn('${f.id}')">🗑</button>
+        </div>
+      </div>
+      <h4>${f.nome}</h4>
+      <div class="sc-cat">${f.categoria}</div>
+      ${f.responsavel ? `<div class="sc-detail">👤 <span>${f.responsavel}</span></div>` : ''}
+      ${f.telefone ? `<div class="sc-detail">📞 <span>${f.telefone}</span></div>` : ''}
+      ${f.email ? `<div class="sc-detail">📧 <span>${f.email}</span></div>` : ''}
+      <div class="stars">${'⭐'.repeat(f.avaliacao)}</div>
+      ${f.obs ? `<div style="margin-top:10px;font-size:12px;color:var(--slate);padding-top:10px;border-top:1px solid var(--border);">${f.obs}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function editarForn(id) {
+  const f = state.fornecedores.find(x=>x.id===id);
+  if(!f) return;
+  document.getElementById('f_nome').value = f.nome;
+  document.getElementById('f_responsavel').value = f.responsavel||'';
+  document.getElementById('f_telefone').value = f.telefone||'';
+  document.getElementById('f_email').value = f.email||'';
+  document.getElementById('f_categoria').value = f.categoria;
+  document.getElementById('f_avaliacao').value = f.avaliacao;
+  document.getElementById('f_obs').value = f.obs||'';
+  state.editingForn = id;
+  window.scrollTo({top:0, behavior:'smooth'});
+  toast('Editando fornecedor.', 'info');
+}
+
+function excluirForn(id) {
+  if(!confirm('Excluir este fornecedor?')) return;
+  state.fornecedores = state.fornecedores.filter(f=>f.id!==id);
+  persist('oab-fornecedores', state.fornecedores);
+  renderFornecedores();
+  updateDash();
+  toast('Fornecedor removido.');
+}
+
+function adicionarItem() {
+  const item = document.getElementById('ci_item').value.trim();
+  if(!item) { toast('Informe o nome do produto.','error'); return; }
+  state.checklistItems.push({
+    id: Date.now().toString(),
+    item,
+    atual: document.getElementById('ci_atual').value,
+    necessario: document.getElementById('ci_necessario').value,
+    link: document.getElementById('ci_link').value,
+    obs: document.getElementById('ci_obs').value,
+    checked: false
+  });
+  ['ci_item','ci_atual','ci_necessario','ci_link','ci_obs'].forEach(id=>{ document.getElementById(id).value=''; });
+  renderChecklist();
+}
+
+function renderChecklist() {
+  const body = document.getElementById('checklistBody');
+  if(!state.checklistItems.length) { body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">📦</div><h4>Nenhum item ainda</h4><p>Adicione itens usando a linha abaixo da tabela.</p></div></td></tr>`; return; }
+  body.innerHTML = state.checklistItems.map(r=>`
+    <tr class="${r.checked?'item-checked':''}">
+      <td style="text-align:center;"><input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}', this.checked)"></td>
+      <td><strong>${r.item}</strong></td>
+      <td>${r.atual||'—'}</td>
+      <td>${r.necessario||'—'}</td>
+      <td style="font-size:12px;">${r.link ? `<a href="${r.link}" target="_blank" style="color:var(--teal);">🔗 Ver produto</a>` : '—'}</td>
+      <td style="font-size:12px;">${r.obs||'—'}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="removerItem('${r.id}')">🗑</button></td>
+    </tr>
+  `).join('');
+}
+
+function toggleItem(id, val) {
+  const item = state.checklistItems.find(r=>r.id===id);
+  if(item) item.checked = val;
+  renderChecklist();
+}
+
+function removerItem(id) {
+  state.checklistItems = state.checklistItems.filter(r=>r.id!==id);
+  renderChecklist();
+}
+
+function novaLista() {
+  state.checklistItems = [];
+  state.checklistStatus = 'Em análise';
+  ['c_data','c_responsavel','c_nome','c_obs'].forEach(id=>{ document.getElementById(id).value=''; });
+  setStatus('Em análise');
+  renderChecklist();
+  toast('Nova lista iniciada.','info');
+}
+
+function setStatus(s) {
+  state.checklistStatus = s;
+  document.querySelectorAll('.status-step').forEach(el=>el.classList.remove('active'));
+  const map = {'Em análise':'ss1','Aprovado pela Chefia':'ss2','Ajustar':'ss3','Finalizado':'ss4'};
+  if(map[s]) document.getElementById(map[s]).classList.add('active');
+  const badgeMap = {'Em análise':'badge-pending','Aprovado pela Chefia':'badge-approved','Ajustar':'badge-adjust','Finalizado':'badge-done'};
+  document.getElementById('statusAtual').className = `badge ${badgeMap[s]||'badge-pending'}`;
+  document.getElementById('statusAtual').textContent = s;
+}
+
+function salvarLista() {
+  const resp = document.getElementById('c_responsavel').value.trim();
+  const obs = document.getElementById('c_obs').value.trim();
+  if(!resp || !obs) { toast('Preencha responsável e observação geral.','error'); return; }
+  if(!state.checklistItems.length) { toast('Adicione ao menos um item na lista.','error'); return; }
+  const lista = {
+    id: Date.now().toString(),
+    data: document.getElementById('c_data').value,
+    responsavel: resp,
+    nome: document.getElementById('c_nome').value || `Lista de ${resp}`,
+    obs, status: state.checklistStatus,
+    items: [...state.checklistItems],
+    criadoEm: new Date().toISOString()
+  };
+  state.listas.push(lista);
+  persist('oab-listas', state.listas);
+  updateDash();
+  toast('Lista salva com sucesso!');
+  renderListasGrid();
+}
+
+function carregarListas() {
+  renderListasGrid();
+  document.getElementById('listasGrid').scrollIntoView({behavior:'smooth'});
+}
+
+function renderListasGrid() {
+  const el = document.getElementById('listasGrid');
+  if(!state.listas.length) { el.innerHTML=''; return; }
+  el.innerHTML = `
+    <h3 style="font-family:'Playfair Display',serif;margin-bottom:16px;">Listas Salvas</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;">
+      ${state.listas.map(l=>`
+        <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow);">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
+            <div>
+              <strong style="font-size:14px;">${l.nome}</strong>
+              <div style="font-size:12px;color:var(--slate);margin-top:2px;">${l.data ? new Date(l.data+'T12:00').toLocaleDateString('pt-br') : ''} · ${l.responsavel}</div>
             </div>
-        `;
+            <button class="btn btn-danger btn-sm" onclick="excluirLista('${l.id}')">🗑</button>
+          </div>
+          ${badgeHtml(l.status)}
+          <div style="margin-top:12px;font-size:12px;color:var(--slate);">📦 ${l.items.length} item(ns)</div>
+          <div style="margin-top:8px;font-size:12px;color:var(--slate);">${l.obs}</div>
+          <div style="margin-top:14px;display:flex;gap:6px;">
+            <button class="btn btn-secondary btn-sm" onclick="carregarListaParaEdicao('${l.id}')">📂 Carregar</button>
+            <button class="btn btn-teal btn-sm" onclick="exportarListaPDF('${l.id}')">📄 PDF</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
-        document.getElementById('reportContent').innerHTML = html;
-        document.getElementById('reportArea').style.display = 'block';
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
+function excluirLista(id) {
+  if(!confirm('Excluir esta lista?')) return;
+  state.listas = state.listas.filter(l=>l.id!==id);
+  persist('oab-listas', state.listas);
+  renderListasGrid();
+  updateDash();
+  toast('Lista excluída.');
+}
+
+function carregarListaParaEdicao(id) {
+  const l = state.listas.find(x=>x.id===id);
+  if(!l) return;
+  document.getElementById('c_data').value = l.data;
+  document.getElementById('c_responsavel').value = l.responsavel;
+  document.getElementById('c_nome').value = l.nome;
+  document.getElementById('c_obs').value = l.obs;
+  state.checklistItems = [...l.items];
+  setStatus(l.status);
+  renderChecklist();
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast('Lista carregada.','info');
+}
+
+function downloadListaAprovada() {
+  if(!state.checklistItems.length) { toast('Nenhum item na lista atual.','error'); return; }
+  exportarListaAtualPDF();
+}
+
+function exportarListaAtualPDF() {
+  const resp = document.getElementById('c_responsavel').value || '—';
+  const nome = document.getElementById('c_nome').value || 'Lista de Compras';
+  const obs = document.getElementById('c_obs').value || '—';
+  const hoje = new Date().toLocaleDateString('pt-br');
+  document.getElementById('reportBody').innerHTML = `
+    <div class="report-oab-header">
+      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2>
+      <p>Subseção Santana de Parnaíba</p>
+      <p style="font-size:13px;font-weight:bold;margin-top:8px;">LISTA DE COMPRAS — GIMBA</p>
+      <p style="font-size:12px;color:var(--slate);margin-top:4px;">Responsável: ${resp} · Gerado em: ${hoje}</p>
+    </div>
+    <p><strong>Lista:</strong> ${nome}</p>
+    <p><strong>Observação Geral:</strong> ${obs}</p>
+    <p><strong>Status:</strong> ${state.checklistStatus}</p>
+    <table style="margin-top:20px;">
+      <thead><tr><th>✓</th><th>Item</th><th>Qtd. Atual</th><th>Qtd. Necessária</th><th>Link</th><th>Observação</th></tr></thead>
+      <tbody>${state.checklistItems.map(r=>`<tr><td>${r.checked?'✅':'☐'}</td><td>${r.item}</td><td>${r.atual||'—'}</td><td>${r.necessario||'—'}</td><td style="font-size:11px;word-break:break-all;">${r.link||'—'}</td><td>${r.obs||'—'}</td></tr>`).join('')}</tbody>
+    </table>
+    <div style="margin-top:60px;text-align:center;">
+      <p>________________________________________________________________</p>
+      <p style="font-size:13px;"><strong>RESPONSÁVEL PELA COTAÇÃO</strong></p>
+      <p style="font-size:11px;margin-top:16px;">________________________________________________________________</p>
+      <p style="font-size:13px;"><strong>APROVAÇÃO — CHEFIA</strong></p>
+      <p style="font-size:10px;margin-top:12px;color:var(--slate);">Documento gerado eletronicamente pelo Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>
+    </div>
+  `;
+  document.getElementById('reportModal').style.display='block';
+}
+
+function exportarListaPDF(id) {
+  const l = state.listas.find(x=>x.id===id);
+  if(!l) return;
+  state.checklistItems = l.items;
+  document.getElementById('c_responsavel').value = l.responsavel;
+  document.getElementById('c_nome').value = l.nome;
+  document.getElementById('c_obs').value = l.obs;
+  state.checklistStatus = l.status;
+  exportarListaAtualPDF();
+}
+
+function compartilharLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(()=>{ toast('Link copiado! Compartilhe com a chefia para revisão.','info'); }).catch(()=>{ toast('Link: ' + url, 'info'); });
+}
+
+function init() {
+  const now = new Date();
+  document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-br', {weekday:'short',year:'numeric',month:'long',day:'numeric'});
+  const today = now.toISOString().split('T')[0];
+  ['s_data','c_data'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=today; });
+  loadData();
+  renderChecklist();
+}
+
+init();
 </script>
-
 </body>
 </html>
