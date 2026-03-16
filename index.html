@@ -155,6 +155,9 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
 .report-oab-header{text-align:center;padding-bottom:24px;border-bottom:2px solid var(--ink);margin-bottom:30px;}
 .report-oab-header h2{font-family:'Playfair Display',serif;font-size:20px;}
 
+/* Destaque lista salva ativa */
+.lista-card-ativa{border-color:var(--gold) !important;background:var(--gold-pale) !important;}
+
 @media print{.site-header,.dashboard-bar,.sync-bar,.print-hide{display:none!important;}body{background:white;}.report-body{padding:20px;}}
 @media(max-width:768px){.site-header{padding:0 16px;}.main{padding:16px;}.add-item-bar{grid-template-columns:1fr 1fr;}.dashboard-bar{padding:16px;}}
 </style>
@@ -191,6 +194,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
 
 <main class="main">
 
+<!-- PAINEL: ORÇAMENTOS SITES -->
 <div id="panel-site" class="panel active">
   <div class="panel-title">Orçamentos para Sites</div>
   <div class="panel-sub">Registre e compare propostas. O sistema aponta automaticamente o menor preço.</div>
@@ -236,6 +240,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
   </div>
 </div>
 
+<!-- PAINEL: FORNECEDORES -->
 <div id="panel-fornecedores" class="panel">
   <div class="panel-title">Gestão de Fornecedores</div>
   <div class="panel-sub">Cadastro e controle estratégico de fornecedores homologados.</div>
@@ -271,17 +276,22 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
   </div>
 </div>
 
+<!-- PAINEL: COMPRAS GIMBA -->
 <div id="panel-compras" class="panel">
   <div class="panel-title">Compras Gimba</div>
-  <div class="panel-sub">Você preenche o estoque → envia para a chefe → ela coloca a quantidade a comprar → aprovado!</div>
+  <div class="panel-sub">Você preenche o estoque → salva → envia para a chefe → ela coloca a quantidade a comprar → aprovado!</div>
+
+  <!-- LISTAS SALVAS -->
   <div id="listasGrid" style="margin-bottom:30px;"></div>
-  <div class="gimba-card">
-    <h3>📦 Nova Lista de Compras</h3>
-    <p class="gimba-subtitle">Preencha os dados abaixo, adicione os produtos e envie o link para sua chefe aprovar.</p>
+
+  <!-- FORMULÁRIO DE NOVA LISTA -->
+  <div class="gimba-card" id="gimbaForm">
+    <h3 id="gimbaFormTitle">📦 Nova Lista de Compras</h3>
+    <p class="gimba-subtitle">Preencha os dados abaixo, adicione os produtos e clique em <strong>Salvar Lista</strong>.</p>
     <div class="gimba-meta">
       <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="c_data"></div>
       <div class="form-group"><label>Responsável <span class="req">*</span></label><input type="text" id="c_responsavel" placeholder="Seu nome (Cássia)"></div>
-      <div class="form-group"><label>Nome da Lista</label><input type="text" id="c_nome" placeholder="Ex: Compras de Fevereiro"></div>
+      <div class="form-group"><label>Nome da Lista</label><input type="text" id="c_nome" placeholder="Ex: Compras de Março"></div>
       <div class="form-group full"><label>Observação Geral <span class="req">*</span></label><input type="text" id="c_obs" placeholder="Ex: Urgente — precisamos antes de sexta"></div>
     </div>
     <div class="gimba-table-wrap">
@@ -301,12 +311,14 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
       </table>
       <div class="add-item-bar">
         <input type="text" id="ci_item" placeholder="Nome do produto">
-        <input type="number" id="ci_atual" placeholder="Qtd. em estoque">
+        <input type="number" id="ci_atual" placeholder="Qtd. em estoque" min="0">
         <input type="text" id="ci_link" placeholder="Link do produto na Gimba">
         <input type="text" id="ci_obs" placeholder="Observação">
         <button class="btn btn-primary btn-sm" onclick="adicionarItem()">+ Add</button>
       </div>
     </div>
+
+    <!-- STATUS FLOW -->
     <div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;">
       <div style="padding:14px 20px;border-bottom:1px solid var(--border);"><strong style="font-size:13px;">Status da Lista:</strong></div>
       <div class="status-flow">
@@ -322,6 +334,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
         <strong style="font-size:12px;">Status atual: </strong><span id="statusAtual" class="badge badge-pending">Cássia preencheu</span>
       </div>
     </div>
+
     <div class="btn-row">
       <button class="btn btn-primary" onclick="salvarLista()">💾 Salvar Lista</button>
       <button class="btn btn-teal print-hide" onclick="enviarParaChefe()">🔗 Enviar Link para Chefe</button>
@@ -333,6 +346,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
 
 </main>
 
+<!-- MODAL: LINK PARA CHEFE -->
 <div id="linkModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;padding:20px;">
   <div style="background:white;border-radius:16px;padding:40px;max-width:500px;width:100%;text-align:center;box-shadow:var(--shadow-lg);">
     <div style="font-size:48px;margin-bottom:16px;">🔗</div>
@@ -353,6 +367,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
   </div>
 </div>
 
+<!-- MODAL: RELATÓRIO PDF -->
 <div id="reportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;padding:30px;">
   <div style="max-width:820px;margin:0 auto;">
     <div class="report-preview">
@@ -372,7 +387,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const _cfg = {
   apiKey: atob("QUl6YVN5Q19sZkJTUzJqWkJOY0UzZlZFQVBILTRuWlR5RllhV0o4"),
@@ -387,6 +402,7 @@ const _cfg = {
 const app = initializeApp(_cfg);
 const db = getDatabase(app);
 
+// ── Estado global ──────────────────────────────────────────────
 const S = {
   orcamentos:{}, fornecedores:{}, listas:{},
   checklistItems:[], checklistStatus:'Cássia preencheu',
@@ -394,34 +410,30 @@ const S = {
   filtroSite:'todos', filtroForn:'Todos'
 };
 
+// ── Helpers ────────────────────────────────────────────────────
 function setSyncStatus(type,msg){
   const bar=document.getElementById('syncBar');
   bar.className='sync-bar '+type;
   document.getElementById('syncMsg').textContent=msg;
 }
 
-onValue(ref(db,'orcamentos'),snap=>{
-  S.orcamentos=snap.val()||{};renderOrcamentos();updateDash();
-  setSyncStatus('ok','✔ Conectado — dados sincronizados em tempo real');
-},err=>setSyncStatus('error','✗ Erro: '+err.message));
-
-onValue(ref(db,'fornecedores'),snap=>{S.fornecedores=snap.val()||{};renderFornecedores();updateDash();});
-onValue(ref(db,'listas'),snap=>{S.listas=snap.val()||{};renderListasGrid();updateDash();});
-
 function toast(msg,type='success'){
   const c=document.getElementById('toastContainer');
   const el=document.createElement('div');
   el.className=`toast ${type}`;
   el.innerHTML=`<span>${type==='success'?'✅':type==='error'?'❌':'ℹ️'}</span> ${msg}`;
-  c.appendChild(el);setTimeout(()=>el.remove(),4500);
+  c.appendChild(el);
+  setTimeout(()=>el.remove(),4500);
 }
 
 function fmt(v){return parseFloat(v||0).toLocaleString('pt-br',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 function badgeHtml(status){
-  const map={pendente:'badge-pending',aprovado:'badge-approved',reprovado:'badge-rejected',
+  const map={
+    pendente:'badge-pending',aprovado:'badge-approved',reprovado:'badge-rejected',
     'Cássia preencheu':'badge-pending','Aguardando Chefia':'badge-adjust',
-    'Aprovado pela Chefia':'badge-approved',Finalizado:'badge-done'};
+    'Aprovado pela Chefia':'badge-approved',Finalizado:'badge-done'
+  };
   const labels={pendente:'Pendente',aprovado:'Aprovado',reprovado:'Reprovado'};
   return `<span class="badge ${map[status]||'badge-pending'}">${labels[status]||status}</span>`;
 }
@@ -434,6 +446,43 @@ function updateDash(){
   document.getElementById('statListas').textContent=Object.keys(S.listas).length;
 }
 
+// ── Firebase listeners ─────────────────────────────────────────
+onValue(ref(db,'orcamentos'),snap=>{
+  S.orcamentos=snap.val()||{};
+  renderOrcamentos();
+  updateDash();
+  setSyncStatus('ok','✔ Conectado — dados sincronizados em tempo real');
+},err=>setSyncStatus('error','✗ Erro: '+err.message));
+
+onValue(ref(db,'fornecedores'),snap=>{
+  S.fornecedores=snap.val()||{};
+  renderFornecedores();
+  updateDash();
+});
+
+onValue(ref(db,'listas'),snap=>{
+  S.listas=snap.val()||{};
+  renderListasGrid();
+  updateDash();
+  // Se estiver editando uma lista, recarregar os itens atualizados do Firebase
+  if(S.editingLista && S.listas[S.editingLista]){
+    const l=S.listas[S.editingLista];
+    // Só sincroniza itens se não há edição local em andamento (items idênticos)
+    const remoteItems=l.items||[];
+    if(JSON.stringify(remoteItems)!==JSON.stringify(S.checklistItems)){
+      // atualiza silenciosamente só as qtdComprar vindas de outro dispositivo
+      remoteItems.forEach(ri=>{
+        const local=S.checklistItems.find(x=>x.id===ri.id);
+        if(local && local.qtdComprar!==ri.qtdComprar){
+          local.qtdComprar=ri.qtdComprar;
+        }
+      });
+      renderChecklist();
+    }
+  }
+});
+
+// ── Navegação entre painéis ────────────────────────────────────
 window.showPanel=(name,btn)=>{
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
@@ -441,43 +490,70 @@ window.showPanel=(name,btn)=>{
   btn.classList.add('active');
 };
 
+// ══════════════════════════════════════════════════════════════
+// ORÇAMENTOS
+// ══════════════════════════════════════════════════════════════
 window.salvarOrcamento=async()=>{
   const num=document.getElementById('s_num').value.trim();
   const fornecedor=document.getElementById('s_fornecedor').value.trim();
   const descricao=document.getElementById('s_descricao').value.trim();
   const obs=document.getElementById('s_obs').value.trim();
   const valor=parseFloat(document.getElementById('s_valor').value);
-  if(!num||!fornecedor||!descricao||!obs||isNaN(valor)){toast('Preencha todos os campos obrigatórios (*).','error');return;}
-  const orc={num,data:document.getElementById('s_data').value,fornecedor,
+  if(!num||!fornecedor||!descricao||!obs||isNaN(valor)){
+    toast('Preencha todos os campos obrigatórios (*).','error');return;
+  }
+  const orc={
+    num,data:document.getElementById('s_data').value,fornecedor,
     cnpj:document.getElementById('s_cnpj').value,descricao,valor,
-    prazo:document.getElementById('s_prazo').value,pagamento:document.getElementById('s_pagamento').value,
-    status:document.getElementById('s_status').value,obs,criadoEm:new Date().toISOString()};
+    prazo:document.getElementById('s_prazo').value,
+    pagamento:document.getElementById('s_pagamento').value,
+    status:document.getElementById('s_status').value,
+    obs,criadoEm:new Date().toISOString()
+  };
   try{
-    if(S.editingOrc){await update(ref(db,'orcamentos/'+S.editingOrc),orc);S.editingOrc=null;toast('Orçamento atualizado! ✅');}
-    else{await push(ref(db,'orcamentos'),orc);toast('Orçamento salvo! ✅');}
+    if(S.editingOrc){
+      await update(ref(db,'orcamentos/'+S.editingOrc),orc);
+      S.editingOrc=null;
+      toast('Orçamento atualizado! ✅');
+    }else{
+      await push(ref(db,'orcamentos'),orc);
+      toast('Orçamento salvo! ✅');
+    }
     limparFormSite();
   }catch(e){toast('Erro: '+e.message,'error');}
 };
 
 window.limparFormSite=()=>{
-  ['s_num','s_fornecedor','s_cnpj','s_descricao','s_valor','s_prazo','s_pagamento','s_obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['s_num','s_fornecedor','s_cnpj','s_descricao','s_valor','s_prazo','s_pagamento','s_obs'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
   document.getElementById('s_data').value=new Date().toISOString().split('T')[0];
-  document.getElementById('s_status').value='pendente';S.editingOrc=null;
+  document.getElementById('s_status').value='pendente';
+  S.editingOrc=null;
 };
 
 window.filtrarSite=(f,chip)=>{
   S.filtroSite=f;
   document.querySelectorAll('#siteFilters .filter-chip').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active');renderOrcamentos();
+  chip.classList.add('active');
+  renderOrcamentos();
 };
 
 function renderOrcamentos(){
   const search=(document.getElementById('searchSite')?.value||'').toLowerCase();
   let list=Object.entries(S.orcamentos).map(([id,o])=>({...o,id}));
   if(S.filtroSite!=='todos')list=list.filter(o=>o.status===S.filtroSite);
-  if(search)list=list.filter(o=>o.fornecedor.toLowerCase().includes(search)||o.num.toLowerCase().includes(search)||o.descricao.toLowerCase().includes(search));
+  if(search)list=list.filter(o=>
+    o.fornecedor.toLowerCase().includes(search)||
+    o.num.toLowerCase().includes(search)||
+    o.descricao.toLowerCase().includes(search)
+  );
   const tb=document.getElementById('tabelaOrc');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><h4>Nenhum orçamento</h4><p>Preencha o formulário acima.</p></div></td></tr>`;document.getElementById('compareSection').style.display='none';return;}
+  if(!list.length){
+    tb.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><h4>Nenhum orçamento</h4><p>Preencha o formulário acima.</p></div></td></tr>`;
+    document.getElementById('compareSection').style.display='none';
+    return;
+  }
   tb.innerHTML=list.map(o=>`<tr>
     <td><code style="font-size:12px;">${o.num}</code></td>
     <td>${o.data?new Date(o.data+'T12:00').toLocaleDateString('pt-br'):'—'}</td>
@@ -496,38 +572,51 @@ function renderOrcamentos(){
 
 window.editarOrc=id=>{
   const o=S.orcamentos[id];if(!o)return;
-  document.getElementById('s_num').value=o.num;document.getElementById('s_data').value=o.data||'';
-  document.getElementById('s_fornecedor').value=o.fornecedor;document.getElementById('s_cnpj').value=o.cnpj||'';
-  document.getElementById('s_descricao').value=o.descricao;document.getElementById('s_valor').value=o.valor;
-  document.getElementById('s_prazo').value=o.prazo||'';document.getElementById('s_pagamento').value=o.pagamento||'';
-  document.getElementById('s_status').value=o.status;document.getElementById('s_obs').value=o.obs||'';
-  S.editingOrc=id;window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('s_num').value=o.num;
+  document.getElementById('s_data').value=o.data||'';
+  document.getElementById('s_fornecedor').value=o.fornecedor;
+  document.getElementById('s_cnpj').value=o.cnpj||'';
+  document.getElementById('s_descricao').value=o.descricao;
+  document.getElementById('s_valor').value=o.valor;
+  document.getElementById('s_prazo').value=o.prazo||'';
+  document.getElementById('s_pagamento').value=o.pagamento||'';
+  document.getElementById('s_status').value=o.status;
+  document.getElementById('s_obs').value=o.obs||'';
+  S.editingOrc=id;
+  window.scrollTo({top:0,behavior:'smooth'});
   toast('Editando orçamento — altere e salve.','info');
 };
 
 window.excluirOrc=async id=>{
   if(!confirm('Excluir este orçamento?\n\nEsta ação não pode ser desfeita.'))return;
-  try{await remove(ref(db,'orcamentos/'+id));toast('Excluído.');}catch(e){toast('Erro: '+e.message,'error');}
+  try{await remove(ref(db,'orcamentos/'+id));toast('Excluído.');}
+  catch(e){toast('Erro: '+e.message,'error');}
 };
 
 function renderComparativo(list){
   const sec=document.getElementById('compareSection');
   if(list.length<2){sec.style.display='none';return;}
   sec.style.display='block';
-  const sorted=[...list].sort((a,b)=>a.valor-b.valor);const w=sorted[0];
+  const sorted=[...list].sort((a,b)=>a.valor-b.valor);
+  const w=sorted[0];
   document.getElementById('compareContent').innerHTML=`
     <table><thead><tr><th>Fornecedor</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
     <tbody>${sorted.map(o=>`<tr class="${o.id===w.id?'winner-row':''}">
       <td>${o.fornecedor}${o.id===w.id?' 🏆 <strong>(Menor Valor)</strong>':''}</td>
-      <td><strong>R$ ${fmt(o.valor)}</strong></td><td>${o.prazo||'—'}</td><td>${o.pagamento||'—'}</td><td>${badgeHtml(o.status)}</td>
+      <td><strong>R$ ${fmt(o.valor)}</strong></td>
+      <td>${o.prazo||'—'}</td><td>${o.pagamento||'—'}</td>
+      <td>${badgeHtml(o.status)}</td>
     </tr>`).join('')}</tbody></table>
-    <p style="margin-top:14px;font-size:13px;color:var(--slate);">ℹ️ Menor valor: <strong>${w.fornecedor}</strong> — R$ ${fmt(w.valor)}${sorted[1]?`. Economia: R$ ${fmt(sorted[1].valor-w.valor)}`:''}.</p>`;
+    <p style="margin-top:14px;font-size:13px;color:var(--slate);">
+      ℹ️ Menor valor: <strong>${w.fornecedor}</strong> — R$ ${fmt(w.valor)}
+      ${sorted[1]?`. Economia: R$ ${fmt(sorted[1].valor-w.valor)}`:''}.</p>`;
 }
 
 window.gerarRelatorioSites=()=>{
   const list=Object.values(S.orcamentos);
   if(!list.length){toast('Nenhum orçamento.','error');return;}
-  const sorted=[...list].sort((a,b)=>a.valor-b.valor);const w=sorted[0];
+  const sorted=[...list].sort((a,b)=>a.valor-b.valor);
+  const w=sorted[0];
   const hoje=new Date().toLocaleDateString('pt-br');
   document.getElementById('reportBody').innerHTML=`
     <div class="report-oab-header">
@@ -538,8 +627,11 @@ window.gerarRelatorioSites=()=>{
     <table><thead><tr><th>Nº</th><th>Fornecedor</th><th>Serviço</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
     <tbody>${sorted.map(o=>`<tr style="${o===w?'background:#e6fff0;':''}">
       <td>${o.num}</td><td><strong>${o.fornecedor}</strong>${o===w?' ✅':''}</td>
-      <td style="font-size:12px;">${o.descricao}</td><td><strong>R$ ${fmt(o.valor)}</strong></td>
-      <td>${o.prazo||'—'}</td><td style="font-size:12px;">${o.pagamento||'—'}</td><td>${o.status.toUpperCase()}</td>
+      <td style="font-size:12px;">${o.descricao}</td>
+      <td><strong>R$ ${fmt(o.valor)}</strong></td>
+      <td>${o.prazo||'—'}</td>
+      <td style="font-size:12px;">${o.pagamento||'—'}</td>
+      <td>${o.status.toUpperCase()}</td>
     </tr>`).join('')}</tbody></table>
     <div style="margin-top:26px;padding:18px;border:1px solid #000;">
       <p><strong>PARECER TÉCNICO:</strong></p>
@@ -553,23 +645,41 @@ window.gerarRelatorioSites=()=>{
   document.getElementById('reportModal').style.display='block';
 };
 
+// ══════════════════════════════════════════════════════════════
+// FORNECEDORES
+// ══════════════════════════════════════════════════════════════
 window.salvarFornecedor=async()=>{
   const nome=document.getElementById('f_nome').value.trim();
   if(!nome){toast('Nome obrigatório.','error');return;}
-  const forn={nome,responsavel:document.getElementById('f_responsavel').value,
-    telefone:document.getElementById('f_telefone').value,email:document.getElementById('f_email').value,
-    categoria:document.getElementById('f_categoria').value,avaliacao:parseInt(document.getElementById('f_avaliacao').value),
-    obs:document.getElementById('f_obs').value,criadoEm:new Date().toISOString()};
+  const forn={
+    nome,
+    responsavel:document.getElementById('f_responsavel').value,
+    telefone:document.getElementById('f_telefone').value,
+    email:document.getElementById('f_email').value,
+    categoria:document.getElementById('f_categoria').value,
+    avaliacao:parseInt(document.getElementById('f_avaliacao').value),
+    obs:document.getElementById('f_obs').value,
+    criadoEm:new Date().toISOString()
+  };
   try{
-    if(S.editingForn){await update(ref(db,'fornecedores/'+S.editingForn),forn);S.editingForn=null;toast('Atualizado!');}
-    else{await push(ref(db,'fornecedores'),forn);toast('Fornecedor salvo!');}
+    if(S.editingForn){
+      await update(ref(db,'fornecedores/'+S.editingForn),forn);
+      S.editingForn=null;toast('Atualizado!');
+    }else{
+      await push(ref(db,'fornecedores'),forn);
+      toast('Fornecedor salvo!');
+    }
     limparFormForn();
   }catch(e){toast('Erro: '+e.message,'error');}
 };
 
 window.limparFormForn=()=>{
-  ['f_nome','f_responsavel','f_telefone','f_email','f_obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('f_categoria').value='Site';document.getElementById('f_avaliacao').value='5';S.editingForn=null;
+  ['f_nome','f_responsavel','f_telefone','f_email','f_obs'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('f_categoria').value='Site';
+  document.getElementById('f_avaliacao').value='5';
+  S.editingForn=null;
 };
 
 window.filtrarForn=(cat,chip)=>{
@@ -582,7 +692,9 @@ function renderFornecedores(){
   let list=Object.entries(S.fornecedores).map(([id,f])=>({...f,id}));
   if(S.filtroForn!=='Todos')list=list.filter(f=>f.categoria===S.filtroForn);
   const grid=document.getElementById('fornGrid');
-  if(!list.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="icon">🏢</div><h4>Nenhum fornecedor</h4><p>Cadastre acima.</p></div>`;return;}
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="icon">🏢</div><h4>Nenhum fornecedor</h4><p>Cadastre acima.</p></div>`;return;
+  }
   grid.innerHTML=list.map(f=>`<div class="supplier-card">
     <div class="sc-top">
       <div class="supplier-avatar">${f.nome.charAt(0).toUpperCase()}</div>
@@ -591,7 +703,8 @@ function renderFornecedores(){
         <button class="btn btn-danger btn-sm" onclick="excluirForn('${f.id}')">🗑</button>
       </div>
     </div>
-    <h4>${f.nome}</h4><div class="sc-cat">${f.categoria}</div>
+    <h4>${f.nome}</h4>
+    <div class="sc-cat">${f.categoria}</div>
     ${f.responsavel?`<div class="sc-detail">👤 <span>${f.responsavel}</span></div>`:''}
     ${f.telefone?`<div class="sc-detail">📞 <span>${f.telefone}</span></div>`:''}
     ${f.email?`<div class="sc-detail">📧 <span>${f.email}</span></div>`:''}
@@ -602,63 +715,97 @@ function renderFornecedores(){
 
 window.editarForn=id=>{
   const f=S.fornecedores[id];if(!f)return;
-  document.getElementById('f_nome').value=f.nome;document.getElementById('f_responsavel').value=f.responsavel||'';
-  document.getElementById('f_telefone').value=f.telefone||'';document.getElementById('f_email').value=f.email||'';
-  document.getElementById('f_categoria').value=f.categoria;document.getElementById('f_avaliacao').value=f.avaliacao;
-  document.getElementById('f_obs').value=f.obs||'';S.editingForn=id;window.scrollTo({top:0,behavior:'smooth'});toast('Editando fornecedor.','info');
+  document.getElementById('f_nome').value=f.nome;
+  document.getElementById('f_responsavel').value=f.responsavel||'';
+  document.getElementById('f_telefone').value=f.telefone||'';
+  document.getElementById('f_email').value=f.email||'';
+  document.getElementById('f_categoria').value=f.categoria;
+  document.getElementById('f_avaliacao').value=f.avaliacao;
+  document.getElementById('f_obs').value=f.obs||'';
+  S.editingForn=id;
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast('Editando fornecedor.','info');
 };
 
 window.excluirForn=async id=>{
   if(!confirm('Excluir este fornecedor?'))return;
-  try{await remove(ref(db,'fornecedores/'+id));toast('Removido.');}catch(e){toast('Erro: '+e.message,'error');}
+  try{await remove(ref(db,'fornecedores/'+id));toast('Removido.');}
+  catch(e){toast('Erro: '+e.message,'error');}
 };
 
+// ══════════════════════════════════════════════════════════════
+// COMPRAS GIMBA — LISTA
+// ══════════════════════════════════════════════════════════════
 window.adicionarItem=()=>{
   const item=document.getElementById('ci_item').value.trim();
   if(!item){toast('Informe o nome do produto.','error');return;}
   S.checklistItems.push({
-    id:Date.now().toString(),item,
-    atual:document.getElementById('ci_atual').value,
-    qtdComprar:'',
-    link:document.getElementById('ci_link').value,
-    obs:document.getElementById('ci_obs').value,
-    checked:false
+    id: Date.now().toString(),
+    item,
+    atual: document.getElementById('ci_atual').value || '0',
+    qtdComprar: '',
+    link: document.getElementById('ci_link').value.trim(),
+    obs: document.getElementById('ci_obs').value.trim(),
+    checked: false
   });
   ['ci_item','ci_atual','ci_link','ci_obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ci_item').focus();
   renderChecklist();
+  toast('Produto adicionado!','info');
 };
+
+// Permitir adicionar item com Enter no campo de produto
+document.getElementById('ci_item').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();adicionarItem();}
+});
 
 function estoqueClass(qtd){
   const n=parseInt(qtd||0);
-  if(n===0)return'estoque-zero';
-  if(n<=3)return'estoque-baixo';
-  return'estoque-ok';
+  if(n===0)return 'estoque-zero';
+  if(n<=3)return 'estoque-baixo';
+  return 'estoque-ok';
 }
 
 function renderChecklist(){
   const body=document.getElementById('checklistBody');
   if(!S.checklistItems.length){
-    body.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="icon">📦</div><h4>Nenhum produto ainda</h4><p>Use a barra abaixo para adicionar produtos.</p></div></td></tr>`;return;
+    body.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="icon">📦</div><h4>Nenhum produto ainda</h4><p>Use a barra abaixo para adicionar produtos.</p></div></td></tr>`;
+    return;
   }
   body.innerHTML=S.checklistItems.map(r=>`<tr>
-    <td style="text-align:center;"><input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}',this.checked)"></td>
+    <td style="text-align:center;">
+      <input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}',this.checked)">
+    </td>
     <td><strong>${r.item}</strong></td>
     <td><span class="estoque-badge ${estoqueClass(r.atual)}">${r.atual||'0'} un.</span></td>
     <td class="qty-chefe">
-      <input type="number" min="0" value="${r.qtdComprar||''}" placeholder="?" onchange="atualizarQtd('${r.id}',this.value)" title="Quantidade a comprar">
+      <input type="number" min="0" value="${r.qtdComprar||''}" placeholder="?" 
+        onchange="atualizarQtd('${r.id}',this.value)"
+        oninput="atualizarQtd('${r.id}',this.value)"
+        title="Quantidade a comprar">
     </td>
     <td style="font-size:12px;">${r.link?`<a href="${r.link}" target="_blank" style="color:var(--teal);font-weight:600;">🔗 Ver na Gimba</a>`:'—'}</td>
     <td style="font-size:12px;">${r.obs||'—'}</td>
-    <td class="print-hide"><button class="btn btn-danger btn-sm" onclick="removerItem('${r.id}')">🗑</button></td>
+    <td class="print-hide">
+      <button class="btn btn-danger btn-sm" onclick="removerItem('${r.id}')">🗑</button>
+    </td>
   </tr>`).join('');
 }
 
-window.toggleItem=(id,val)=>{const item=S.checklistItems.find(r=>r.id===id);if(item)item.checked=val;renderChecklist();};
-window.atualizarQtd=(id,val)=>{const item=S.checklistItems.find(r=>r.id===id);if(item)item.qtdComprar=val;};
+window.toggleItem=(id,val)=>{
+  const item=S.checklistItems.find(r=>r.id===id);
+  if(item){item.checked=val;}
+};
+
+window.atualizarQtd=(id,val)=>{
+  const item=S.checklistItems.find(r=>r.id===id);
+  if(item){item.qtdComprar=val;}
+};
 
 window.removerItem=id=>{
   if(!confirm('Remover este item?'))return;
-  S.checklistItems=S.checklistItems.filter(r=>r.id!==id);renderChecklist();
+  S.checklistItems=S.checklistItems.filter(r=>r.id!==id);
+  renderChecklist();
 };
 
 window.setStatus=s=>{
@@ -666,99 +813,205 @@ window.setStatus=s=>{
   document.querySelectorAll('.status-step').forEach(el=>el.classList.remove('active'));
   const map={'Cássia preencheu':'ss1','Aguardando Chefia':'ss2','Aprovado pela Chefia':'ss3','Finalizado':'ss4'};
   if(map[s])document.getElementById(map[s]).classList.add('active');
-  const bmap={'Cássia preencheu':'badge-pending','Aguardando Chefia':'badge-adjust','Aprovado pela Chefia':'badge-approved','Finalizado':'badge-done'};
-  const el=document.getElementById('statusAtual');el.className=`badge ${bmap[s]||'badge-pending'}`;el.textContent=s;
+  const bmap={
+    'Cássia preencheu':'badge-pending','Aguardando Chefia':'badge-adjust',
+    'Aprovado pela Chefia':'badge-approved','Finalizado':'badge-done'
+  };
+  const el=document.getElementById('statusAtual');
+  el.className=`badge ${bmap[s]||'badge-pending'}`;
+  el.textContent=s;
 };
 
-window.novaLista=()=>{
-  if(S.checklistItems.length>0&&!confirm('Limpar lista atual?\n\nSalve antes de continuar.'))return;
-  S.checklistItems=[];S.checklistStatus='Cássia preencheu';S.editingLista=null;
-  ['c_data','c_responsavel','c_nome','c_obs'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('c_data').value=new Date().toISOString().split('T')[0];
-  setStatus('Cássia preencheu');renderChecklist();toast('Nova lista iniciada.','info');
-};
-
+// ── SALVAR LISTA (CORRIGIDO) ───────────────────────────────────
 window.salvarLista=async()=>{
   const resp=document.getElementById('c_responsavel').value.trim();
   const obs=document.getElementById('c_obs').value.trim();
-  if(!resp||!obs){toast('Preencha responsável e observação.','error');return;}
-  if(!S.checklistItems.length){toast('Adicione ao menos um produto.','error');return;}
+  if(!resp||!obs){
+    toast('Preencha responsável e observação.','error');return;
+  }
+  if(!S.checklistItems.length){
+    toast('Adicione ao menos um produto.','error');return;
+  }
+
+  // Capturar qtdComprar diretamente dos inputs antes de salvar
+  document.querySelectorAll('#checklistBody input[type=number]').forEach(input=>{
+    const row=input.closest('tr');
+    const idx=Array.from(document.querySelectorAll('#checklistBody tr')).indexOf(row);
+    if(S.checklistItems[idx])S.checklistItems[idx].qtdComprar=input.value;
+  });
+
   const lista={
-    data:document.getElementById('c_data').value,responsavel:resp,
-    nome:document.getElementById('c_nome').value||`Lista de ${resp}`,
-    obs,status:S.checklistStatus,items:S.checklistItems,
-    atualizadoEm:new Date().toISOString()
+    data: document.getElementById('c_data').value,
+    responsavel: resp,
+    nome: document.getElementById('c_nome').value.trim()||`Lista de ${resp}`,
+    obs,
+    status: S.checklistStatus,
+    items: S.checklistItems.map(i=>({...i})), // cópia limpa
+    atualizadoEm: new Date().toISOString()
   };
+
   try{
-    if(S.editingLista){await update(ref(db,'listas/'+S.editingLista),lista);toast('Lista atualizada! ✅');}
-    else{const r=await push(ref(db,'listas'),lista);S.editingLista=r.key;toast('Lista salva! ✅');}
-  }catch(e){toast('Erro: '+e.message,'error');}
+    if(S.editingLista){
+      // Atualiza registro existente preservando a chave
+      await set(ref(db,'listas/'+S.editingLista), lista);
+      toast('Lista atualizada e salva! ✅');
+    }else{
+      // Cria novo registro e guarda a chave gerada
+      const newRef=await push(ref(db,'listas'), lista);
+      S.editingLista=newRef.key;
+      toast('Lista salva com sucesso! ✅');
+    }
+    // Atualiza o título do formulário para indicar que está editando
+    document.getElementById('gimbaFormTitle').textContent='✏️ Editando Lista';
+  }catch(e){
+    toast('Erro ao salvar: '+e.message,'error');
+    console.error(e);
+  }
 };
 
+// ── ENVIAR PARA CHEFE ──────────────────────────────────────────
 window.enviarParaChefe=async()=>{
   const resp=document.getElementById('c_responsavel').value.trim();
   const obs=document.getElementById('c_obs').value.trim();
-  if(!resp||!obs){toast('Preencha responsável e observação antes de enviar.','error');return;}
-  if(!S.checklistItems.length){toast('Adicione produtos antes de enviar.','error');return;}
+  if(!resp||!obs){
+    toast('Preencha responsável e observação antes de enviar.','error');return;
+  }
+  if(!S.checklistItems.length){
+    toast('Adicione produtos antes de enviar.','error');return;
+  }
   await salvarLista();
   setStatus('Aguardando Chefia');
   await salvarLista();
   const url=window.location.href;
   document.getElementById('linkDisplay').textContent=url;
-  navigator.clipboard.writeText(url).catch(()=>{});
+  try{await navigator.clipboard.writeText(url);}catch(e){}
   document.getElementById('linkModal').style.display='flex';
 };
 
-function renderListasGrid(){
-  const el=document.getElementById('listasGrid');
-  const listas=Object.entries(S.listas).map(([id,l])=>({...l,id})).sort((a,b)=>new Date(b.atualizadoEm)-new Date(a.atualizadoEm));
-  if(!listas.length){el.innerHTML='';return;}
-  el.innerHTML=`<h3 style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;">📂 Listas Salvas</h3>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:10px;">
-    ${listas.map(l=>`<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow);">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
-        <div>
-          <strong style="font-size:14px;">${l.nome}</strong>
-          <div style="font-size:12px;color:var(--slate);margin-top:3px;">${l.data?new Date(l.data+'T12:00').toLocaleDateString('pt-br'):''} · ${l.responsavel}</div>
-        </div>
-        <button class="btn btn-danger btn-sm" onclick="excluirLista('${l.id}')">🗑</button>
-      </div>
-      ${badgeHtml(l.status)}
-      <div style="margin-top:10px;font-size:12px;color:var(--slate);">📦 ${(l.items||[]).length} produto(s)</div>
-      <div style="margin-top:5px;font-size:12px;color:var(--slate);font-style:italic;">${l.obs}</div>
-      <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;">
-        <button class="btn btn-secondary btn-sm" onclick="carregarLista('${l.id}')">📂 Editar</button>
-        <button class="btn btn-teal btn-sm" onclick="pdfLista('${l.id}')">📄 PDF</button>
-      </div>
-    </div>`).join('')}
-  </div>`;
-}
-
-window.excluirLista=async id=>{
-  if(!confirm('Excluir esta lista permanentemente?\n\nEsta ação não pode ser desfeita.'))return;
-  try{await remove(ref(db,'listas/'+id));toast('Lista excluída.');}catch(e){toast('Erro: '+e.message,'error');}
+// ── NOVA LISTA ─────────────────────────────────────────────────
+window.novaLista=()=>{
+  if(S.checklistItems.length>0&&!confirm('Limpar lista atual?\n\nSalve antes de continuar.'))return;
+  S.checklistItems=[];
+  S.checklistStatus='Cássia preencheu';
+  S.editingLista=null;
+  ['c_responsavel','c_nome','c_obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c_data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('gimbaFormTitle').textContent='📦 Nova Lista de Compras';
+  setStatus('Cássia preencheu');
+  renderChecklist();
+  toast('Nova lista iniciada.','info');
+  document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth'});
 };
 
+// ── RENDERIZAR LISTAS SALVAS ───────────────────────────────────
+function renderListasGrid(){
+  const el=document.getElementById('listasGrid');
+  const listas=Object.entries(S.listas)
+    .map(([id,l])=>({...l,id}))
+    .sort((a,b)=>new Date(b.atualizadoEm)-new Date(a.atualizadoEm));
+
+  if(!listas.length){el.innerHTML='';return;}
+
+  el.innerHTML=`
+    <h3 style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;">
+      📂 Listas Salvas <span style="font-size:13px;color:var(--slate);font-weight:400;">(${listas.length} lista${listas.length>1?'s':''})</span>
+    </h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-bottom:24px;">
+      ${listas.map(l=>`
+        <div style="background:white;border:2px solid ${S.editingLista===l.id?'var(--gold)':'var(--border)'};
+          border-radius:12px;padding:20px;box-shadow:var(--shadow);
+          ${S.editingLista===l.id?'background:var(--gold-pale);':''}">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+            <div>
+              <strong style="font-size:14px;">${l.nome}</strong>
+              ${S.editingLista===l.id?'<span style="font-size:10px;background:var(--gold);color:white;padding:2px 8px;border-radius:20px;margin-left:6px;">Editando</span>':''}
+              <div style="font-size:12px;color:var(--slate);margin-top:3px;">
+                ${l.data?new Date(l.data+'T12:00').toLocaleDateString('pt-br'):''} · ${l.responsavel}
+              </div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="excluirLista('${l.id}')">🗑</button>
+          </div>
+          ${badgeHtml(l.status)}
+          <div style="margin-top:10px;font-size:12px;color:var(--slate);">
+            📦 ${(l.items||[]).length} produto(s)
+            · ✅ ${(l.items||[]).filter(i=>i.qtdComprar&&i.qtdComprar!=='').length} com qtd.
+          </div>
+          <div style="margin-top:5px;font-size:12px;color:var(--slate);font-style:italic;">${l.obs}</div>
+          <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="carregarLista('${l.id}')">
+              ${S.editingLista===l.id?'🔄 Recarregar':'📂 Editar'}
+            </button>
+            <button class="btn btn-teal btn-sm" onclick="pdfLista('${l.id}')">📄 PDF</button>
+          </div>
+        </div>`).join('')}
+    </div>
+    <hr style="border:none;border-top:1px dashed var(--border);margin-bottom:24px;">`;
+}
+
+// ── CARREGAR LISTA PARA EDIÇÃO (CORRIGIDO) ─────────────────────
 window.carregarLista=id=>{
-  const l=S.listas[id];if(!l)return;
+  const l=S.listas[id];
+  if(!l){toast('Lista não encontrada.','error');return;}
+
+  // Preenche os campos do formulário
   document.getElementById('c_data').value=l.data||'';
   document.getElementById('c_responsavel').value=l.responsavel||'';
   document.getElementById('c_nome').value=l.nome||'';
   document.getElementById('c_obs').value=l.obs||'';
-  S.checklistItems=[...(l.items||[])];S.editingLista=id;
-  setStatus(l.status||'Cássia preencheu');renderChecklist();
-  document.querySelector('.gimba-card').scrollIntoView({behavior:'smooth'});
-  toast('Lista carregada. Faça as alterações e salve.','info');
+
+  // Carrega os itens com deep copy para não afetar o Firebase diretamente
+  S.checklistItems=(l.items||[]).map(i=>({...i}));
+  S.editingLista=id;
+
+  // Atualiza status
+  setStatus(l.status||'Cássia preencheu');
+
+  // Renderiza checklist
+  renderChecklist();
+
+  // Atualiza título do formulário
+  document.getElementById('gimbaFormTitle').textContent=`✏️ Editando: ${l.nome}`;
+
+  // Scroll até o formulário
+  setTimeout(()=>{
+    document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth',block:'start'});
+  },100);
+
+  toast(`Lista "${l.nome}" carregada. Faça as alterações e salve.`,'info');
 };
 
-window.pdfLista=id=>{const l=S.listas[id];if(!l)return;gerarPDF(l.responsavel,l.nome,l.obs,l.status,l.items||[],l.data);};
+window.excluirLista=async id=>{
+  const l=S.listas[id];
+  const nome=l?l.nome:'esta lista';
+  if(!confirm(`Excluir "${nome}" permanentemente?\n\nEsta ação não pode ser desfeita.`))return;
+  try{
+    await remove(ref(db,'listas/'+id));
+    if(S.editingLista===id){
+      S.editingLista=null;
+      S.checklistItems=[];
+      document.getElementById('gimbaFormTitle').textContent='📦 Nova Lista de Compras';
+      renderChecklist();
+    }
+    toast('Lista excluída.');
+  }catch(e){toast('Erro: '+e.message,'error');}
+};
+
+// ── PDF ────────────────────────────────────────────────────────
+window.pdfLista=id=>{
+  const l=S.listas[id];if(!l)return;
+  gerarPDF(l.responsavel,l.nome,l.obs,l.status,l.items||[],l.data);
+};
 
 window.exportarPDFAtual=()=>{
   if(!S.checklistItems.length){toast('Nenhum produto na lista.','error');return;}
-  gerarPDF(document.getElementById('c_responsavel').value||'—',
+  gerarPDF(
+    document.getElementById('c_responsavel').value||'—',
     document.getElementById('c_nome').value||'Lista de Compras',
     document.getElementById('c_obs').value||'—',
-    S.checklistStatus,S.checklistItems,document.getElementById('c_data').value);
+    S.checklistStatus,
+    S.checklistItems,
+    document.getElementById('c_data').value
+  );
 };
 
 function gerarPDF(resp,nome,obs,status,items,data){
@@ -767,7 +1020,8 @@ function gerarPDF(resp,nome,obs,status,items,data){
   const totalComprar=items.reduce((s,r)=>s+(parseInt(r.qtdComprar)||0),0);
   document.getElementById('reportBody').innerHTML=`
     <div class="report-oab-header">
-      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2><p>Subseção Santana de Parnaíba</p>
+      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2>
+      <p>Subseção Santana de Parnaíba</p>
       <p style="font-size:13px;font-weight:bold;margin-top:8px;">LISTA DE COMPRAS — GIMBA</p>
       <p style="font-size:12px;color:#666;margin-top:4px;">Data: ${dataFmt} · Responsável: ${resp} · Gerado em: ${hoje}</p>
     </div>
@@ -776,7 +1030,7 @@ function gerarPDF(resp,nome,obs,status,items,data){
     <p style="margin-bottom:20px;"><strong>Status:</strong> ${status}</p>
     <table>
       <thead><tr>
-        <th>✓</th><th>Produto</th><th>Qtd. em Estoque</th>
+        <th>✓</th><th>Produto</th><th>Estoque Atual</th>
         <th style="background:#b8922a;color:white;">Qtd. a Comprar</th>
         <th>Link Gimba</th><th>Obs.</th>
       </tr></thead>
@@ -802,12 +1056,17 @@ function gerarPDF(resp,nome,obs,status,items,data){
         <p style="font-size:11px;color:#666;">Data: ___/___/______</p>
       </div>
     </div>
-    <p style="font-size:10px;color:#666;text-align:center;margin-top:30px;">Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>`;
+    <p style="font-size:10px;color:#666;text-align:center;margin-top:30px;">
+      Painel Integrado de Orçamentos · OAB Santana de Parnaíba
+    </p>`;
   document.getElementById('reportModal').style.display='block';
 }
 
+// ── Inicialização ──────────────────────────────────────────────
 const now=new Date();
-document.getElementById('headerDate').textContent=now.toLocaleDateString('pt-br',{weekday:'short',year:'numeric',month:'long',day:'numeric'});
+document.getElementById('headerDate').textContent=now.toLocaleDateString('pt-br',{
+  weekday:'short',year:'numeric',month:'long',day:'numeric'
+});
 document.getElementById('c_data').value=now.toISOString().split('T')[0];
 document.getElementById('s_data').value=now.toISOString().split('T')[0];
 renderChecklist();
