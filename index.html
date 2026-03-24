@@ -340,6 +340,7 @@ tr.winner-row td:first-child{border-left:3px solid #065f46;}
       <button class="btn btn-teal print-hide" onclick="enviarParaChefe()">🔗 Enviar Link para Chefe</button>
       <button class="btn btn-secondary print-hide" onclick="exportarPDFAtual()">📄 Exportar PDF</button>
       <button class="btn btn-secondary print-hide" onclick="novaLista()">🗒 Nova Lista</button>
+      <button class="btn btn-secondary print-hide" onclick="carregarListaPadrao()" style="border-color:var(--gold);color:var(--gold);">📋 Carregar Lista Padrão</button>
     </div>
   </div>
 </div>
@@ -769,7 +770,7 @@ function estoqueClass(qtd){
 function renderChecklist(){
   const body=document.getElementById('checklistBody');
   if(!S.checklistItems.length){
-    body.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="icon">📦</div><h4>Nenhum produto ainda</h4><p>Use a barra abaixo para adicionar produtos.</p></div></td></tr>`;
+    body.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="icon">📦</div><h4>Nenhum produto ainda</h4><p>Use a barra abaixo para adicionar produtos ou clique em <strong>📋 Carregar Lista Padrão</strong>.</p></div></td></tr>`;
     return;
   }
   body.innerHTML=S.checklistItems.map(r=>`<tr>
@@ -777,7 +778,7 @@ function renderChecklist(){
       <input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}',this.checked)">
     </td>
     <td><strong>${r.item}</strong></td>
-    <td><span class="estoque-badge ${estoqueClass(r.atual)}">${r.atual||'0'} un.</span></td>
+    <td><span class="estoque-badge ${estoqueClass(r.atual)}">${r.atual||'—'}</span></td>
     <td class="qty-chefe">
       <input type="number" min="0" value="${r.qtdComprar||''}" placeholder="?" 
         onchange="atualizarQtd('${r.id}',this.value)"
@@ -901,6 +902,122 @@ window.novaLista=()=>{
   renderChecklist();
   toast('Nova lista iniciada.','info');
   document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth'});
+};
+
+// ── LISTA PADRÃO GIMBA ─────────────────────────────────────────
+const LISTA_PADRAO = [
+  {nome:"Açúcar Caravelas Refinado 1kg",cod:"9139931",preco:"R$ 4,69"},
+  {nome:"Açúcar União Premium Refinado Sachês",cod:"10914161",preco:"R$ 22,90"},
+  {nome:"Adoçante Zero-Cal Sacarina 100ml",cod:"9172270",preco:"R$ 6,49"},
+  {nome:"Adoçante Zero-Cal Sucralose 100ml",cod:"11042982",preco:"R$ 9,29"},
+  {nome:"Água de Coco Mais Coco 1L",cod:"11783508",preco:"R$ 13,49"},
+  {nome:"Álcool em Gel Asseptgel 70% 1L",cod:"11197200",preco:"R$ 15,99"},
+  {nome:"Álcool Líquido Archote 46º INPM 1L",cod:"11526467",preco:"R$ 10,59"},
+  {nome:"Álcool Líquido Coperalcool 46° 1L",cod:"11787392",preco:"R$ 12,90"},
+  {nome:"Álcool Líquido Perfumado Coperalcool 1L",cod:"11631724",preco:"R$ 14,49"},
+  {nome:"Amaciante Downy Concentrado 500ml",cod:"11140771",preco:"R$ 14,49"},
+  {nome:"Amaciante Ypê Delicado 2L",cod:"11133317",preco:"R$ 12,49"},
+  {nome:"Aromatizante Coala 120ml Algas Marinhas",cod:"11526483",preco:"R$ 14,99"},
+  {nome:"Aromatizante Coala 120ml Bambu",cod:"11731273",preco:"R$ 14,99"},
+  {nome:"Aromatizante Coala 120ml Citronela",cod:"11526491",preco:"R$ 14,99"},
+  {nome:"Aromatizante Coala 120ml Talco",cod:"11731257",preco:"R$ 14,99"},
+  {nome:"Aromatizante Coala Algodão 120ml",cod:"11731265",preco:"R$ 14,99"},
+  {nome:"Aromatizante Coala Lavanda 120ml",cod:"11526521",preco:"R$ 14,99"},
+  {nome:"Bala Arcor de Framboesa 7 Belo PT 500g",cod:"11676710",preco:"R$ 14,59"},
+  {nome:"Bala Arcor Posh Tutti Frutti 500g",cod:"11763310",preco:"R$ 15,49"},
+  {nome:"Bala Dori Bolete Tutti Frutti 600g",cod:"11670029",preco:"R$ 13,39"},
+  {nome:"Bala Dori de Hortelã Recheada 600g",cod:"11670193",preco:"R$ 13,39"},
+  {nome:"Bala Dori Gota Cola 100g",cod:"11698810",preco:"R$ 2,99"},
+  {nome:"Bala Dori Lua Cheia Frutas 600g",cod:"11670223",preco:"R$ 13,39"},
+  {nome:"Bala Dori Sabor Yogurte 600g",cod:"11670274",preco:"R$ 13,39"},
+  {nome:"Bala Freegells Azedinha de Morango 475g",cod:"11762888",preco:"R$ 10,99"},
+  {nome:"Bala Freegells Chocolate Sortida 475g",cod:"11766611",preco:"R$ 10,99"},
+  {nome:"Barrinha de Chocolate Bauducco 25g CX C/20",cod:"10248056",preco:"R$ 26,49"},
+  {nome:"Barrinha Goiabinha Bauducco 30g CX C/20",cod:"10291075",preco:"R$ 27,90"},
+  {nome:"Bicarbonato de Sódio Kitano 80g",cod:"11550899",preco:"R$ 5,59"},
+  {nome:"Biscoito Amanteigado Renata Coco Sachês 8,8g",cod:"11622318",preco:"R$ 91,90"},
+  {nome:"Biscoito Amanteigado Renata Leite Sachês 8,8g",cod:"11622300",preco:"R$ 91,90"},
+  {nome:"Biscoito Bela Vista Tuc Din Crackers S (1)",cod:"11748974",preco:"R$ 1,89"},
+  {nome:"Biscoito Bela Vista Tuc Din Crackers S (2)",cod:"11748966",preco:"R$ 1,89"},
+  {nome:"Biscoito Bom Sabor Maizena Sachê 9g CX",cod:"11417110",preco:"R$ 69,90"},
+  {nome:"Biscoito Cil Doce Chá de Limão 10g CX C/180UN",cod:"11786574",preco:"R$ 82,90"},
+  {nome:"Biscoito Cil Salgado de Queijo 5g CX C/280 UN",cod:"11786590",preco:"R$ 79,90"},
+  {nome:"Biscoito Cream Cracker Bom Sabor Sachê 5g CX",cod:"11748508",preco:"R$ 66,90"},
+  {nome:"Biscoito Cream Cracker Renata Sachê 10g CX",cod:"11218886",preco:"R$ 49,90"},
+  {nome:"Biscoito de Leite Bom Sabor Amanteigado Sachê",cod:"11417102",preco:"R$ 73,00"},
+  {nome:"Biscoito Doce Cil Chá Verde Caixa 180UN 10G",cod:"11786566",preco:"R$ 79,90"},
+  {nome:"Biscoito Maria Renata Sachê 11g CX C/180 UN",cod:"11665572",preco:"R$ 59,90"},
+  {nome:"Biscoito Marilan Amanteigado Chocolate 8,6g",cod:"11775483",preco:"R$ 79,90"},
+  {nome:"Biscoito Renata Cream Cracker Integral Sachê",cod:"11665602",preco:"R$ 49,90"},
+  {nome:"Biscoito Wafer Bauducco Chocolate com Avelã",cod:"11722746",preco:"R$ 4,49"},
+  {nome:"Biscoito Wafer Bauducco de Chocolate 140g",cod:"11073039",preco:"R$ 4,99"},
+  {nome:"Biscoito Wafer Bauducco Morango 140g",cod:"11722754",preco:"R$ 4,49"},
+  {nome:"Biscoito Wafer Bauducco Triplo Chocolate 140g",cod:"11722762",preco:"R$ 4,49"},
+  {nome:"Biscoito Wafer Bono Morango 110g",cod:"11689137",preco:"R$ 4,99"},
+  {nome:"Biscoito Wafer Negresco 110g",cod:"11537965",preco:"R$ 4,99"},
+  {nome:"Bloco Sanitário Zap Clean Lavanda com Aparelho",cod:"11136421",preco:"R$ 5,39"},
+  {nome:"Bloco Sanitário Zap Clean Lavanda Refil 30g",cod:"11136480",preco:"R$ 2,69"},
+  {nome:"Bolo Casa Suíça Café da Manhã Chocolate 250g",cod:"11215348",preco:"R$ 12,49"},
+  {nome:"Bolo Casa Suíça Café da Manhã Gotas de Chocolate",cod:"11215313",preco:"R$ 12,49"},
+  {nome:"Bolo Casa Suíça Café da Manhã Laranja 250g",cod:"11215321",preco:"R$ 12,49"},
+  {nome:"Café em Grãos Pelé Pouch Espresso 1kg",cod:"11748281",preco:"R$ 109,90"},
+  {nome:"Café em Pó 3 Corações Extra Forte 500g",cod:"10300279",preco:"R$ 33,90"},
+  {nome:"Café em Pó 3 Corações Fort 500g",cod:"11034963",preco:"R$ 30,90"},
+  {nome:"Café em Pó Pilão Extra Forte 500g",cod:"11026081",preco:"R$ 27,90"},
+  {nome:"Café em Pó Pilão Tradicional 500g",cod:"9140000",preco:"R$ 27,90"},
+  {nome:"Café Torrado em Grãos Melitta Spresso 500g",cod:"11748265",preco:"R$ 65,90"},
+  {nome:"Chá Leão Matte Original a Granel 250g",cod:"9151001",preco:"R$ 7,99"},
+  {nome:"Coador de Café Plasútil para Filtro N°103",cod:"11484896",preco:"R$ 10,39"},
+  {nome:"Cookie Original Marilan 10g Caixa com 200 UN",cod:"11780436",preco:"R$ 129,90"},
+  {nome:"Copo Descartável Kerocopo 200ml Branco CX",cod:"11601434",preco:"R$ 124,90"},
+  {nome:"Copo Plástico Altacoppo 180ml Transparente CX",cod:"11228717",preco:"R$ 155,90"},
+  {nome:"Copo Plástico Kerocopo 180ml Branco CX C/250",cod:"11197552",preco:"R$ 119,90"},
+  {nome:"Desinfetante Aerossol Lysoform Original 360ml",cod:"11542098",preco:"R$ 29,49"},
+  {nome:"Desinfetante Lysoform Bruto 1L",cod:"11217847",preco:"R$ 19,99"},
+  {nome:"Desinfetante Lysoform Lavanda 1L",cod:"11542136",preco:"R$ 19,99"},
+  {nome:"Detergente Líquido Limpol Neutro 5L",cod:"10784586",preco:"R$ 22,90"},
+  {nome:"Detergente Líquido Ypê Clear 500ml",cod:"11441283",preco:"R$ 2,89"},
+  {nome:"Detergente Líquido Ypê Limão 500ml",cod:"11133155",preco:"R$ 2,89"},
+  {nome:"Detergente Líquido Ypê Maçã 500ml",cod:"11133180",preco:"R$ 2,89"},
+  {nome:"Detergente Líquido Ypê Neutro 500ml",cod:"11133198",preco:"R$ 2,89"},
+  {nome:"Escova Lava Garrafa Shangrila Cabo em Arame",cod:"11802804",preco:"R$ 3,99"},
+  {nome:"Escova Multiuso Mimo com Cabo Grey SF20110",cod:"11706821",preco:"R$ 12,19"},
+  {nome:"Esponja de Aço Bombril 45g PCT C/6 UN",cod:"11789514",preco:"R$ 2,99"},
+  {nome:"Esponja Macia Bettanin Amarela",cod:"11619040",preco:"R$ 1,09"},
+  {nome:"Esponja Magia Flash Limp ESP7757-3 PCT C/3 UN",cod:"11774894",preco:"R$ 16,90"},
+  {nome:"Esponja Multiuso Perfect Pro Dupla Face PCT",cod:"11781793",preco:"R$ 12,90"},
+  {nome:"Faca Descartável Strawplast para Refeição PCT",cod:"10212477",preco:"R$ 4,99"},
+  {nome:"Filtro de Papel 3 Corações Nº103 CX C/30 UN",cod:"11034947",preco:"R$ 3,49"},
+  {nome:"Filtro de Papel Melitta Nº102 CX C/30 UN",cod:"10578153",preco:"R$ 4,79"},
+  {nome:"Filtro de Papel Melitta Nº103 CX C/30 UN",cod:"10578161",preco:"R$ 4,99"},
+  {nome:"Garrafa Térmica Termolar Lúmina Pressão 1,8L",cod:"9533117",preco:"R$ 139,90"},
+  {nome:"Geleia Bom Sabor Goiaba e Morango Sachês",cod:"11602651",preco:"R$ 76,90"},
+  {nome:"Guardanapo Folha Dupla Snob 23,5x23,5cm PCT",cod:"10928480",preco:"R$ 4,90"},
+  {nome:"Guardanapo Santepel Folha Simples 24x22cm PCT",cod:"10928448",preco:"R$ 2,19"},
+  {nome:"Guardanapo Snob Folha Simples 24x22cm PCT",cod:"10928464",preco:"R$ 2,99"},
+  {nome:"Inseticida Elétrico SBP Líquido com Refil 35ml",cod:"11194863",preco:"R$ 22,90"},
+  {nome:"Lenços Umedecidos Cottonbaby Premium Hidra",cod:"11675039",preco:"R$ 8,59"},
+  {nome:"Limpa Alumínio Sanapy Santop 5L",cod:"11732733",preco:"R$ 18,39"},
+  {nome:"Maionese Hellmann's Tradicional 500g",cod:"11534117",preco:"R$ 15,75"},
+  {nome:"Mexedor de Plástico Gool para Café Cristal 7,5cm",cod:"11015748",preco:"R$ 10,69"},
+  {nome:"Mexedor de Plástico Gool para Chá e Drink Cristal",cod:"11266287",preco:"R$ 13,99"},
+  {nome:"Multi Inseticida SBP Citronela 450ml",cod:"11524626",preco:"R$ 22,99"}
+];
+
+window.carregarListaPadrao=()=>{
+  if(S.checklistItems.length>0 && !confirm('Substituir os itens atuais pela Lista Padrão Gimba?\n\nSalve os itens atuais antes de continuar.')) return;
+  S.checklistItems = LISTA_PADRAO.map((p,i)=>({
+    id: (Date.now()+i).toString(),
+    item: `${p.nome} — Cód. ${p.cod} (${p.preco})`,
+    atual: '',
+    qtdComprar: '',
+    link: `https://www.gimba.com.br/busca?q=${encodeURIComponent(p.cod)}`,
+    obs: '',
+    checked: false
+  }));
+  renderChecklist();
+  toast(`✅ Lista Padrão carregada com ${LISTA_PADRAO.length} produtos. Exclua os que não for comprar este mês.`, 'info');
+  document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth',block:'start'});
 };
 
 // ── RENDERIZAR LISTAS SALVAS ───────────────────────────────────
@@ -1037,7 +1154,7 @@ function gerarPDF(resp,nome,obs,status,items,data){
       <tbody>${items.map(r=>`<tr>
         <td>${r.checked?'✅':'☐'}</td>
         <td><strong>${r.item}</strong></td>
-        <td>${r.atual||'0'}</td>
+        <td>${r.atual||'—'}</td>
         <td style="background:#fff9e6;font-weight:700;text-align:center;">${r.qtdComprar||'—'}</td>
         <td style="font-size:11px;word-break:break-all;">${r.link||'—'}</td>
         <td>${r.obs||'—'}</td>
