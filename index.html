@@ -174,6 +174,7 @@ select{cursor:pointer;}
   text-transform:uppercase;letter-spacing:.09em;
 }
 .checklist-wrap th.th-gold{background:var(--gold);}
+.checklist-wrap th.th-teal{background:var(--teal);}
 .checklist-wrap td{
   padding:11px 14px;font-size:13px;
   border-bottom:1px solid var(--border-light);
@@ -191,6 +192,17 @@ select{cursor:pointer;}
 }
 .td-gold input:focus{box-shadow:0 0 0 3px rgba(184,146,42,.15);}
 
+/* ── ESTOQUE INPUT (célula editável na tabela) ── */
+.td-estoque{background:#e8f4f4 !important;border-left:3px solid var(--teal);}
+.td-estoque input{
+  background:white;border:2px solid var(--teal);
+  border-radius:6px;padding:6px 10px;
+  width:80px;font-size:14px;font-weight:700;
+  text-align:center;outline:none;color:var(--teal);
+}
+.td-estoque input:focus{box-shadow:0 0 0 3px rgba(26,107,107,.15);}
+.td-estoque input.vazio{border-color:#f59e0b;background:#fffbeb;}
+
 .estoque-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;}
 .es-ok{background:var(--green-light);color:var(--green);border:1px solid #6ee7b7;}
 .es-low{background:#fff7e6;color:#b45309;border:1px solid #fcd34d;}
@@ -200,13 +212,22 @@ select{cursor:pointer;}
 .add-bar{
   display:grid;grid-template-columns:2fr 100px 2fr 1fr 72px;gap:8px;
   padding:14px 16px;background:var(--cream-dark);
-  border-top:2px dashed var(--border);align-items:center;
+  border-top:2px dashed var(--border);align-items:end;
 }
+.add-bar-field{display:flex;flex-direction:column;gap:4px;}
+.add-bar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--slate);}
+.add-bar-label.req-label{color:var(--teal);}
 .add-bar input{
   padding:8px 11px;font-size:13px;
   background:white;border:1.5px solid var(--border);border-radius:6px;
+  width:100%;
 }
 .add-bar input:focus{border-color:var(--gold);outline:none;}
+.add-bar input.estoque-input{
+  border-color:var(--teal);background:#f0fafa;font-weight:600;color:var(--teal);
+}
+.add-bar input.estoque-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,107,107,.12);}
+.add-bar input.estoque-input::placeholder{color:#9ac9c9;}
 
 /* ── STATUS FLOW ── */
 .status-section{
@@ -245,7 +266,7 @@ select{cursor:pointer;}
 .fc.active{background:var(--gold);border-color:var(--gold);color:white;}
 .fc:hover:not(.active){border-color:var(--gold-light);color:var(--gold);}
 
-/* ── TABLE (orçamentos/fornecedores) ── */
+/* ── TABLE ── */
 .table-wrap{background:white;border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);}
 .table-toolbar{
   display:flex;align-items:center;gap:12px;
@@ -388,7 +409,7 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
 <div id="panel-compras" class="panel active">
   <div class="page-header">
     <h2>Compras Gimba</h2>
-    <p>Você preenche o estoque → salva → envia para a chefia → ela coloca a quantidade → aprovado!</p>
+    <p>Preencha o estoque atual de cada produto → salva → envia para a chefia → ela coloca a quantidade → aprovado!</p>
   </div>
 
   <!-- LISTAS SALVAS -->
@@ -400,7 +421,7 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
       <h3 id="gimbaFormTitle">📦 Nova Lista de Compras</h3>
       <span id="editingBadge" style="display:none;" class="editing-pill">Editando</span>
     </div>
-    <p class="gimba-subtitle" id="gimbaSubtitle">Preencha os dados, adicione os produtos e clique em <strong>Salvar Lista</strong>.</p>
+    <p class="gimba-subtitle" id="gimbaSubtitle">Preencha os dados, adicione os produtos com o <strong style="color:var(--teal);">estoque atual</strong> e clique em <strong>Salvar Lista</strong>.</p>
 
     <div class="gimba-meta">
       <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="c_data"></div>
@@ -415,7 +436,7 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
           <tr>
             <th style="width:36px;">✓</th>
             <th>Produto</th>
-            <th style="width:130px;">Estoque Atual</th>
+            <th class="th-teal" style="width:150px;">📦 Estoque Atual</th>
             <th class="th-gold" style="width:160px;">⭐ Qtd. a Comprar</th>
             <th style="width:130px;">Link Gimba</th>
             <th>Obs.</th>
@@ -424,12 +445,28 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
         </thead>
         <tbody id="checklistBody"></tbody>
       </table>
+
+      <!-- BARRA DE ADIÇÃO COM ESTOQUE OBRIGATÓRIO -->
       <div class="add-bar">
-        <input type="text" id="ci_item" placeholder="Nome do produto">
-        <input type="number" id="ci_atual" placeholder="Qtd. estoque" min="0">
-        <input type="text" id="ci_link" placeholder="Link Gimba (opcional)">
-        <input type="text" id="ci_obs" placeholder="Observação">
-        <button class="btn btn-primary btn-sm" onclick="adicionarItem()">+ Add</button>
+        <div class="add-bar-field">
+          <span class="add-bar-label req-label">Produto *</span>
+          <input type="text" id="ci_item" placeholder="Nome do produto" class="add-bar input">
+        </div>
+        <div class="add-bar-field">
+          <span class="add-bar-label req-label" style="color:var(--teal);">📦 Estoque Atual *</span>
+          <input type="number" id="ci_atual" placeholder="0" min="0" class="estoque-input">
+        </div>
+        <div class="add-bar-field">
+          <span class="add-bar-label">Link Gimba</span>
+          <input type="text" id="ci_link" placeholder="Link Gimba (opcional)">
+        </div>
+        <div class="add-bar-field">
+          <span class="add-bar-label">Observação</span>
+          <input type="text" id="ci_obs" placeholder="Observação">
+        </div>
+        <div class="add-bar-field" style="justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="adicionarItem()" style="height:38px;">+ Add</button>
+        </div>
       </div>
     </div>
 
@@ -613,7 +650,6 @@ const S = {
   checklistItems:[], checklistStatus:'Cássia preencheu',
   editingOrc:null, editingForn:null, editingLista:null,
   filtroSite:'todos', filtroForn:'Todos',
-  // Controle para evitar sobreposição do Firebase durante edição ativa
   _localEditing: false
 };
 
@@ -676,8 +712,6 @@ onValue(ref(db,'listas'), snap=>{
   renderListasGrid();
   updateDash();
 
-  // Sincronização colaborativa: atualiza qtdComprar vinda de outro dispositivo
-  // SOMENTE se não estiver em edição local ativa
   if(S.editingLista && S.listas[S.editingLista] && !S._localEditing){
     const remoteItems = (S.listas[S.editingLista].items)||[];
     remoteItems.forEach(ri=>{
@@ -948,10 +982,17 @@ window.excluirForn = async id=>{
 window.adicionarItem = ()=>{
   const item = document.getElementById('ci_item').value.trim();
   if(!item){ toast('Informe o nome do produto.','error'); return; }
+
+  // Avisa se estoque não foi preenchido, mas não bloqueia
+  const atualVal = document.getElementById('ci_atual').value.trim();
+  if(atualVal === ''){
+    toast('⚠️ Estoque atual não preenchido. Continua assim mesmo?', 'info');
+  }
+
   S.checklistItems.push({
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     item,
-    atual: document.getElementById('ci_atual').value || '0',
+    atual: atualVal !== '' ? atualVal : '',
     qtdComprar: '',
     link: document.getElementById('ci_link').value.trim(),
     obs: document.getElementById('ci_obs').value.trim(),
@@ -968,6 +1009,7 @@ document.getElementById('ci_item').addEventListener('keydown', e=>{
 });
 
 function estoqueClass(qtd){
+  if(qtd==='' || qtd===null || qtd===undefined) return 'es-zero';
   const n = parseInt(qtd||0);
   if(n===0) return 'es-zero';
   if(n<=3) return 'es-low';
@@ -985,7 +1027,13 @@ function renderChecklist(){
       <input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}',this.checked)">
     </td>
     <td><strong>${r.item}</strong></td>
-    <td><span class="estoque-badge ${estoqueClass(r.atual)}">${r.atual||'—'}</span></td>
+    <td class="td-estoque">
+      <input type="number" min="0" value="${r.atual||''}"
+        class="${(r.atual===''||r.atual===null||r.atual===undefined)?'vazio':''}"
+        placeholder="0"
+        oninput="atualizarEstoque('${r.id}',this.value)"
+        title="Quantidade em estoque agora">
+    </td>
     <td class="td-gold">
       <input type="number" min="0" value="${r.qtdComprar||''}" placeholder="?"
         oninput="atualizarQtd('${r.id}',this.value)"
@@ -1009,6 +1057,18 @@ window.atualizarQtd = (id, val)=>{
   if(item){ item.qtdComprar = val; S._localEditing = true; }
 };
 
+// ── NOVA FUNÇÃO: atualizar estoque diretamente na tabela ──
+window.atualizarEstoque = (id, val)=>{
+  const item = S.checklistItems.find(r=>r.id===id);
+  if(item){
+    item.atual = val;
+    S._localEditing = true;
+    // Atualiza visualmente a classe do input
+    const input = document.querySelector(`#checklistBody tr td.td-estoque input[oninput*="${id}"]`);
+    if(input) input.classList.toggle('vazio', val===''||val===null);
+  }
+};
+
 window.removerItem = id=>{
   if(!confirm('Remover este item?')) return;
   S.checklistItems = S.checklistItems.filter(r=>r.id!==id);
@@ -1029,15 +1089,15 @@ window.setStatus = s=>{
   el.textContent = s;
 };
 
-// ── COLETA QTDS DOS INPUTS ANTES DE SALVAR ──
-// Resolve o bug de "salvo mas não atualiza"
+// ── COLETA TODOS OS VALORES DOS INPUTS ANTES DE SALVAR ──
 function coletarQtdsDosInputs(){
   const rows = document.querySelectorAll('#checklistBody tr');
   rows.forEach((row, idx)=>{
-    const input = row.querySelector('td.td-gold input[type=number]');
-    if(input && S.checklistItems[idx]){
-      S.checklistItems[idx].qtdComprar = input.value;
-    }
+    if(!S.checklistItems[idx]) return;
+    const inputQtd = row.querySelector('td.td-gold input[type=number]');
+    if(inputQtd) S.checklistItems[idx].qtdComprar = inputQtd.value;
+    const inputEstoque = row.querySelector('td.td-estoque input[type=number]');
+    if(inputEstoque) S.checklistItems[idx].atual = inputEstoque.value;
   });
 }
 
@@ -1048,7 +1108,6 @@ window.salvarLista = async()=>{
   if(!resp||!obs){ toast('Preencha responsável e observação.','error'); return; }
   if(!S.checklistItems.length){ toast('Adicione ao menos um produto.','error'); return; }
 
-  // Coleta qtdComprar direto dos inputs (fix principal)
   coletarQtdsDosInputs();
 
   const lista = {
@@ -1057,7 +1116,6 @@ window.salvarLista = async()=>{
     nome: document.getElementById('c_nome').value.trim() || `Lista de ${resp}`,
     obs,
     status: S.checklistStatus,
-    // Deep copy limpa para o Firebase
     items: S.checklistItems.map(i=>({
       id: i.id,
       item: i.item,
@@ -1072,7 +1130,6 @@ window.salvarLista = async()=>{
 
   try{
     if(S.editingLista){
-      // Usa set() para garantir substituição completa (fix do "itens somem")
       await set(ref(db,'listas/'+S.editingLista), lista);
       S._localEditing = false;
       toast(`Lista "${lista.nome}" salva! ✅`);
@@ -1237,11 +1294,11 @@ window.carregarListaPadrao = ()=>{
     checked: false
   }));
   renderChecklist();
-  toast(`✅ ${LISTA_PADRAO.length} produtos carregados. Exclua os que não for comprar.`, 'info');
+  toast(`✅ ${LISTA_PADRAO.length} produtos carregados. Preencha o estoque de cada um!`, 'info');
   document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth',block:'start'});
 };
 
-// ── RENDERIZAR LISTAS SALVAS (com destaque para a em edição) ──
+// ── RENDERIZAR LISTAS SALVAS ──
 function renderListasGrid(){
   const el = document.getElementById('listasSection');
   const listas = Object.entries(S.listas)
@@ -1258,6 +1315,8 @@ function renderListasGrid(){
       ${listas.map(l=>{
         const isEditing = S.editingLista===l.id;
         const itensComQtd = (l.items||[]).filter(i=>i.qtdComprar&&i.qtdComprar!=='').length;
+        const itensComEstoque = (l.items||[]).filter(i=>i.atual&&i.atual!=='').length;
+        const total = (l.items||[]).length;
         return `<div class="lista-card ${isEditing?'editing':''}">
           <div class="lista-card-top">
             <div>
@@ -1273,8 +1332,9 @@ function renderListasGrid(){
           </div>
           ${badgeHtml(l.status)}
           <div class="lista-card-info">
-            <span>📦 ${(l.items||[]).length} produto(s)</span>
-            <span>✅ ${itensComQtd} com qtd.</span>
+            <span>📦 ${total} produto(s)</span>
+            <span style="color:var(--teal);">📊 ${itensComEstoque}/${total} c/ estoque</span>
+            <span>⭐ ${itensComQtd} c/ qtd.</span>
           </div>
           <div class="lista-card-obs">${l.obs||''}</div>
           <div class="lista-card-actions">
@@ -1289,18 +1349,16 @@ function renderListasGrid(){
     <hr class="section-divider">`;
 }
 
-// ── CARREGAR LISTA PARA EDIÇÃO (fix principal) ──
+// ── CARREGAR LISTA PARA EDIÇÃO ──
 window.carregarLista = id=>{
   const l = S.listas[id];
   if(!l){ toast('Lista não encontrada.','error'); return; }
 
-  // 1. Preenche campos do formulário
   document.getElementById('c_data').value = l.data||'';
   document.getElementById('c_responsavel').value = l.responsavel||'';
   document.getElementById('c_nome').value = l.nome||'';
   document.getElementById('c_obs').value = l.obs||'';
 
-  // 2. Cria deep copy dos itens para não afetar diretamente o Firebase
   S.checklistItems = (l.items||[]).map(i=>({
     id: i.id,
     item: i.item||'',
@@ -1311,25 +1369,17 @@ window.carregarLista = id=>{
     checked: i.checked||false
   }));
 
-  // 3. Seta a lista como "em edição" antes de renderizar
   S.editingLista = id;
   S._localEditing = false;
-
-  // 4. Atualiza status
   setStatus(l.status||'Cássia preencheu');
-
-  // 5. Renderiza a tabela
   renderChecklist();
 
-  // 6. Atualiza título e badge
   document.getElementById('gimbaFormTitle').textContent = `✏️ Editando: ${l.nome}`;
   document.getElementById('editingBadge').style.display = 'inline-flex';
-  document.getElementById('gimbaSubtitle').textContent = 'Lista carregada. Faça as alterações e clique em Salvar.';
+  document.getElementById('gimbaSubtitle').textContent = 'Lista carregada. Preencha o estoque atual e clique em Salvar.';
 
-  // 7. Re-renderiza o grid das listas salvas para destacar a que está sendo editada
   renderListasGrid();
 
-  // 8. Scroll suave até o formulário
   setTimeout(()=>{
     document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth',block:'start'});
   }, 120);
@@ -1391,14 +1441,15 @@ function gerarPDF(resp, nome, obs, status, items, data){
     <p style="margin-bottom:20px;"><strong>Status:</strong> ${status}</p>
     <table>
       <thead><tr>
-        <th>✓</th><th>Produto</th><th>Estoque Atual</th>
+        <th>✓</th><th>Produto</th>
+        <th style="background:#1a6b6b;color:white;">Estoque Atual</th>
         <th style="background:#b8922a;color:white;">Qtd. a Comprar</th>
         <th>Link Gimba</th><th>Obs.</th>
       </tr></thead>
       <tbody>${items.map(r=>`<tr>
         <td>${r.checked?'✅':'☐'}</td>
         <td><strong>${r.item}</strong></td>
-        <td>${r.atual||'—'}</td>
+        <td style="background:#e8f4f4;font-weight:700;text-align:center;color:#1a6b6b;">${r.atual!==''?r.atual:'—'}</td>
         <td style="background:#fff9e6;font-weight:700;text-align:center;">${r.qtdComprar||'—'}</td>
         <td style="font-size:11px;word-break:break-all;">${r.link||'—'}</td>
         <td>${r.obs||'—'}</td>
