@@ -1,845 +1,639 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Compras Gimba — OAB Santana de Parnaíba</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* ── Manto Sagrado Palette ── */
-  --void:       #05070f;
-  --deep:       #080d1e;
-  --navy:       #0b1328;
-  --royal:      #0d1a3a;
-  --mantle:     #111f4d;
-  --cobalt:     #1a2f6b;
-  --lapis:      #1e3a8a;
-  --azure:      #2348a8;
-  --sky:        #3461c4;
-  --ice:        #6b8fd4;
-  --frost:      #adc4f0;
-  --mist:       #dce8fc;
-  --white:      #f0f4ff;
-
-  /* ── Gold Accent ── */
-  --gold:       #c8a84b;
-  --gold-l:     #e0c06a;
-  --gold-pale:  #f5ead4;
-  --gold-dim:   #8a6e28;
-
-  /* ── Semantic ── */
-  --surface:    #0e172e;
-  --surface-2:  #131e3a;
-  --surface-3:  #192444;
-  --border:     rgba(107,143,212,0.18);
-  --border-l:   rgba(107,143,212,0.10);
-  --text:       #e8eeff;
-  --text-2:     #a0b4d8;
-  --text-3:     #6b7f9e;
-  --muted:      #4a5a78;
-
-  /* ── Status ── */
-  --green:      #22c55e;
-  --green-bg:   rgba(34,197,94,0.12);
-  --amber:      #f59e0b;
-  --amber-bg:   rgba(245,158,11,0.12);
-  --red:        #ef4444;
-  --red-bg:     rgba(239,68,68,0.12);
-  --purple:     #a855f7;
-  --purple-bg:  rgba(168,85,247,0.12);
-
-  --radius:     10px;
-  --radius-lg:  16px;
-  --radius-xl:  22px;
-  --shadow:     0 4px 24px rgba(5,7,15,0.5);
-  --shadow-md:  0 8px 40px rgba(5,7,15,0.65);
-  --shadow-lg:  0 20px 80px rgba(5,7,15,0.8);
-  --glow:       0 0 40px rgba(35,72,168,0.25);
+  --black: #000000;
+  --ink: #111111;
+  --white: #ffffff;
+  --gray-50: #f7f7f7;
+  --gray-100: #efefef;
+  --gray-200: #e2e2e2;
+  --gray-400: #9a9a9a;
+  --gray-600: #5e5e5e;
+  --yellow: #ffd400;
+  --yellow-soft: #fff6c2;
+  --blue-soft: #eef2f7;
+  --green: #1b9e4b;
+  --green-soft: #e7f6ec;
+  --amber: #c77700;
+  --amber-soft: #fff3e0;
+  --red: #d7263d;
+  --red-soft: #fdecee;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family:'Outfit',sans-serif;
-  background:var(--void);
-  color:var(--text);
-  min-height:100vh;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(30,58,138,0.25) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(13,26,58,0.4) 0%, transparent 60%);
+  font-family: 'Montserrat', system-ui, sans-serif;
+  background: var(--gray-50);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 14px;
 }
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:6px;height:6px;}
-::-webkit-scrollbar-track{background:var(--deep);}
-::-webkit-scrollbar-thumb{background:var(--cobalt);border-radius:99px;}
-
-/* ══════════════════ HEADER ══════════════════ */
-.site-header {
-  background:rgba(8,13,30,0.92);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  padding:0 40px;
-  display:flex;
-  align-items:center;
-  height:72px;
-  position:sticky;
-  top:0;
-  z-index:200;
-  gap:20px;
-  box-shadow:0 4px 32px rgba(5,7,15,0.7);
+/* ═════════ HEADER ═════════ */
+.topbar {
+  background: var(--black);
+  color: var(--white);
+  padding: 18px 36px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-
-.oab-seal {
-  width:46px;height:46px;
-  border:2px solid var(--gold);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;
-  font-size:15px;font-weight:700;
-  color:var(--gold);
-  flex-shrink:0;
-  box-shadow:0 0 16px rgba(200,168,75,0.2);
+.logo {
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.04em;
 }
-
-.brand-text h1 {
-  font-family:'Cormorant Garamond',serif;
-  font-size:15px;font-weight:600;
-  letter-spacing:0.06em;
-  color:var(--white);
+.logo span { color: var(--yellow); }
+.topbar-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: #bdbdbd;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-left: 1px solid #333;
+  padding-left: 18px;
 }
-.brand-text p {
-  font-size:10px;
-  color:var(--text-3);
-  text-transform:uppercase;
-  letter-spacing:0.18em;
-  margin-top:2px;
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-
-.header-sep {
-  width:1px;height:38px;
-  background:var(--border);
-  margin:0 8px;
+.header-date {
+  font-size: 11px;
+  color: #bdbdbd;
+  text-transform: capitalize;
 }
-
-.nav-tabs{display:flex;gap:3px;}
-.nav-tab {
-  padding:7px 18px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:13px;font-weight:500;
-  color:var(--text-3);
-  transition:all .2s;
-  border:1px solid transparent;
-  background:none;
-  white-space:nowrap;
-  font-family:'Outfit',sans-serif;
-}
-.nav-tab:hover{color:var(--frost);background:var(--surface);}
-.nav-tab.active{
-  color:var(--gold);
-  background:rgba(200,168,75,0.1);
-  border-color:rgba(200,168,75,0.25);
-}
-
-.header-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
-.header-date{
-  font-size:11px;
-  color:var(--text-3);
-  font-family:'DM Mono',monospace;
-  letter-spacing:0.05em;
-}
-
-/* MODO CHEFIA BADGE */
 .mode-badge {
-  display:none;
-  align-items:center;gap:7px;
-  padding:5px 14px;
-  border-radius:100px;
-  font-size:11px;font-weight:600;
-  background:rgba(200,168,75,0.15);
-  border:1px solid rgba(200,168,75,0.4);
-  color:var(--gold);
-  text-transform:uppercase;letter-spacing:0.1em;
+  display: none;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--yellow);
+  color: var(--black);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-.mode-badge.visible{display:flex;}
+.mode-badge.visible { display: inline-flex; }
 
-/* ── SYNC BAR ── */
 .sync-bar {
-  display:flex;align-items:center;justify-content:center;
-  gap:8px;padding:7px;
-  font-size:11px;font-weight:500;
-  background:rgba(26,47,107,0.5);
-  color:var(--ice);
-  border-bottom:1px solid var(--border);
-  transition:all .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--gray-100);
+  color: var(--gray-600);
 }
-.sync-bar.ok{background:rgba(34,197,94,0.08);color:#4ade80;border-color:rgba(34,197,94,0.15);}
-.sync-bar.error{background:rgba(239,68,68,0.08);color:#f87171;}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.6s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-bar.ok { background: var(--green-soft); color: var(--green); }
+.sync-bar.error { background: var(--red-soft); color: var(--red); }
+.sync-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.6s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
 
-/* ══════════════════ STATS ══════════════════ */
-.stats-bar {
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
-  padding:16px 40px;
-  display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+/* ═════════ MAIN ═════════ */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 36px 60px;
 }
-.stat-pill {
-  display:flex;align-items:center;gap:10px;
-  padding:10px 18px;
-  border-radius:100px;
-  background:var(--surface-2);
-  border:1px solid var(--border);
-  transition:all .2s;
-  cursor:default;
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
-.stat-pill:hover{border-color:rgba(200,168,75,0.3);background:var(--surface-3);}
-.stat-pill .ico{font-size:16px;}
-.stat-pill .num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;font-weight:700;
-  line-height:1;color:var(--white);
+.page-sub {
+  color: var(--gray-600);
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 28px;
 }
-.stat-pill .lbl{
-  font-size:10px;color:var(--text-3);
-  text-transform:uppercase;letter-spacing:.12em;
-}
-.stats-title{
-  margin-left:auto;
-  font-family:'Cormorant Garamond',serif;
-  font-size:13px;color:var(--text-3);
-  font-style:italic;
-}
+.page-sub b { color: var(--ink); }
 
-/* ══════════════════ MAIN ══════════════════ */
-.main{padding:36px 40px;max-width:1360px;margin:0 auto;}
-
-.page-header{margin-bottom:30px;}
-.page-header h2 {
-  font-family:'Cormorant Garamond',serif;
-  font-size:30px;font-weight:600;
-  letter-spacing:0.02em;
-  color:var(--white);
+/* Passo a passo */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
 }
-.page-header p{font-size:13px;color:var(--text-2);margin-top:5px;}
+.step {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.step.done .step-num { background: var(--black); color: var(--yellow); }
 
-/* ══════════════════ CARD BASE ══════════════════ */
+/* ═════════ CARDS ═════════ */
 .card {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
 }
-.card-header {
-  padding:20px 28px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--surface-2);
-  border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+.card-head {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
-.card-header h3 {
-  font-family:'Cormorant Garamond',serif;
-  font-size:17px;font-weight:600;
-  color:var(--white);
+.card-head h3 {
+  font-size: 16px;
+  font-weight: 800;
 }
-.card-body{padding:28px;}
+.card-body { padding: 24px; }
 
-/* ══════════════════ FORM ══════════════════ */
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
-.fg-full{grid-column:1/-1;}
+.editing-pill {
+  background: var(--yellow);
+  color: var(--black);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-left: 8px;
+}
 
-.form-group{display:flex;flex-direction:column;gap:6px;}
-label{
-  font-size:10px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.12em;
-  color:var(--text-3);
+/* ═════════ LISTAS SALVAS ═════════ */
+.listas-section { margin-bottom: 32px; }
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-label .req{color:var(--red);}
-
-input[type=text],input[type=number],input[type=date],select,textarea {
-  width:100%;padding:11px 14px;
-  border:1.5px solid var(--border);
-  border-radius:8px;
-  font-family:'Outfit',sans-serif;font-size:13.5px;
-  color:var(--text);
-  background:var(--surface-2);
-  transition:all .18s;outline:none;
+.section-title small {
+  font-weight: 500;
+  color: var(--gray-400);
+  font-size: 13px;
 }
-input:focus,select:focus,textarea:focus{
-  border-color:var(--azure);
-  box-shadow:0 0 0 3px rgba(35,72,168,.18);
-  background:var(--surface-3);
+.listas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
 }
-input::placeholder,textarea::placeholder{color:var(--muted);}
-textarea{resize:vertical;min-height:72px;}
-select{cursor:pointer;}
-select option{background:var(--navy);}
-
-/* ══════════════════ BUTTONS ══════════════════ */
-.btn {
-  display:inline-flex;align-items:center;gap:7px;
-  padding:10px 20px;
-  border-radius:8px;
-  font-family:'Outfit',sans-serif;
-  font-size:13px;font-weight:600;
-  cursor:pointer;border:none;
-  transition:all .18s;
-  text-decoration:none;white-space:nowrap;
-}
-.btn-primary {
-  background:linear-gradient(135deg,var(--lapis),var(--azure));
-  color:white;
-  box-shadow:0 4px 16px rgba(30,58,138,0.4);
-}
-.btn-primary:hover{
-  background:linear-gradient(135deg,var(--azure),var(--sky));
-  transform:translateY(-1px);
-  box-shadow:0 6px 24px rgba(35,72,168,0.5);
-}
-.btn-gold {
-  background:linear-gradient(135deg,var(--gold-dim),var(--gold));
-  color:var(--void);
-  box-shadow:0 4px 16px rgba(200,168,75,0.3);
-  font-weight:700;
-}
-.btn-gold:hover{
-  background:linear-gradient(135deg,var(--gold),var(--gold-l));
-  transform:translateY(-1px);
-}
-.btn-secondary {
-  background:var(--surface-2);
-  color:var(--text-2);
-  border:1.5px solid var(--border);
-}
-.btn-secondary:hover{border-color:var(--ice);color:var(--frost);}
-.btn-danger {
-  background:transparent;
-  color:var(--text-3);
-  border:1.5px solid var(--border);
-}
-.btn-danger:hover{background:var(--red-bg);color:var(--red);border-color:rgba(239,68,68,.35);}
-.btn-ghost {
-  background:transparent;
-  color:var(--text-3);
-  border:1.5px solid transparent;
-}
-.btn-ghost:hover{background:var(--surface-2);color:var(--text);}
-.btn-sm{padding:6px 13px;font-size:12px;}
-.btn-xs{padding:4px 10px;font-size:11px;border-radius:6px;}
-.btn-row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center;}
-
-/* ══════════════════ BADGES ══════════════════ */
-.badge {
-  display:inline-flex;align-items:center;
-  padding:3px 10px;
-  border-radius:100px;
-  font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.07em;
-}
-.b-pending{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
-.b-waiting{background:rgba(107,143,212,.12);color:var(--ice);border:1px solid rgba(107,143,212,.3);}
-.b-approved{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.3);}
-.b-done{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(168,85,247,.3);}
-
-/* ══════════════════ LISTAS SALVAS ══════════════════ */
-.listas-section{margin-bottom:30px;}
-.listas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-
 .lista-card {
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:20px;
-  box-shadow:var(--shadow);
-  transition:all .22s;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  transition: all .2s;
 }
-.lista-card:hover{
-  border-color:rgba(107,143,212,.35);
-  box-shadow:var(--shadow-md),var(--glow);
-  transform:translateY(-2px);
+.lista-card:hover {
+  border-color: var(--black);
+  transform: translateY(-2px);
 }
-.lista-card.editing{
-  border-color:rgba(200,168,75,.5);
-  background:rgba(200,168,75,.04);
-  box-shadow:0 0 0 3px rgba(200,168,75,.1),var(--shadow);
+.lista-card.editing {
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 3px var(--yellow-soft);
 }
-.lista-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
-.lista-card-name{
-  font-family:'Cormorant Garamond',serif;
-  font-size:15px;font-weight:600;
-  color:var(--white);margin-bottom:3px;
+.lista-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
 }
-.lista-card-meta{font-size:11px;color:var(--text-3);}
-.lista-card-info{display:flex;gap:12px;margin-top:10px;font-size:11px;color:var(--text-3);}
-.lista-card-obs{
-  font-size:12px;color:var(--text-2);
-  font-style:italic;margin-top:8px;
-  border-top:1px solid var(--border-l);
-  padding-top:8px;
+.lista-name {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 4px;
 }
-.lista-card-actions{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;}
-.editing-pill{
-  background:rgba(200,168,75,.2);color:var(--gold);
-  font-size:9px;font-weight:700;
-  padding:2px 8px;border-radius:100px;
-  letter-spacing:.08em;text-transform:uppercase;
-  margin-left:6px;
-  border:1px solid rgba(200,168,75,.3);
+.lista-meta {
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
 }
-
-/* ══════════════════ GIMBA FORM CARD ══════════════════ */
-.gimba-card {
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:32px;
-  box-shadow:var(--shadow-md),var(--glow);
-  position:relative;
-  overflow:hidden;
+.lista-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-600);
 }
-.gimba-card::before {
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--lapis),var(--gold),var(--sky));
+.lista-info span {
+  background: var(--gray-100);
+  padding: 4px 9px;
+  border-radius: 6px;
 }
-.gimba-card-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:6px;
+.lista-obs {
+  font-size: 12px;
+  color: var(--gray-600);
+  border-top: 1px solid var(--gray-100);
+  padding-top: 10px;
+  margin-bottom: 4px;
 }
-.gimba-card-header h3 {
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;font-weight:600;color:var(--white);
-}
-.gimba-subtitle{font-size:13px;color:var(--text-2);margin-bottom:24px;}
-
-.gimba-meta {
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px;
-  padding:20px;
-  background:var(--surface-2);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  margin-bottom:24px;
+.lista-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+  flex-wrap: wrap;
 }
 
-/* ══════════════════ CHECKLIST TABLE ══════════════════ */
+/* ═════════ BADGES ═════════ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.b-preenchida { background: var(--amber-soft); color: var(--amber); }
+.b-aguardando { background: var(--blue-soft); color: var(--black); }
+.b-aprovada   { background: var(--green-soft); color: var(--green); }
+.b-finalizada { background: var(--black); color: var(--yellow); }
+
+/* ═════════ BOTÕES ═════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.btn-black { background: var(--black); color: var(--white); }
+.btn-black:hover { background: #222; }
+.btn-yellow { background: var(--yellow); color: var(--black); }
+.btn-yellow:hover { filter: brightness(.95); }
+.btn-outline { background: var(--white); color: var(--ink); border-color: var(--gray-200); }
+.btn-outline:hover { border-color: var(--black); }
+.btn-danger { background: var(--white); color: var(--gray-400); border-color: var(--gray-200); }
+.btn-danger:hover { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+.btn-ghost { background: transparent; color: var(--gray-600); }
+.btn-ghost:hover { color: var(--ink); background: var(--gray-100); }
+.btn-sm { padding: 7px 13px; font-size: 11px; }
+.btn-xs { padding: 5px 9px; font-size: 11px; }
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* ═════════ FORM ═════════ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.fg-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-600);
+}
+label .req { color: var(--red); }
+
+input[type=text], input[type=number], input[type=date] {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--white);
+  outline: none;
+  transition: border-color .15s;
+}
+input:focus { border-color: var(--black); }
+
+/* ═════════ CHECKLIST ═════════ */
 .checklist-wrap {
-  border:1.5px solid var(--border);
-  border-radius:var(--radius);
-  overflow:hidden;margin-bottom:18px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 6px;
 }
-.checklist-wrap table{width:100%;border-collapse:collapse;}
-.checklist-wrap th{
-  background:var(--surface-3);
-  padding:11px 15px;
-  font-size:10px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.1em;
-  color:var(--text-3);
-  border-bottom:1px solid var(--border);
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: var(--gray-50);
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--gray-600);
+  border-bottom: 1px solid var(--gray-200);
 }
-.th-teal{background:rgba(26,47,107,0.8) !important;color:var(--frost) !important;}
-.th-gold{background:rgba(200,168,75,0.15) !important;color:var(--gold) !important;}
-
-.checklist-wrap td{
-  padding:12px 15px;font-size:13px;
-  border-bottom:1px solid var(--border-l);
-  vertical-align:middle;
-  background:var(--surface);
+td {
+  padding: 12px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+  background: var(--white);
 }
-.checklist-wrap tr:last-child td{border-bottom:none;}
-.checklist-wrap tr:hover td{background:var(--surface-2);}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--gray-50); }
 
-/* Célula estoque */
-.td-estoque{background:rgba(26,47,107,0.15) !important;border-left:2px solid rgba(107,143,212,.3);}
-.td-estoque input{
-  background:var(--surface-2);
-  border:1.5px solid rgba(107,143,212,.4);
-  border-radius:6px;padding:7px 10px;
-  width:84px;font-size:14px;font-weight:600;
-  text-align:center;outline:none;
-  color:var(--frost);
-  font-family:'DM Mono',monospace;
+.th-estoque { background: var(--blue-soft) !important; color: var(--black) !important; }
+.th-qtd { background: var(--yellow) !important; color: var(--black) !important; }
+.td-estoque { background: #f7f9fc !important; }
+.td-qtd { background: #fffbe0 !important; }
+
+.num-input {
+  width: 96px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  border: 1.5px solid var(--gray-200);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  background: var(--white);
 }
-.td-estoque input:focus{box-shadow:0 0 0 3px rgba(107,143,212,.15);}
-.td-estoque input.vazio{border-color:var(--amber);color:var(--amber);}
+.num-input:focus { border-color: var(--black); }
+.td-estoque .num-input { border-color: #b9c7de; }
+.td-qtd .num-input { border-color: var(--yellow); border-width: 2px; }
+.num-input.vazio { border-color: var(--amber); color: var(--amber); }
 
-/* Célula qtd comprar */
-.td-gold{background:rgba(200,168,75,0.06) !important;border-left:2px solid rgba(200,168,75,.25);}
-.td-gold input{
-  background:var(--surface-2);
-  border:2px solid rgba(200,168,75,.4);
-  border-radius:6px;padding:7px 10px;
-  width:84px;font-size:14px;font-weight:700;
-  text-align:center;outline:none;
-  color:var(--gold);
-  font-family:'DM Mono',monospace;
-}
-.td-gold input:focus{box-shadow:0 0 0 3px rgba(200,168,75,.15);}
-
-/* ── Estoque badges ── */
-.es-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;}
-.es-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.25);}
-.es-low{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.25);}
-.es-zero{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.25);}
-
-/* ══════════════════ ADD BAR ══════════════════ */
 .add-bar {
-  display:grid;
-  grid-template-columns:2fr 100px 2fr 1fr 72px;
-  gap:9px;
-  padding:16px 18px;
-  background:var(--surface-2);
-  border-top:1.5px dashed var(--border);
-  align-items:end;
+  display: grid;
+  grid-template-columns: 2.4fr 120px 1.6fr 1.2fr 80px;
+  gap: 10px;
+  padding: 16px;
+  background: var(--gray-50);
+  border-top: 1.5px dashed var(--gray-200);
+  align-items: end;
 }
-.add-bar-field{display:flex;flex-direction:column;gap:4px;}
-.add-bar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);}
-.add-bar input{
-  padding:9px 12px;font-size:13px;
-  background:var(--surface-3);
-  border:1.5px solid var(--border);
-  border-radius:7px;width:100%;
-  color:var(--text);font-family:'Outfit',sans-serif;
-}
-.add-bar input:focus{border-color:var(--azure);outline:none;}
-.add-bar input.estoque-input{
-  border-color:rgba(107,143,212,.5);
-  color:var(--frost);font-weight:600;
-  font-family:'DM Mono',monospace;
-}
+.add-bar-field { display: flex; flex-direction: column; gap: 5px; }
+.add-bar input { padding: 9px 11px; font-size: 12px; }
 
-/* ══════════════════ STATUS FLOW ══════════════════ */
-.status-section{
-  border:1.5px solid var(--border);
-  border-radius:var(--radius);
-  overflow:hidden;margin-bottom:20px;
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray-400);
 }
-.status-section-header{
-  padding:12px 20px;background:var(--surface-2);
-  border-bottom:1px solid var(--border);
-  font-size:11px;font-weight:600;color:var(--text-3);
-  text-transform:uppercase;letter-spacing:.1em;
-}
-.status-flow{
-  display:flex;align-items:center;
-  gap:7px;padding:14px 20px;
-  flex-wrap:wrap;background:var(--surface);
-}
-.status-step{
-  display:flex;align-items:center;gap:5px;
-  padding:7px 14px;border-radius:100px;
-  font-size:12px;font-weight:600;
-  cursor:pointer;border:1.5px solid transparent;
-  transition:all .18s;
-}
-.status-step.active{
-  border-color:rgba(200,168,75,.5);
-  background:rgba(200,168,75,.12);
-  color:var(--gold);
-}
-.status-step:not(.active){
-  background:var(--surface-2);
-  color:var(--text-3);
-  border-color:var(--border);
-}
-.status-step:not(.active):hover{border-color:rgba(107,143,212,.4);color:var(--frost);}
-.status-arrow{color:var(--muted);font-size:12px;}
-.status-current{
-  padding:10px 20px;
-  border-top:1px solid var(--border-l);
-  background:var(--surface-2);
-  font-size:12px;
-  display:flex;align-items:center;gap:8px;
-}
+.empty .ico { font-size: 36px; margin-bottom: 10px; opacity: .5; }
+.empty h4 { font-size: 14px; color: var(--gray-600); margin-bottom: 4px; }
+.empty p { font-size: 12px; }
 
-/* ══════════════════ FILTER CHIPS ══════════════════ */
-.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
-.fc{
-  padding:7px 16px;border-radius:100px;
-  border:1.5px solid var(--border);
-  background:var(--surface-2);
-  font-size:11px;font-weight:600;
-  cursor:pointer;transition:all .18s;
-  color:var(--text-3);
+/* ═════════ STATUS ═════════ */
+.status-section {
+  margin-top: 24px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  overflow: hidden;
 }
-.fc.active{
-  background:linear-gradient(135deg,var(--lapis),var(--azure));
-  border-color:transparent;color:white;
+.status-head {
+  padding: 10px 18px;
+  background: var(--gray-50);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-600);
+  border-bottom: 1px solid var(--gray-200);
 }
-.fc:hover:not(.active){border-color:rgba(107,143,212,.4);color:var(--frost);}
+.status-flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 18px;
+}
+.status-step {
+  padding: 8px 14px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-600);
+  transition: all .15s;
+}
+.status-step:hover { border-color: var(--black); color: var(--ink); }
+.status-step.active { background: var(--black); color: var(--yellow); border-color: var(--black); }
+.status-arrow { color: var(--gray-400); font-size: 12px; }
 
-/* ══════════════════ TABLE ══════════════════ */
-.table-wrap {
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-xl);
-  overflow:hidden;
-  box-shadow:var(--shadow);
+/* ═════════ MODAIS ═════════ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
-.table-toolbar {
-  display:flex;align-items:center;gap:14px;
-  padding:16px 22px;
-  border-bottom:1px solid var(--border);
-  background:var(--surface-2);flex-wrap:wrap;
+.modal-box {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 36px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
 }
-.table-toolbar h3{
-  font-family:'Cormorant Garamond',serif;
-  font-size:15px;font-weight:600;color:var(--white);
+.modal-box h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+.modal-box p { font-size: 13px; color: var(--gray-600); margin-bottom: 18px; }
+.link-display {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 11px;
+  word-break: break-all;
+  margin-bottom: 18px;
+  text-align: left;
+  color: var(--gray-600);
 }
-.search-box input{
-  padding:8px 13px;
-  border:1.5px solid var(--border);
-  border-radius:7px;font-size:13px;
-  width:200px;background:var(--surface);
-  color:var(--text);
+.instructions {
+  background: var(--yellow-soft);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: 12px;
 }
-.search-box input:focus{border-color:var(--azure);outline:none;}
+.instructions strong { display: block; margin-bottom: 8px; font-size: 13px; }
+.instructions ol { margin-left: 18px; line-height: 2; }
 
-table{width:100%;border-collapse:collapse;}
-th{
-  background:var(--surface-2);
-  padding:12px 16px;text-align:left;
-  font-size:10px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.09em;
-  color:var(--text-3);
-  border-bottom:1px solid var(--border);
-}
-td{
-  padding:13px 16px;font-size:13px;
-  border-bottom:1px solid var(--border-l);
-  vertical-align:middle;
-  color:var(--text-2);
-}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:var(--surface-2);}
-tr.winner-row td{background:var(--green-bg);}
-tr.winner-row td:first-child{border-left:3px solid var(--green);}
-
-/* ══════════════════ SUPPLIERS ══════════════════ */
-.suppliers-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:18px;
-}
-.supplier-card{
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:22px;
-  box-shadow:var(--shadow);
-  transition:all .22s;
-}
-.supplier-card:hover{
-  transform:translateY(-2px);
-  box-shadow:var(--shadow-md),var(--glow);
-  border-color:rgba(107,143,212,.35);
-}
-
-/* ══════════════════ EMPTY STATE ══════════════════ */
-.empty{text-align:center;padding:52px 20px;color:var(--muted);}
-.empty .ico{font-size:44px;margin-bottom:16px;opacity:.35;}
-.empty h4{
-  font-family:'Cormorant Garamond',serif;
-  font-size:18px;margin-bottom:6px;
-  color:var(--text-3);
-}
-.empty p{font-size:12px;}
-
-/* ══════════════════ TOAST ══════════════════ */
-.toast-container{
-  position:fixed;bottom:28px;right:28px;
-  z-index:9999;
-  display:flex;flex-direction:column;gap:9px;
-}
-.toast{
-  background:var(--surface-3);
-  color:var(--text);
-  padding:14px 18px;
-  border-radius:10px;
-  font-size:13px;font-weight:500;
-  display:flex;align-items:center;gap:9px;
-  box-shadow:var(--shadow-md);
-  animation:slideIn .25s ease;
-  min-width:260px;max-width:380px;
-  border:1px solid var(--border);
-}
-.toast.success{border-left:3px solid var(--green);}
-.toast.error{border-left:3px solid var(--red);}
-.toast.info{border-left:3px solid var(--gold);}
-@keyframes slideIn{from{transform:translateX(90px);opacity:0}to{transform:translateX(0);opacity:1}}
-
-/* ══════════════════ MODAL ══════════════════ */
-.modal-overlay{
-  display:none;
-  position:fixed;inset:0;
-  background:rgba(5,7,15,.85);
-  backdrop-filter:blur(8px);
-  z-index:1000;
-  align-items:center;justify-content:center;
-  padding:24px;
-}
-.modal-box{
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:40px;max-width:500px;width:100%;
-  box-shadow:var(--shadow-lg);
-  text-align:center;
-}
-.modal-box h3{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;margin-bottom:8px;color:var(--white);
-}
-.modal-box p{font-size:13px;color:var(--text-2);margin-bottom:20px;}
-.link-display{
-  background:var(--surface-2);
-  border:1px solid var(--border);
-  border-radius:8px;padding:13px;
-  font-family:'DM Mono',monospace;font-size:11px;
-  word-break:break-all;margin-bottom:20px;
-  color:var(--text-3);text-align:left;
-}
-.chefe-instructions{
-  background:rgba(200,168,75,.06);
-  border:1px solid rgba(200,168,75,.25);
-  border-radius:var(--radius);padding:18px;
-  margin-bottom:24px;text-align:left;
-}
-.chefe-instructions strong{font-size:13px;color:var(--gold);}
-.chefe-instructions ol{font-size:13px;margin-top:9px;margin-left:18px;line-height:2.2;color:var(--text-2);}
-
-/* ══════════════════ REPORT MODAL ══════════════════ */
-.report-modal{
-  display:none;position:fixed;inset:0;
-  background:rgba(5,7,15,.85);
-  backdrop-filter:blur(8px);
-  z-index:1000;overflow-y:auto;padding:28px;
-}
-.report-wrap{
-  max-width:840px;margin:0 auto;
-  background:white;border-radius:var(--radius-xl);
-  overflow:hidden;box-shadow:var(--shadow-lg);
-}
-.report-header{
-  background:var(--navy);color:white;
-  padding:16px 24px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.report-body{padding:52px;color:#1a1a2e;}
-.report-oab-header{
-  text-align:center;padding-bottom:24px;
-  border-bottom:2px solid #1a1a2e;
-  margin-bottom:30px;
-}
-.report-oab-header h2{
-  font-family:'Cormorant Garamond',serif;
-  font-size:20px;color:#1a1a2e;
-}
-
-/* ══════════════════ NAV ══════════════════ */
-.panel{display:none;}
-.panel.active{display:block;}
-.section-divider{border:none;border-top:1px solid var(--border-l);margin:26px 0;}
-
-/* ══════════════════ MODO CHEFIA ══════════════════ */
 .chefia-overlay {
-  display:none;
-  position:fixed;inset:0;
-  background:rgba(5,7,15,.92);
-  backdrop-filter:blur(10px);
-  z-index:500;
-  align-items:center;justify-content:center;
-  padding:24px;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
 .chefia-box {
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:48px;max-width:900px;width:100%;
-  box-shadow:var(--shadow-lg);
-  max-height:90vh;overflow-y:auto;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
-.chefia-box h2{
-  font-family:'Cormorant Garamond',serif;
-  font-size:26px;font-weight:600;
-  color:var(--white);margin-bottom:6px;
+.chefia-box h2 { font-size: 22px; font-weight: 900; }
+.chefia-info {
+  background: var(--yellow-soft);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 16px 0;
 }
-.chefia-box p{font-size:13px;color:var(--text-2);margin-bottom:24px;}
-.chefia-table-wrap{
-  border:1.5px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;
-  margin-bottom:20px;
-}
-.chefia-table-wrap table{width:100%;border-collapse:collapse;}
-.chefia-table-wrap th{
-  background:var(--surface-3);
-  padding:11px 16px;
-  font-size:10px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.1em;
-  color:var(--text-3);
-  border-bottom:1px solid var(--border);
-}
-.chefia-table-wrap td{
-  padding:12px 16px;font-size:13px;
-  border-bottom:1px solid var(--border-l);
-  vertical-align:middle;background:var(--surface);
-  color:var(--text-2);
-}
-.chefia-table-wrap tr:last-child td{border-bottom:none;}
-.chefia-table-wrap tr:hover td{background:var(--surface-2);}
-.chefia-td-gold{background:rgba(200,168,75,0.07) !important;border-left:2px solid rgba(200,168,75,.35);}
-.chefia-td-gold input{
-  background:var(--surface-2);
-  border:2px solid rgba(200,168,75,.45);
-  border-radius:6px;padding:7px 11px;
-  width:90px;font-size:15px;font-weight:700;
-  text-align:center;outline:none;
-  color:var(--gold);
-  font-family:'DM Mono',monospace;
-}
-.chefia-td-gold input:focus{box-shadow:0 0 0 3px rgba(200,168,75,.18);}
-.chefia-info-row{
-  display:flex;gap:8px;align-items:center;
-  padding:12px 18px;
-  background:var(--amber-bg);
-  border-radius:var(--radius);
-  border:1px solid rgba(245,158,11,.25);
-  margin-bottom:18px;
-  font-size:12px;color:var(--amber);font-weight:500;
+.chefia-table {
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-/* ══════════════════ RESPONSIVE ══════════════════ */
-@media print{
-  .site-header,.stats-bar,.sync-bar,.print-hide{display:none!important;}
-  body{background:white;}
-  .report-body{padding:20px;}
+/* Relatório (impressão) */
+.report-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 28px;
 }
-@media(max-width:768px){
-  .site-header{padding:0 18px;}
-  .main{padding:18px;}
-  .add-bar{grid-template-columns:1fr 1fr;}
-  .stats-bar{padding:12px 18px;}
+.report-wrap {
+  max-width: 840px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.report-header {
+  background: var(--black);
+  color: var(--white);
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.report-body { padding: 44px; color: #111; }
+.report-title {
+  text-align: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #111;
+  margin-bottom: 24px;
+}
+.report-title h2 { font-size: 18px; font-weight: 900; }
+.report-title p { font-size: 12px; color: #555; margin-top: 4px; }
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 26px;
+  right: 26px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--black);
+  color: var(--white);
+  padding: 13px 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 250px;
+  max-width: 380px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  animation: slideIn .25s ease;
+  border-left: 4px solid var(--yellow);
+}
+.toast.error { border-left-color: var(--red); }
+.toast.success { border-left-color: var(--green); }
+@keyframes slideIn { from { transform: translateX(80px); opacity: 0 } to { transform: none; opacity: 1 } }
+
+.chefe-hint {
+  font-size: 12px;
+  color: var(--gray-600);
+  margin-top: 6px;
+}
+
+/* ═════════ RESPONSIVO ═════════ */
+@media (max-width: 900px) {
+  .steps { grid-template-columns: 1fr 1fr; }
+  .add-bar { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 14px 18px; flex-wrap: wrap; }
+  .topbar-sub { display: none; }
+  .main { padding: 20px 16px 50px; }
+  .steps { grid-template-columns: 1fr; }
+}
+@media print {
+  .topbar, .sync-bar, .print-hide { display: none !important; }
+  body { background: white; }
+  .report-body { padding: 18px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════ HEADER ══════════════════ -->
-<header class="site-header">
-  <div class="oab-seal">OAB</div>
-  <div class="brand-text">
-    <h1>OAB Santana de Parnaíba</h1>
-    <p>247ª Subseção</p>
-  </div>
-  <div class="header-sep"></div>
-  <nav class="nav-tabs" id="mainNav">
-    <button class="nav-tab active" onclick="showPanel('compras',this)">🛒 Compras Gimba</button>
-    <button class="nav-tab" onclick="showPanel('site',this)">📄 Orçamentos</button>
-    <button class="nav-tab" onclick="showPanel('fornecedores',this)">🏢 Fornecedores</button>
-  </nav>
-  <div class="header-right">
+<header class="topbar">
+  <div class="logo">GIMBA<span>.</span></div>
+  <div class="topbar-sub">Compras · OAB Santana de Parnaíba<br>247ª Subseção</div>
+  <div class="topbar-right">
     <div class="mode-badge" id="modeBadge">👑 Modo Chefia</div>
     <div class="header-date" id="headerDate"></div>
   </div>
@@ -850,272 +644,136 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
   <span id="syncMsg">Conectando ao banco de dados...</span>
 </div>
 
-<div class="stats-bar">
-  <div class="stat-pill"><span class="ico">🛒</span><div><div class="num" id="statListas">0</div><div class="lbl">Listas</div></div></div>
-  <div class="stat-pill"><span class="ico">📋</span><div><div class="num" id="statOrc">0</div><div class="lbl">Orçamentos</div></div></div>
-  <div class="stat-pill"><span class="ico">✅</span><div><div class="num" id="statAprov">0</div><div class="lbl">Aprovados</div></div></div>
-  <div class="stat-pill"><span class="ico">🏢</span><div><div class="num" id="statForn">0</div><div class="lbl">Fornecedores</div></div></div>
-  <span class="stats-title" id="statsTitle">—</span>
-</div>
-
 <main class="main">
 
-<!-- ══ PAINEL COMPRAS GIMBA ══ -->
-<div id="panel-compras" class="panel active">
-  <div class="page-header">
-    <h2>Compras Gimba</h2>
-    <p>Preencha o estoque atual → salve → envie para a chefia → ela coloca a quantidade → aprovado!</p>
+  <h1 class="page-title">Lista de Compras</h1>
+  <p class="page-sub">Confira o <b>estoque atual</b>, salve e envie para a chefia. A chefia define a <b>quantidade a comprar</b> e aprova.</p>
+
+  <div class="steps">
+    <div class="step" id="passo1"><span class="step-num">1</span> Cássia informa o estoque</div>
+    <div class="step" id="passo2"><span class="step-num">2</span> Salva e envia para a chefia</div>
+    <div class="step" id="passo3"><span class="step-num">3</span> Chefia define a quantidade</div>
+    <div class="step" id="passo4"><span class="step-num">4</span> Chefia aprova a lista</div>
   </div>
 
-  <div class="listas-section" id="listasSection"></div>
+  <section class="listas-section" id="listasSection"></section>
 
-  <div class="gimba-card" id="gimbaForm">
-    <div class="gimba-card-header">
-      <h3 id="gimbaFormTitle">📦 Nova Lista de Compras</h3>
-      <span id="editingBadge" style="display:none;" class="editing-pill">Editando</span>
+  <div class="card" id="gimbaForm">
+    <div class="card-head">
+      <h3 id="gimbaFormTitle">Nova Lista de Compras</h3>
+      <span id="editingBadge" class="editing-pill" style="display:none;">Editando</span>
     </div>
-    <p class="gimba-subtitle" id="gimbaSubtitle">Preencha os dados, adicione os produtos com o <strong style="color:var(--frost);">estoque atual</strong> e clique em <strong style="color:var(--gold);">Salvar Lista</strong>.</p>
-
-    <div class="gimba-meta">
-      <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="c_data"></div>
-      <div class="form-group"><label>Responsável <span class="req">*</span></label><input type="text" id="c_responsavel" placeholder="Seu nome"></div>
-      <div class="form-group"><label>Nome da Lista</label><input type="text" id="c_nome" placeholder="Ex: Compras de Março"></div>
-      <div class="form-group fg-full"><label>Observação Geral <span class="req">*</span></label><input type="text" id="c_obs" placeholder="Ex: Urgente — precisamos antes de sexta"></div>
-    </div>
-
-    <div class="checklist-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:36px;">✓</th>
-            <th>Produto</th>
-            <th class="th-teal" style="width:155px;">📦 Estoque Atual</th>
-            <th class="th-gold" style="width:165px;">⭐ Qtd. a Comprar</th>
-            <th style="width:130px;">Link Gimba</th>
-            <th>Obs.</th>
-            <th class="print-hide" style="width:44px;"></th>
-          </tr>
-        </thead>
-        <tbody id="checklistBody"></tbody>
-      </table>
-
-      <div class="add-bar">
-        <div class="add-bar-field">
-          <span class="add-bar-label" style="color:var(--ice);">Produto *</span>
-          <input type="text" id="ci_item" placeholder="Nome do produto">
-        </div>
-        <div class="add-bar-field">
-          <span class="add-bar-label" style="color:var(--frost);">📦 Estoque *</span>
-          <input type="number" id="ci_atual" placeholder="0" min="0" class="estoque-input">
-        </div>
-        <div class="add-bar-field">
-          <span class="add-bar-label">Link Gimba</span>
-          <input type="text" id="ci_link" placeholder="URL opcional">
-        </div>
-        <div class="add-bar-field">
-          <span class="add-bar-label">Observação</span>
-          <input type="text" id="ci_obs" placeholder="Obs.">
-        </div>
-        <div class="add-bar-field" style="justify-content:flex-end;">
-          <button class="btn btn-primary btn-sm" onclick="adicionarItem()" style="height:40px;">+ Add</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="status-section">
-      <div class="status-section-header">Status da Lista</div>
-      <div class="status-flow">
-        <span class="status-step active" id="ss1" onclick="setStatus('Cássia preencheu')">📝 Cássia preencheu</span>
-        <span class="status-arrow">→</span>
-        <span class="status-step" id="ss2" onclick="setStatus('Aguardando Chefia')">⏳ Aguardando Chefia</span>
-        <span class="status-arrow">→</span>
-        <span class="status-step" id="ss3" onclick="setStatus('Aprovado pela Chefia')">✅ Aprovado</span>
-        <span class="status-arrow">→</span>
-        <span class="status-step" id="ss4" onclick="setStatus('Finalizado')">🏁 Finalizado</span>
-      </div>
-      <div class="status-current">
-        <strong style="font-size:11px;color:var(--text-3);">Status atual:</strong>
-        <span id="statusAtual" class="badge b-pending">Cássia preencheu</span>
-      </div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-gold" onclick="salvarLista()">💾 Salvar Lista</button>
-      <button class="btn btn-primary print-hide" onclick="enviarParaChefe()">🔗 Enviar para Chefia</button>
-      <button class="btn btn-secondary print-hide" onclick="exportarPDFAtual()">📄 Exportar PDF</button>
-      <button class="btn btn-ghost print-hide" onclick="novaLista()">🗒 Nova Lista</button>
-      <button class="btn btn-ghost print-hide" onclick="carregarListaPadrao()" style="border:1.5px solid rgba(200,168,75,.3);color:var(--gold);">📋 Lista Padrão</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAINEL ORÇAMENTOS ══ -->
-<div id="panel-site" class="panel">
-  <div class="page-header">
-    <h2>Orçamentos para Sites</h2>
-    <p>Registre e compare propostas. O sistema aponta o menor preço automaticamente.</p>
-  </div>
-  <div class="card" style="margin-bottom:24px;">
-    <div class="card-header"><h3>Novo Orçamento</h3></div>
     <div class="card-body">
       <div class="form-grid">
-        <div class="form-group"><label>Nº do Orçamento <span class="req">*</span></label><input type="text" id="s_num" placeholder="ORC-001"></div>
-        <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="s_data"></div>
-        <div class="form-group"><label>Fornecedor <span class="req">*</span></label><input type="text" id="s_fornecedor" placeholder="Nome da empresa"></div>
-        <div class="form-group"><label>CNPJ</label><input type="text" id="s_cnpj" placeholder="00.000.000/0000-00"></div>
-        <div class="form-group fg-full"><label>Descrição do Serviço <span class="req">*</span></label><textarea id="s_descricao" placeholder="Descreva o serviço cotado..."></textarea></div>
-        <div class="form-group"><label>Valor Total (R$) <span class="req">*</span></label><input type="number" id="s_valor" placeholder="0.00" step="0.01"></div>
-        <div class="form-group"><label>Prazo de Execução</label><input type="text" id="s_prazo" placeholder="Ex: 30 dias"></div>
-        <div class="form-group"><label>Condições de Pagamento</label><input type="text" id="s_pagamento" placeholder="Ex: 50% entrada + 50% entrega"></div>
-        <div class="form-group"><label>Status</label>
-          <select id="s_status">
-            <option value="pendente">Pendente</option>
-            <option value="aprovado">Aprovado</option>
-            <option value="reprovado">Reprovado</option>
-          </select>
-        </div>
-        <div class="form-group fg-full"><label>Observações <span class="req">*</span></label><textarea id="s_obs" placeholder="Registre qualquer informação relevante..."></textarea></div>
+        <div class="form-group"><label>Data <span class="req">*</span></label><input type="date" id="c_data"></div>
+        <div class="form-group"><label>Responsável <span class="req">*</span></label><input type="text" id="c_responsavel" placeholder="Seu nome"></div>
+        <div class="form-group"><label>Nome da Lista</label><input type="text" id="c_nome" placeholder="Ex: Compras de Dezembro"></div>
+        <div class="form-group"><label>Observação <span class="req">*</span></label><input type="text" id="c_obs" placeholder="Ex: Urgente — precisamos até sexta"></div>
       </div>
+
+      <div class="checklist-wrap" style="margin-top:22px;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:44px;">✓</th>
+              <th>Produto</th>
+              <th class="th-estoque" style="width:150px;">📦 Quantos tem</th>
+              <th class="th-qtd" style="width:160px;">⭐ Quantidade a comprar</th>
+              <th style="width:130px;">Link Gimba</th>
+              <th>Obs.</th>
+              <th class="print-hide" style="width:50px;"></th>
+            </tr>
+          </thead>
+          <tbody id="checklistBody"></tbody>
+        </table>
+
+        <div class="add-bar print-hide">
+          <div class="add-bar-field">
+            <label>Produto *</label>
+            <input type="text" id="ci_item" placeholder="Nome do produto">
+          </div>
+          <div class="add-bar-field">
+            <label>📦 Quantos tem *</label>
+            <input type="number" id="ci_atual" placeholder="0" min="0">
+          </div>
+          <div class="add-bar-field">
+            <label>Link Gimba</label>
+            <input type="text" id="ci_link" placeholder="URL opcional">
+          </div>
+          <div class="add-bar-field">
+            <label>Observação</label>
+            <input type="text" id="ci_obs" placeholder="Opcional">
+          </div>
+          <div class="add-bar-field" style="justify-content:flex-end;">
+            <button class="btn btn-black btn-sm" onclick="adicionarItem()" style="height:40px;">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-section">
+        <div class="status-head">Status da lista</div>
+        <div class="status-flow">
+          <span class="status-step active" id="ss1" onclick="setStatus('Preenchida')">📝 Preenchida</span>
+          <span class="status-arrow">→</span>
+          <span class="status-step" id="ss2" onclick="setStatus('Aguardando Chefia')">⏳ Aguardando Chefia</span>
+          <span class="status-arrow">→</span>
+          <span class="status-step" id="ss3" onclick="setStatus('Aprovada pela Chefia')">✅ Aprovada</span>
+          <span class="status-arrow">→</span>
+          <span class="status-step" id="ss4" onclick="setStatus('Finalizada')">🏁 Finalizada</span>
+        </div>
+      </div>
+
       <div class="btn-row">
-        <button class="btn btn-gold" onclick="salvarOrcamento()">💾 Salvar Orçamento</button>
-        <button class="btn btn-secondary" onclick="limparFormSite()">↺ Limpar</button>
+        <button class="btn btn-yellow" onclick="salvarLista()">💾 Salvar Lista</button>
+        <button class="btn btn-black print-hide" onclick="enviarParaChefe()">🔗 Enviar para Chefia</button>
+        <button class="btn btn-outline print-hide" onclick="exportarPDFAtual()">📄 Gerar PDF</button>
+        <button class="btn btn-ghost print-hide" onclick="novaLista()">🗒 Nova Lista</button>
+        <button class="btn btn-ghost print-hide" onclick="carregarListaPadrao()">📋 Lista Padrão Gimba</button>
       </div>
     </div>
   </div>
-
-  <div class="filter-row" id="siteFilters">
-    <span class="fc active" onclick="filtrarSite('todos',this)">Todos</span>
-    <span class="fc" onclick="filtrarSite('pendente',this)">Pendentes</span>
-    <span class="fc" onclick="filtrarSite('aprovado',this)">Aprovados</span>
-    <span class="fc" onclick="filtrarSite('reprovado',this)">Reprovados</span>
-  </div>
-
-  <div class="table-wrap">
-    <div class="table-toolbar">
-      <h3>Histórico de Orçamentos</h3>
-      <div class="search-box"><input type="text" id="searchSite" placeholder="🔍 Buscar..." oninput="renderOrcamentos()"></div>
-      <button class="btn btn-secondary btn-sm print-hide" onclick="gerarRelatorioSites()">📄 Gerar PDF</button>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Nº</th>
-          <th>Data</th>
-          <th>Fornecedor</th>
-          <th>Serviço</th>
-          <th>Valor</th>
-          <th>Prazo</th>
-          <th>Status</th>
-          <th class="print-hide">Ações</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaOrc">
-        <tr><td colspan="8"><div class="empty"><div class="ico">📋</div><h4>Conectando...</h4></div></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div id="compareSection" style="display:none;margin-top:24px;">
-    <div class="card">
-      <div class="card-header"><h3>📊 Comparativo de Propostas</h3></div>
-      <div class="card-body" id="compareContent"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAINEL FORNECEDORES ══ -->
-<div id="panel-fornecedores" class="panel">
-  <div class="page-header">
-    <h2>Gestão de Fornecedores</h2>
-    <p>Cadastro e controle de fornecedores homologados.</p>
-  </div>
-  <div class="card" style="margin-bottom:24px;">
-    <div class="card-header"><h3>Cadastrar Fornecedor</h3></div>
-    <div class="card-body">
-      <div class="form-grid">
-        <div class="form-group"><label>Nome Empresarial <span class="req">*</span></label><input type="text" id="f_nome" placeholder="Razão social ou nome fantasia"></div>
-        <div class="form-group"><label>Responsável</label><input type="text" id="f_responsavel" placeholder="Nome do contato"></div>
-        <div class="form-group"><label>Telefone</label><input type="text" id="f_telefone" placeholder="(11) 99999-9999"></div>
-        <div class="form-group"><label>E-mail</label><input type="text" id="f_email" placeholder="contato@empresa.com.br"></div>
-        <div class="form-group"><label>Categoria</label>
-          <select id="f_categoria">
-            <option value="Site">Site / Digital</option>
-            <option value="Material de Escritório">Material de Escritório</option>
-            <option value="Tecnologia">Tecnologia / TI</option>
-            <option value="Outros">Outros</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Avaliação</label>
-          <select id="f_avaliacao">
-            <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
-            <option value="4">⭐⭐⭐⭐ Bom</option>
-            <option value="3">⭐⭐⭐ Regular</option>
-            <option value="2">⭐⭐ Ruim</option>
-            <option value="1">⭐ Péssimo</option>
-          </select>
-        </div>
-        <div class="form-group fg-full"><label>Observações</label><textarea id="f_obs" placeholder="Histórico, condições especiais, notas..."></textarea></div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-gold" onclick="salvarFornecedor()">💾 Salvar Fornecedor</button>
-        <button class="btn btn-secondary" onclick="limparFormForn()">↺ Limpar</button>
-      </div>
-    </div>
-  </div>
-  <div class="filter-row" id="fornFilters">
-    <span class="fc active" onclick="filtrarForn('Todos',this)">Todos</span>
-    <span class="fc" onclick="filtrarForn('Site',this)">Site / Digital</span>
-    <span class="fc" onclick="filtrarForn('Material de Escritório',this)">Mat. Escritório</span>
-    <span class="fc" onclick="filtrarForn('Tecnologia',this)">Tecnologia</span>
-    <span class="fc" onclick="filtrarForn('Outros',this)">Outros</span>
-  </div>
-  <div class="suppliers-grid" id="fornGrid">
-    <div class="empty" style="grid-column:1/-1"><div class="ico">🏢</div><h4>Conectando...</h4></div>
-  </div>
-</div>
 
 </main>
 
-<!-- ══ MODAL: LINK CHEFIA ══ -->
-<div class="modal-overlay" id="linkModal" style="display:none;">
+<!-- MODAL: LINK PARA CHEFIA -->
+<div class="modal-overlay" id="linkModal">
   <div class="modal-box">
-    <div style="font-size:48px;margin-bottom:16px;">🔗</div>
+    <div style="font-size:44px;margin-bottom:12px;">🔗</div>
     <h3>Link copiado!</h3>
-    <p>Mande este link para sua chefia pelo WhatsApp ou e-mail.</p>
+    <p>Mande este link para a chefia pelo WhatsApp ou e-mail.</p>
     <div class="link-display" id="linkDisplay"></div>
-    <div class="chefe-instructions">
-      <strong>📋 Instrução para a chefia:</strong>
+    <div class="instructions">
+      <strong>Passo a passo para a chefia:</strong>
       <ol>
         <li>Abrir o link</li>
-        <li>Ir em <strong>Compras Gimba</strong></li>
-        <li>Clicar em <strong>👑 Aprovar</strong> na lista</li>
-        <li>Preencher a coluna dourada <strong>"Qtd. a Comprar"</strong></li>
-        <li>Clicar em <strong>Salvar Aprovação</strong></li>
+        <li>Na lista, clicar em <b>👑 Aprovar</b></li>
+        <li>Preencher a coluna amarela <b>"Quantidade a comprar"</b></li>
+        <li>Clicar em <b>Salvar Aprovação</b></li>
       </ol>
     </div>
-    <button class="btn btn-gold" style="width:100%;" onclick="document.getElementById('linkModal').style.display='none'">Fechar</button>
+    <button class="btn btn-black" style="width:100%;justify-content:center;" onclick="document.getElementById('linkModal').style.display='none'">Fechar</button>
   </div>
 </div>
 
-<!-- ══ MODAL: MODO CHEFIA ══ -->
+<!-- MODAL: MODO CHEFIA -->
 <div class="chefia-overlay" id="chefiaOverlay">
   <div class="chefia-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <h2>👑 Aprovação da Chefia</h2>
-      <button class="btn btn-secondary btn-sm" onclick="fecharModoChefe()">✕ Fechar</button>
+      <button class="btn btn-outline btn-sm" onclick="fecharModoChefe()">✕ Fechar</button>
     </div>
-    <p id="chefiaSubtitle">Preencha apenas a coluna dourada com a quantidade a comprar de cada item.</p>
-    <div class="chefia-info-row">
-      ⚠️ Apenas a coluna <strong style="margin:0 4px;">"Qtd. a Comprar"</strong> é editável neste modo. Os demais dados são somente leitura.
+    <p class="chefe-hint" id="chefiaSubtitle"></p>
+    <div class="chefia-info">
+      ⚠️ Apenas a coluna <b>amarela</b> é editável. Os demais dados são só para consulta.
     </div>
-    <div id="chefiaListaInfo" style="margin-bottom:16px;padding:14px 18px;background:var(--surface-2);border-radius:var(--radius);border:1px solid var(--border);font-size:13px;color:var(--text-2);"></div>
-    <div class="chefia-table-wrap">
+    <div id="chefiaListaInfo" style="margin-bottom:16px;padding:14px 18px;background:var(--gray-50);border-radius:10px;font-size:13px;"></div>
+    <div class="chefia-table">
       <table>
         <thead>
           <tr>
             <th>Produto</th>
-            <th style="background:rgba(26,47,107,0.6);color:var(--frost);">📦 Estoque Atual</th>
-            <th style="background:rgba(200,168,75,0.15);color:var(--gold);">⭐ Qtd. a Comprar</th>
+            <th class="th-estoque" style="text-align:center;">📦 Quantos tem</th>
+            <th class="th-qtd" style="text-align:center;">⭐ Quantidade a comprar</th>
             <th>Obs.</th>
           </tr>
         </thead>
@@ -1123,19 +781,19 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
       </table>
     </div>
     <div class="btn-row">
-      <button class="btn btn-gold" onclick="salvarAprovacaoChefe()">✅ Salvar Aprovação</button>
-      <button class="btn btn-secondary" onclick="fecharModoChefe()">Cancelar</button>
+      <button class="btn btn-yellow" onclick="salvarAprovacaoChefe()">✅ Salvar Aprovação</button>
+      <button class="btn btn-outline" onclick="fecharModoChefe()">Cancelar</button>
     </div>
   </div>
 </div>
 
-<!-- ══ MODAL: RELATÓRIO PDF ══ -->
+<!-- MODAL: RELATÓRIO / PDF -->
 <div class="report-modal" id="reportModal">
   <div class="report-wrap">
     <div class="report-header">
-      <span style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:16px;">📄 Relatório Formal</span>
+      <span style="font-weight:800;">📄 Lista de Compras</span>
       <div style="display:flex;gap:8px;" class="print-hide">
-        <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Imprimir / PDF</button>
+        <button class="btn btn-yellow btn-sm" onclick="window.print()">🖨️ Imprimir / PDF</button>
         <button class="btn btn-danger btn-sm" onclick="document.getElementById('reportModal').style.display='none'">✕ Fechar</button>
       </div>
     </div>
@@ -1147,7 +805,7 @@ tr.winner-row td:first-child{border-left:3px solid var(--green);}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const _cfg = {
   apiKey: atob("QUl6YVN5Q19sZkJTUzJqWkJOY0UzZlZFQVBILTRuWlR5RllhV0o4"),
@@ -1163,518 +821,237 @@ const app = initializeApp(_cfg);
 const db = getDatabase(app);
 
 const S = {
-  orcamentos:{}, fornecedores:{}, listas:{},
-  checklistItems:[], checklistStatus:'Cássia preencheu',
-  editingOrc:null, editingForn:null, editingLista:null,
-  filtroSite:'todos', filtroForn:'Todos',
+  listas: {},
+  checklistItems: [],
+  checklistStatus: 'Preenchida',
+  editingLista: null,
   _localEditing: false,
   chefiaListaId: null,
   chefiaItems: []
 };
 
 // ── Helpers ──
-function setSyncStatus(type, msg){
+function setSyncStatus(type, msg) {
   const bar = document.getElementById('syncBar');
   bar.className = 'sync-bar ' + type;
   document.getElementById('syncMsg').textContent = msg;
 }
 
-function toast(msg, type='success'){
+function toast(msg, type = 'success') {
   const c = document.getElementById('toastContainer');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  const ico = type==='success'?'✅':type==='error'?'❌':'ℹ️';
-  el.innerHTML = `<span>${ico}</span> ${msg}`;
+  el.textContent = msg;
   c.appendChild(el);
-  setTimeout(()=>el.remove(), 4500);
+  setTimeout(() => el.remove(), 4000);
 }
 
-function fmt(v){ return parseFloat(v||0).toLocaleString('pt-br',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-
-function badgeHtml(status){
+function statusBadge(status) {
   const map = {
-    pendente:'b-pending', aprovado:'b-approved', reprovado:'b-pending',
-    'Cássia preencheu':'b-pending','Aguardando Chefia':'b-waiting',
-    'Aprovado pela Chefia':'b-approved','Finalizado':'b-done'
+    'Preenchida': 'b-preenchida',
+    'Aguardando Chefia': 'b-aguardando',
+    'Aprovada pela Chefia': 'b-aprovada',
+    'Finalizada': 'b-finalizada'
   };
-  const labels = {pendente:'Pendente',aprovado:'Aprovado',reprovado:'Reprovado'};
-  return `<span class="badge ${map[status]||'b-pending'}">${labels[status]||status}</span>`;
+  return `<span class="badge ${map[status] || 'b-preenchida'}">${status || 'Preenchida'}</span>`;
 }
 
-function updateDash(){
-  const orcs = Object.values(S.orcamentos);
-  document.getElementById('statOrc').textContent = orcs.length;
-  document.getElementById('statAprov').textContent = orcs.filter(o=>o.status==='aprovado').length;
-  document.getElementById('statForn').textContent = Object.keys(S.fornecedores).length;
-  document.getElementById('statListas').textContent = Object.keys(S.listas).length;
-  const d = new Date();
-  document.getElementById('statsTitle').textContent =
-    d.toLocaleDateString('pt-br',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function formatDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso + 'T12:00').toLocaleDateString('pt-BR');
 }
 
-// ── Firebase listeners ──
-onValue(ref(db,'orcamentos'), snap=>{
-  S.orcamentos = snap.val()||{};
-  renderOrcamentos();
-  updateDash();
-  setSyncStatus('ok','✔ Conectado — dados sincronizados em tempo real');
-}, err=>setSyncStatus('error','✗ Erro: '+err.message));
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
-onValue(ref(db,'fornecedores'), snap=>{
-  S.fornecedores = snap.val()||{};
-  renderFornecedores();
-  updateDash();
-});
-
-onValue(ref(db,'listas'), snap=>{
-  S.listas = snap.val()||{};
+// ── Firebase: listas em tempo real ──
+onValue(ref(db, 'listas'), snap => {
+  S.listas = snap.val() || {};
   renderListasGrid();
-  updateDash();
-  if(S.editingLista && S.listas[S.editingLista] && !S._localEditing){
-    const remoteItems = (S.listas[S.editingLista].items)||[];
-    remoteItems.forEach(ri=>{
-      const local = S.checklistItems.find(x=>x.id===ri.id);
-      if(local && local.qtdComprar !== ri.qtdComprar) local.qtdComprar = ri.qtdComprar;
-    });
-    renderChecklist();
-  }
-});
-
-// ── Navegação ──
-window.showPanel = (name, btn)=>{
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
-  btn.classList.add('active');
-};
+  setSyncStatus('ok', '✔ Conectado — dados sincronizados em tempo real');
+}, err => setSyncStatus('error', '✗ Erro: ' + err.message));
 
 // ══════════════════════════════════════
-// ORÇAMENTOS
+// CHECKLIST
 // ══════════════════════════════════════
-window.salvarOrcamento = async()=>{
-  const num = document.getElementById('s_num').value.trim();
-  const fornecedor = document.getElementById('s_fornecedor').value.trim();
-  const descricao = document.getElementById('s_descricao').value.trim();
-  const obs = document.getElementById('s_obs').value.trim();
-  const valor = parseFloat(document.getElementById('s_valor').value);
-  if(!num||!fornecedor||!descricao||!obs||isNaN(valor)){
-    toast('Preencha todos os campos obrigatórios (*).','error'); return;
-  }
-  const orc = {
-    num, data:document.getElementById('s_data').value,
-    fornecedor, cnpj:document.getElementById('s_cnpj').value,
-    descricao, valor,
-    prazo:document.getElementById('s_prazo').value,
-    pagamento:document.getElementById('s_pagamento').value,
-    status:document.getElementById('s_status').value,
-    obs, criadoEm:new Date().toISOString()
-  };
-  try{
-    if(S.editingOrc){
-      await update(ref(db,'orcamentos/'+S.editingOrc), orc);
-      S.editingOrc = null;
-      toast('Orçamento atualizado! ✅');
-    }else{
-      await push(ref(db,'orcamentos'), orc);
-      toast('Orçamento salvo! ✅');
-    }
-    limparFormSite();
-  }catch(e){ toast('Erro: '+e.message,'error'); }
-};
-
-window.limparFormSite = ()=>{
-  ['s_num','s_fornecedor','s_cnpj','s_descricao','s_valor','s_prazo','s_pagamento','s_obs']
-    .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  document.getElementById('s_data').value = new Date().toISOString().split('T')[0];
-  document.getElementById('s_status').value = 'pendente';
-  S.editingOrc = null;
-};
-
-window.filtrarSite = (f, chip)=>{
-  S.filtroSite = f;
-  document.querySelectorAll('#siteFilters .fc').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active');
-  renderOrcamentos();
-};
-
-function renderOrcamentos(){
-  const search = (document.getElementById('searchSite')?.value||'').toLowerCase();
-  let list = Object.entries(S.orcamentos).map(([id,o])=>({...o,id}));
-  if(S.filtroSite!=='todos') list = list.filter(o=>o.status===S.filtroSite);
-  if(search) list = list.filter(o=>
-    (o.fornecedor||'').toLowerCase().includes(search)||
-    (o.num||'').toLowerCase().includes(search)||
-    (o.descricao||'').toLowerCase().includes(search)
-  );
-  const tb = document.getElementById('tabelaOrc');
-  if(!list.length){
-    tb.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="ico">📋</div><h4>Nenhum orçamento</h4><p>Preencha o formulário acima.</p></div></td></tr>`;
-    document.getElementById('compareSection').style.display = 'none';
-    return;
-  }
-  tb.innerHTML = list.map(o=>`<tr>
-    <td><code style="font-size:11px;color:var(--frost);">${o.num}</code></td>
-    <td style="color:var(--text-3);">${o.data?new Date(o.data+'T12:00').toLocaleDateString('pt-br'):'—'}</td>
-    <td><strong style="color:var(--text);">${o.fornecedor}</strong><br><span style="font-size:11px;color:var(--text-3);">${o.cnpj||''}</span></td>
-    <td style="max-width:180px;white-space:normal;font-size:12px;">${o.descricao}</td>
-    <td><strong style="color:var(--gold);">R$ ${fmt(o.valor)}</strong></td>
-    <td style="color:var(--text-3);">${o.prazo||'—'}</td>
-    <td>${badgeHtml(o.status)}</td>
-    <td class="print-hide">
-      <div style="display:flex;gap:5px;">
-        <button class="btn btn-secondary btn-xs" onclick="editarOrc('${o.id}')">✏️</button>
-        <button class="btn btn-danger btn-xs" onclick="excluirOrc('${o.id}')" title="Excluir orçamento">🗑</button>
-      </div>
-    </td>
-  </tr>`).join('');
-  renderComparativo(list);
-}
-
-window.editarOrc = id=>{
-  const o = S.orcamentos[id]; if(!o) return;
-  document.getElementById('s_num').value = o.num||'';
-  document.getElementById('s_data').value = o.data||'';
-  document.getElementById('s_fornecedor').value = o.fornecedor||'';
-  document.getElementById('s_cnpj').value = o.cnpj||'';
-  document.getElementById('s_descricao').value = o.descricao||'';
-  document.getElementById('s_valor').value = o.valor||'';
-  document.getElementById('s_prazo').value = o.prazo||'';
-  document.getElementById('s_pagamento').value = o.pagamento||'';
-  document.getElementById('s_status').value = o.status||'pendente';
-  document.getElementById('s_obs').value = o.obs||'';
-  S.editingOrc = id;
-  window.scrollTo({top:0,behavior:'smooth'});
-  toast('Editando orçamento — altere os dados e salve.','info');
-};
-
-window.excluirOrc = async id=>{
-  if(!confirm('Excluir este orçamento?\n\nEsta ação não pode ser desfeita.')) return;
-  try{
-    await remove(ref(db,'orcamentos/'+id));
-    toast('Orçamento excluído.');
-    if(S.editingOrc===id){ limparFormSite(); }
-  }catch(e){ toast('Erro: '+e.message,'error'); }
-};
-
-function renderComparativo(list){
-  const sec = document.getElementById('compareSection');
-  if(list.length<2){ sec.style.display='none'; return; }
-  sec.style.display = 'block';
-  const sorted = [...list].sort((a,b)=>a.valor-b.valor);
-  const w = sorted[0];
-  document.getElementById('compareContent').innerHTML = `
-    <table>
-      <thead><tr><th>Fornecedor</th><th>Valor</th><th>Prazo</th><th>Pagamento</th><th>Status</th></tr></thead>
-      <tbody>${sorted.map(o=>`<tr class="${o.id===w.id?'winner-row':''}">
-        <td>${o.fornecedor}${o.id===w.id?' 🏆 <strong>(Menor Valor)</strong>':''}</td>
-        <td><strong style="color:var(--gold);">R$ ${fmt(o.valor)}</strong></td>
-        <td>${o.prazo||'—'}</td>
-        <td>${o.pagamento||'—'}</td>
-        <td>${badgeHtml(o.status)}</td>
-      </tr>`).join('')}</tbody>
-    </table>
-    <p style="margin-top:14px;font-size:13px;color:var(--text-2);">
-      ℹ️ Menor valor: <strong style="color:var(--white);">${w.fornecedor}</strong> — R$ ${fmt(w.valor)}
-      ${sorted[1]?`. Economia: <strong style="color:var(--green);">R$ ${fmt(sorted[1].valor-w.valor)}</strong>.`:''}</p>`;
-}
-
-window.gerarRelatorioSites = ()=>{
-  const list = Object.values(S.orcamentos);
-  if(!list.length){ toast('Nenhum orçamento registrado.','error'); return; }
-  const sorted = [...list].sort((a,b)=>a.valor-b.valor);
-  const w = sorted[0];
-  const hoje = new Date().toLocaleDateString('pt-br');
-  document.getElementById('reportBody').innerHTML = `
-    <div class="report-oab-header">
-      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2>
-      <p>Subseção Santana de Parnaíba</p>
-      <p style="font-size:13px;font-weight:bold;margin-top:8px;">MAPA COMPARATIVO DE PREÇOS</p>
-      <p style="font-size:12px;color:#666;margin-top:4px;">Gerado em: ${hoje}</p>
-    </div>
-    <table style="border-collapse:collapse;width:100%;">
-      <thead>
-        <tr style="background:#0b1328;color:white;">
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Nº</th>
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Fornecedor</th>
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Serviço</th>
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Valor</th>
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Prazo</th>
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Pagamento</th>
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${sorted.map(o=>`<tr style="${o===w?'background:#e6fff0;':''}border-bottom:1px solid #ddd;">
-          <td style="padding:9px 12px;font-size:12px;">${o.num}</td>
-          <td style="padding:9px 12px;font-size:12px;"><strong>${o.fornecedor}</strong>${o===w?' ✅':''}</td>
-          <td style="padding:9px 12px;font-size:11px;">${o.descricao}</td>
-          <td style="padding:9px 12px;font-size:12px;"><strong>R$ ${fmt(o.valor)}</strong></td>
-          <td style="padding:9px 12px;font-size:12px;">${o.prazo||'—'}</td>
-          <td style="padding:9px 12px;font-size:11px;">${o.pagamento||'—'}</td>
-          <td style="padding:9px 12px;font-size:12px;">${o.status.toUpperCase()}</td>
-        </tr>`).join('')}
-      </tbody>
-    </table>
-    <div style="margin-top:28px;padding:20px;border:2px solid #1a1a2e;border-radius:8px;">
-      <p><strong>PARECER TÉCNICO:</strong></p>
-      <p style="margin-top:10px;font-size:13px;line-height:1.7;">A proposta da empresa <strong>${w.fornecedor}</strong> apresentou o menor valor total de <strong>R$ ${fmt(w.valor)}</strong>, sendo indicada para aprovação.</p>
-    </div>
-    <div style="margin-top:60px;text-align:center;">
-      <p>________________________________________________________________</p>
-      <p style="font-size:13px;margin-top:4px;"><strong>RESPONSÁVEL PELA COTAÇÃO</strong></p>
-      <p style="font-size:10px;margin-top:8px;color:#666;">Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>
-    </div>`;
-  document.getElementById('reportModal').style.display = 'block';
-};
-
-// ══════════════════════════════════════
-// FORNECEDORES
-// ══════════════════════════════════════
-window.salvarFornecedor = async()=>{
-  const nome = document.getElementById('f_nome').value.trim();
-  if(!nome){ toast('Nome obrigatório.','error'); return; }
-  const forn = {
-    nome,
-    responsavel:document.getElementById('f_responsavel').value,
-    telefone:document.getElementById('f_telefone').value,
-    email:document.getElementById('f_email').value,
-    categoria:document.getElementById('f_categoria').value,
-    avaliacao:parseInt(document.getElementById('f_avaliacao').value),
-    obs:document.getElementById('f_obs').value,
-    criadoEm:new Date().toISOString()
-  };
-  try{
-    if(S.editingForn){
-      await update(ref(db,'fornecedores/'+S.editingForn), forn);
-      S.editingForn = null; toast('Atualizado!');
-    }else{
-      await push(ref(db,'fornecedores'), forn);
-      toast('Fornecedor salvo!');
-    }
-    limparFormForn();
-  }catch(e){ toast('Erro: '+e.message,'error'); }
-};
-
-window.limparFormForn = ()=>{
-  ['f_nome','f_responsavel','f_telefone','f_email','f_obs']
-    .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  document.getElementById('f_categoria').value = 'Site';
-  document.getElementById('f_avaliacao').value = '5';
-  S.editingForn = null;
-};
-
-window.filtrarForn = (cat, chip)=>{
-  S.filtroForn = cat;
-  document.querySelectorAll('#fornFilters .fc').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active');
-  renderFornecedores();
-};
-
-function renderFornecedores(){
-  let list = Object.entries(S.fornecedores).map(([id,f])=>({...f,id}));
-  if(S.filtroForn!=='Todos') list = list.filter(f=>f.categoria===S.filtroForn);
-  const grid = document.getElementById('fornGrid');
-  if(!list.length){
-    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="ico">🏢</div><h4>Nenhum fornecedor</h4><p>Cadastre acima.</p></div>`;
-    return;
-  }
-  grid.innerHTML = list.map(f=>`<div class="supplier-card">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
-      <div style="width:44px;height:44px;border-radius:10px;background:rgba(35,72,168,0.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--ice);border:1px solid var(--border);">${f.nome.charAt(0).toUpperCase()}</div>
-      <div style="display:flex;gap:5px;">
-        <button class="btn btn-secondary btn-xs" onclick="editarForn('${f.id}')">✏️</button>
-        <button class="btn btn-danger btn-xs" onclick="excluirForn('${f.id}')">🗑</button>
-      </div>
-    </div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--white);margin-bottom:3px;">${f.nome}</div>
-    <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">${f.categoria}</div>
-    ${f.responsavel?`<div style="font-size:12px;color:var(--text-2);margin-bottom:5px;">👤 ${f.responsavel}</div>`:''}
-    ${f.telefone?`<div style="font-size:12px;color:var(--text-2);margin-bottom:5px;">📞 ${f.telefone}</div>`:''}
-    ${f.email?`<div style="font-size:12px;color:var(--text-2);margin-bottom:5px;">📧 ${f.email}</div>`:''}
-    <div style="color:var(--gold);font-size:14px;letter-spacing:2px;margin-top:6px;">${'⭐'.repeat(f.avaliacao)}</div>
-    ${f.obs?`<div style="margin-top:12px;font-size:12px;color:var(--text-2);padding-top:12px;border-top:1px solid var(--border-l);">${f.obs}</div>`:''}
-  </div>`).join('');
-}
-
-window.editarForn = id=>{
-  const f = S.fornecedores[id]; if(!f) return;
-  document.getElementById('f_nome').value = f.nome||'';
-  document.getElementById('f_responsavel').value = f.responsavel||'';
-  document.getElementById('f_telefone').value = f.telefone||'';
-  document.getElementById('f_email').value = f.email||'';
-  document.getElementById('f_categoria').value = f.categoria||'Site';
-  document.getElementById('f_avaliacao').value = f.avaliacao||'5';
-  document.getElementById('f_obs').value = f.obs||'';
-  S.editingForn = id;
-  window.scrollTo({top:0,behavior:'smooth'});
-  toast('Editando fornecedor — altere e salve.','info');
-};
-
-window.excluirForn = async id=>{
-  if(!confirm('Excluir este fornecedor?')) return;
-  try{ await remove(ref(db,'fornecedores/'+id)); toast('Removido.'); }
-  catch(e){ toast('Erro: '+e.message,'error'); }
-};
-
-// ══════════════════════════════════════
-// COMPRAS GIMBA
-// ══════════════════════════════════════
-window.adicionarItem = ()=>{
+window.adicionarItem = () => {
   const item = document.getElementById('ci_item').value.trim();
-  if(!item){ toast('Informe o nome do produto.','error'); return; }
+  if (!item) { toast('Informe o nome do produto.', 'error'); return; }
   const atualVal = document.getElementById('ci_atual').value.trim();
-  if(atualVal === '') toast('⚠️ Estoque atual não preenchido.', 'info');
+  if (atualVal === '') toast('⚠️ Quantidade em estoque não preenchida.', 'info');
 
   S.checklistItems.push({
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-    item, atual: atualVal,
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    item,
+    atual: atualVal,
     qtdComprar: '',
     link: document.getElementById('ci_link').value.trim(),
     obs: document.getElementById('ci_obs').value.trim(),
     checked: false
   });
-  ['ci_item','ci_atual','ci_link','ci_obs'].forEach(id=>document.getElementById(id).value='');
+
+  ['ci_item', 'ci_atual', 'ci_link', 'ci_obs'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('ci_item').focus();
   renderChecklist();
-  toast('Produto adicionado!','info');
 };
 
-document.getElementById('ci_item').addEventListener('keydown', e=>{
-  if(e.key==='Enter'){ e.preventDefault(); adicionarItem(); }
+document.getElementById('ci_item').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); adicionarItem(); }
 });
 
-function renderChecklist(){
+function renderChecklist() {
   const body = document.getElementById('checklistBody');
-  if(!S.checklistItems.length){
-    body.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="ico">📦</div><h4>Nenhum produto ainda</h4><p>Use a barra abaixo ou clique em <strong>📋 Lista Padrão</strong>.</p></div></td></tr>`;
+  if (!S.checklistItems.length) {
+    body.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="ico">📦</div><h4>Nenhum produto ainda</h4><p>Use a barra abaixo ou clique em <b>Lista Padrão Gimba</b>.</p></div></td></tr>`;
     return;
   }
-  body.innerHTML = S.checklistItems.map(r=>`<tr>
+  body.innerHTML = S.checklistItems.map(r => `<tr>
     <td style="text-align:center;">
-      <input type="checkbox" ${r.checked?'checked':''} onchange="toggleItem('${r.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold);">
+      <input type="checkbox" ${r.checked ? 'checked' : ''} onchange="toggleItem('${r.id}', this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:#000;">
     </td>
-    <td style="color:var(--text);"><strong>${r.item}</strong></td>
-    <td class="td-estoque">
-      <input type="number" min="0" value="${r.atual||''}"
-        class="${(r.atual===''||r.atual===null||r.atual===undefined)?'vazio':''}"
-        placeholder="0"
-        oninput="atualizarEstoque('${r.id}',this.value)"
-        title="Quantidade em estoque agora">
+    <td><strong>${esc(r.item)}</strong></td>
+    <td class="td-estoque" style="text-align:center;">
+      <input type="number" min="0" value="${esc(r.atual)}" placeholder="0"
+        class="num-input ${r.atual === '' || r.atual == null ? 'vazio' : ''}"
+        oninput="atualizarEstoque('${r.id}', this.value)">
     </td>
-    <td class="td-gold">
-      <input type="number" min="0" value="${r.qtdComprar||''}" placeholder="?"
-        oninput="atualizarQtd('${r.id}',this.value)"
-        title="Quantidade a comprar">
+    <td class="td-qtd" style="text-align:center;">
+      <input type="number" min="0" value="${esc(r.qtdComprar)}" placeholder="chefia"
+        class="num-input" oninput="atualizarQtd('${r.id}', this.value)">
     </td>
-    <td style="font-size:12px;">${r.link?`<a href="${r.link}" target="_blank" style="color:var(--ice);font-weight:600;">🔗 Ver na Gimba</a>`:'<span style="color:var(--muted);">—</span>'}</td>
-    <td style="font-size:12px;color:var(--text-3);">${r.obs||'—'}</td>
+    <td style="font-size:12px;">${r.link ? `<a href="${esc(r.link)}" target="_blank" style="color:#000;font-weight:700;">🔗 Ver na Gimba</a>` : '<span style="color:#bbb;">—</span>'}</td>
+    <td style="font-size:12px;color:var(--gray-600);">${esc(r.obs) || '—'}</td>
     <td class="print-hide">
       <button class="btn btn-danger btn-xs" onclick="removerItem('${r.id}')">🗑</button>
     </td>
   </tr>`).join('');
 }
 
-window.toggleItem = (id, val)=>{ const i=S.checklistItems.find(r=>r.id===id); if(i) i.checked=val; };
-window.atualizarQtd = (id, val)=>{ const i=S.checklistItems.find(r=>r.id===id); if(i){i.qtdComprar=val;S._localEditing=true;} };
-window.atualizarEstoque = (id, val)=>{ const i=S.checklistItems.find(r=>r.id===id); if(i){i.atual=val;S._localEditing=true;} };
-window.removerItem = id=>{
-  if(!confirm('Remover este item?')) return;
-  S.checklistItems = S.checklistItems.filter(r=>r.id!==id);
+window.toggleItem = (id, val) => { const i = S.checklistItems.find(r => r.id === id); if (i) i.checked = val; };
+window.atualizarEstoque = (id, val) => { const i = S.checklistItems.find(r => r.id === id); if (i) { i.atual = val; S._localEditing = true; } };
+window.atualizarQtd = (id, val) => { const i = S.checklistItems.find(r => r.id === id); if (i) { i.qtdComprar = val; S._localEditing = true; } };
+
+window.removerItem = id => {
+  if (!confirm('Remover este item?')) return;
+  S.checklistItems = S.checklistItems.filter(r => r.id !== id);
   renderChecklist();
 };
 
-window.setStatus = s=>{
+window.setStatus = s => {
   S.checklistStatus = s;
-  document.querySelectorAll('.status-step').forEach(el=>el.classList.remove('active'));
-  const map = {'Cássia preencheu':'ss1','Aguardando Chefia':'ss2','Aprovado pela Chefia':'ss3','Finalizado':'ss4'};
-  if(map[s]) document.getElementById(map[s]).classList.add('active');
-  const bmap = {
-    'Cássia preencheu':'b-pending','Aguardando Chefia':'b-waiting',
-    'Aprovado pela Chefia':'b-approved','Finalizado':'b-done'
+  const map = {
+    'Preenchida': 'ss1',
+    'Aguardando Chefia': 'ss2',
+    'Aprovada pela Chefia': 'ss3',
+    'Finalizada': 'ss4'
   };
-  const el = document.getElementById('statusAtual');
-  el.className = `badge ${bmap[s]||'b-pending'}`;
-  el.textContent = s;
+  document.querySelectorAll('.status-step').forEach(el => el.classList.remove('active'));
+  if (map[s]) document.getElementById(map[s]).classList.add('active');
+  markSteps(s);
 };
 
-function coletarQtdsDosInputs(){
-  const rows = document.querySelectorAll('#checklistBody tr');
-  rows.forEach((row, idx)=>{
-    if(!S.checklistItems[idx]) return;
-    const inputQtd = row.querySelector('td.td-gold input[type=number]');
-    if(inputQtd) S.checklistItems[idx].qtdComprar = inputQtd.value;
-    const inputEstoque = row.querySelector('td.td-estoque input[type=number]');
-    if(inputEstoque) S.checklistItems[idx].atual = inputEstoque.value;
+function markSteps(s) {
+  const order = ['Preenchida', 'Aguardando Chefia', 'Aprovada pela Chefia', 'Finalizada'];
+  const idx = order.indexOf(s);
+  ['passo1', 'passo2', 'passo3', 'passo4'].forEach((id, i) => {
+    document.getElementById(id).classList.toggle('done', i <= idx);
   });
 }
 
-window.salvarLista = async()=>{
+// Lê os valores digitados direto dos inputs (antes de salvar)
+function coletarQtdsDosInputs() {
+  const rows = document.querySelectorAll('#checklistBody tr');
+  rows.forEach((row, idx) => {
+    if (!S.checklistItems[idx]) return;
+    const qtd = row.querySelector('td.td-qtd input');
+    const est = row.querySelector('td.td-estoque input');
+    if (qtd) S.checklistItems[idx].qtdComprar = qtd.value;
+    if (est) S.checklistItems[idx].atual = est.value;
+  });
+}
+
+// ══════════════════════════════════════
+// SALVAR / ENVIAR
+// ══════════════════════════════════════
+window.salvarLista = async () => {
   const resp = document.getElementById('c_responsavel').value.trim();
-  const obs  = document.getElementById('c_obs').value.trim();
-  if(!resp||!obs){ toast('Preencha responsável e observação.','error'); return; }
-  if(!S.checklistItems.length){ toast('Adicione ao menos um produto.','error'); return; }
+  const obs = document.getElementById('c_obs').value.trim();
+  if (!resp || !obs) { toast('Preencha responsável e observação.', 'error'); return; }
+  if (!S.checklistItems.length) { toast('Adicione ao menos um produto.', 'error'); return; }
+
   coletarQtdsDosInputs();
+
   const lista = {
     data: document.getElementById('c_data').value,
     responsavel: resp,
     nome: document.getElementById('c_nome').value.trim() || `Lista de ${resp}`,
-    obs, status: S.checklistStatus,
-    items: S.checklistItems.map(i=>({
-      id:i.id, item:i.item, atual:i.atual||'',
-      qtdComprar:i.qtdComprar||'', link:i.link||'',
-      obs:i.obs||'', checked:i.checked||false
+    obs,
+    status: S.checklistStatus,
+    items: S.checklistItems.map(i => ({
+      id: i.id,
+      item: i.item,
+      atual: i.atual || '',
+      qtdComprar: i.qtdComprar || '',
+      link: i.link || '',
+      obs: i.obs || '',
+      checked: !!i.checked
     })),
     atualizadoEm: new Date().toISOString()
   };
-  try{
-    if(S.editingLista){
-      await set(ref(db,'listas/'+S.editingLista), lista);
-      S._localEditing = false;
+
+  try {
+    if (S.editingLista) {
+      await set(ref(db, 'listas/' + S.editingLista), lista);
       toast(`Lista "${lista.nome}" salva! ✅`);
-    }else{
-      const newRef = await push(ref(db,'listas'), lista);
+    } else {
+      const newRef = await push(ref(db, 'listas'), lista);
       S.editingLista = newRef.key;
-      S._localEditing = false;
-      document.getElementById('gimbaFormTitle').textContent = `✏️ Editando: ${lista.nome}`;
+      document.getElementById('gimbaFormTitle').textContent = `Editando: ${lista.nome}`;
       document.getElementById('editingBadge').style.display = 'inline-flex';
-      document.getElementById('gimbaSubtitle').textContent = 'Lista salva. Continue editando e salve novamente quando quiser.';
       toast(`Lista "${lista.nome}" criada! ✅`);
     }
-    renderListasGrid();
-  }catch(e){ toast('Erro ao salvar: '+e.message,'error'); console.error(e); }
+    S._localEditing = false;
+    markSteps(S.checklistStatus);
+  } catch (e) {
+    toast('Erro ao salvar: ' + e.message, 'error');
+    console.error(e);
+  }
 };
 
-window.enviarParaChefe = async()=>{
+window.enviarParaChefe = async () => {
   const resp = document.getElementById('c_responsavel').value.trim();
-  const obs  = document.getElementById('c_obs').value.trim();
-  if(!resp||!obs){ toast('Preencha responsável e observação antes de enviar.','error'); return; }
-  if(!S.checklistItems.length){ toast('Adicione produtos antes de enviar.','error'); return; }
-  await salvarLista();
+  const obs = document.getElementById('c_obs').value.trim();
+  if (!resp || !obs) { toast('Preencha responsável e observação antes de enviar.', 'error'); return; }
+  if (!S.checklistItems.length) { toast('Adicione produtos antes de enviar.', 'error'); return; }
+
   setStatus('Aguardando Chefia');
   await salvarLista();
+
   const url = window.location.href;
   document.getElementById('linkDisplay').textContent = url;
-  try{ await navigator.clipboard.writeText(url); }catch(e){}
+  try { await navigator.clipboard.writeText(url); } catch (e) {}
   document.getElementById('linkModal').style.display = 'flex';
 };
 
-window.novaLista = ()=>{
-  if(S.checklistItems.length>0 && !confirm('Limpar lista atual e começar nova?\n\nSalve antes de continuar se necessário.')) return;
+window.novaLista = () => {
+  if (S.checklistItems.length > 0 && !confirm('Limpar a lista atual e começar uma nova?\n\nSalve antes se precisar.')) return;
   S.checklistItems = [];
-  S.checklistStatus = 'Cássia preencheu';
+  S.checklistStatus = 'Preenchida';
   S.editingLista = null;
   S._localEditing = false;
-  ['c_responsavel','c_nome','c_obs'].forEach(id=>document.getElementById(id).value='');
+  ['c_responsavel', 'c_nome', 'c_obs'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('c_data').value = new Date().toISOString().split('T')[0];
-  document.getElementById('gimbaFormTitle').textContent = '📦 Nova Lista de Compras';
+  document.getElementById('gimbaFormTitle').textContent = 'Nova Lista de Compras';
   document.getElementById('editingBadge').style.display = 'none';
-  document.getElementById('gimbaSubtitle').textContent = 'Preencha os dados, adicione os produtos e clique em Salvar Lista.';
-  setStatus('Cássia preencheu');
+  setStatus('Preenchida');
   renderChecklist();
-  toast('Nova lista iniciada.','info');
+  renderListasGrid();
 };
 
-// ── LISTA PADRÃO ──
+// ══════════════════════════════════════
+// LISTA PADRÃO GIMBA
+// ══════════════════════════════════════
 const LISTA_PADRAO = [
   {nome:"Açúcar Caravelas Refinado 1kg",cod:"9139931",preco:"R$ 4,69"},
   {nome:"Açúcar União Premium Refinado Sachês",cod:"10914161",preco:"R$ 22,90"},
@@ -1708,105 +1085,133 @@ const LISTA_PADRAO = [
   {nome:"Mexedor de Plástico Gool para Café Cristal 7,5cm",cod:"11015748",preco:"R$ 10,69"},
 ];
 
-window.carregarListaPadrao = ()=>{
-  if(S.checklistItems.length>0 && !confirm('Substituir os itens atuais pela Lista Padrão Gimba?')) return;
-  S.checklistItems = LISTA_PADRAO.map((p,i)=>({
-    id: (Date.now()+i).toString(36),
+window.carregarListaPadrao = () => {
+  if (S.checklistItems.length > 0 && !confirm('Substituir os itens atuais pela Lista Padrão Gimba?')) return;
+  S.checklistItems = LISTA_PADRAO.map((p, i) => ({
+    id: (Date.now() + i).toString(36),
     item: `${p.nome} — Cód. ${p.cod} (${p.preco})`,
-    atual: '', qtdComprar: '',
+    atual: '',
+    qtdComprar: '',
     link: `https://www.gimba.com.br/busca?q=${encodeURIComponent(p.cod)}`,
-    obs: '', checked: false
+    obs: '',
+    checked: false
   }));
   renderChecklist();
   toast(`✅ ${LISTA_PADRAO.length} produtos carregados. Preencha o estoque!`, 'info');
 };
 
-// ── RENDERIZAR LISTAS SALVAS ──
-function renderListasGrid(){
+// ══════════════════════════════════════
+// LISTAS SALVAS
+// ══════════════════════════════════════
+function renderListasGrid() {
   const el = document.getElementById('listasSection');
   const listas = Object.entries(S.listas)
-    .map(([id,l])=>({...l,id}))
-    .sort((a,b)=>new Date(b.atualizadoEm)-new Date(a.atualizadoEm));
+    .map(([id, l]) => ({ ...l, id }))
+    .sort((a, b) => new Date(b.atualizadoEm) - new Date(a.atualizadoEm));
 
-  if(!listas.length){ el.innerHTML=''; return; }
+  if (!listas.length) { el.innerHTML = ''; return; }
 
   el.innerHTML = `
-    <h3 style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white);margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-      📂 Listas Salvas
-      <span style="font-size:13px;color:var(--text-3);font-weight:400;font-family:'Outfit',sans-serif;">(${listas.length})</span>
-    </h3>
+    <div class="section-title">📂 Listas Salvas <small>(${listas.length})</small></div>
     <div class="listas-grid">
-      ${listas.map(l=>{
-        const isEditing = S.editingLista===l.id;
-        const itensComQtd = (l.items||[]).filter(i=>i.qtdComprar&&i.qtdComprar!=='').length;
-        const itensComEstoque = (l.items||[]).filter(i=>i.atual&&i.atual!=='').length;
-        const total = (l.items||[]).length;
-        return `<div class="lista-card ${isEditing?'editing':''}">
-          <div class="lista-card-top">
+      ${listas.map(l => {
+        const isEditing = S.editingLista === l.id;
+        const items = l.items || [];
+        const total = items.length;
+        const comEstoque = items.filter(i => i.atual !== '' && i.atual != null).length;
+        const comQtd = items.filter(i => i.qtdComprar !== '' && i.qtdComprar != null).length;
+        return `<div class="lista-card ${isEditing ? 'editing' : ''}">
+          <div class="lista-top">
             <div>
-              <div class="lista-card-name">
-                ${l.nome}
-                ${isEditing?'<span class="editing-pill">Editando</span>':''}
-              </div>
-              <div class="lista-card-meta">
-                ${l.data?new Date(l.data+'T12:00').toLocaleDateString('pt-br'):'—'} · ${l.responsavel}
-              </div>
+              <div class="lista-name">${esc(l.nome)} ${isEditing ? '<span class="editing-pill">Editando</span>' : ''}</div>
+              <div class="lista-meta">${formatDate(l.data)} · ${esc(l.responsavel)}</div>
             </div>
-            <button class="btn btn-danger btn-xs" onclick="excluirLista('${l.id}')" title="Excluir lista">🗑</button>
+            <button class="btn btn-danger btn-xs" onclick="excluirLista('${l.id}')" title="Excluir">🗑</button>
           </div>
-          ${badgeHtml(l.status)}
-          <div class="lista-card-info">
+          ${statusBadge(l.status)}
+          <div class="lista-info">
             <span>📦 ${total} produto(s)</span>
-            <span style="color:var(--ice);">📊 ${itensComEstoque}/${total} c/ estoque</span>
-            <span style="color:var(--gold);">⭐ ${itensComQtd} c/ qtd.</span>
+            <span>🔢 ${comEstoque}/${total} com estoque</span>
+            <span>⭐ ${comQtd}/${total} com qtd.</span>
           </div>
-          <div class="lista-card-obs">${l.obs||''}</div>
-          <div class="lista-card-actions">
-            <button class="btn btn-secondary btn-sm" onclick="carregarLista('${l.id}')">
-              ${isEditing?'🔄 Recarregar':'📂 Editar'}
-            </button>
-            <button class="btn btn-primary btn-sm" onclick="abrirModoChefe('${l.id}')" title="Acessar modo restrito para chefia">👑 Aprovar</button>
-            <button class="btn btn-ghost btn-sm" onclick="pdfLista('${l.id}')" style="border:1px solid var(--border);">📄 PDF</button>
+          <div class="lista-obs">${esc(l.obs)}</div>
+          <div class="lista-actions">
+            <button class="btn btn-outline btn-sm" onclick="carregarLista('${l.id}')">${isEditing ? '🔄 Recarregar' : '📂 Editar'}</button>
+            <button class="btn btn-black btn-sm" onclick="abrirModoChefe('${l.id}')">👑 Aprovar</button>
+            <button class="btn btn-ghost btn-sm" onclick="pdfLista('${l.id}')">📄 PDF</button>
           </div>
         </div>`;
       }).join('')}
-    </div>
-    <hr class="section-divider">`;
+    </div>`;
 }
 
-// ══════════════════════════════════════
-// MODO CHEFIA (acesso restrito)
-// ══════════════════════════════════════
-window.abrirModoChefe = id=>{
+window.carregarLista = id => {
   const l = S.listas[id];
-  if(!l){ toast('Lista não encontrada.','error'); return; }
+  if (!l) { toast('Lista não encontrada.', 'error'); return; }
+  document.getElementById('c_data').value = l.data || '';
+  document.getElementById('c_responsavel').value = l.responsavel || '';
+  document.getElementById('c_nome').value = l.nome || '';
+  document.getElementById('c_obs').value = l.obs || '';
+  S.checklistItems = (l.items || []).map(i => ({ ...i }));
+  S.editingLista = id;
+  S._localEditing = false;
+  setStatus(l.status || 'Preenchida');
+  renderChecklist();
+  document.getElementById('gimbaFormTitle').textContent = `Editando: ${l.nome}`;
+  document.getElementById('editingBadge').style.display = 'inline-flex';
+  renderListasGrid();
+  setTimeout(() => document.getElementById('gimbaForm').scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+  toast(`Lista "${l.nome}" aberta para edição.`, 'info');
+};
+
+window.excluirLista = async id => {
+  const l = S.listas[id];
+  const nome = l ? l.nome : 'esta lista';
+  if (!confirm(`Excluir "${nome}" permanentemente?`)) return;
+  try {
+    await remove(ref(db, 'listas/' + id));
+    if (S.editingLista === id) {
+      S.editingLista = null;
+      S.checklistItems = [];
+      document.getElementById('gimbaFormTitle').textContent = 'Nova Lista de Compras';
+      document.getElementById('editingBadge').style.display = 'none';
+      renderChecklist();
+    }
+    toast('Lista excluída.');
+  } catch (e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+// ══════════════════════════════════════
+// MODO CHEFIA
+// ══════════════════════════════════════
+window.abrirModoChefe = id => {
+  const l = S.listas[id];
+  if (!l) { toast('Lista não encontrada.', 'error'); return; }
 
   S.chefiaListaId = id;
-  S.chefiaItems = (l.items||[]).map(i=>({...i}));
+  S.chefiaItems = (l.items || []).map(i => ({ ...i }));
 
   document.getElementById('chefiaSubtitle').textContent =
-    `Lista: "${l.nome}" · Responsável: ${l.responsavel} · ${l.data?new Date(l.data+'T12:00').toLocaleDateString('pt-br'):'—'}`;
+    `${l.nome} · Responsável: ${l.responsavel} · ${formatDate(l.data)}`;
 
   document.getElementById('chefiaListaInfo').innerHTML = `
-    <strong style="color:var(--white);">📋 ${l.nome}</strong><br>
-    <span style="font-size:12px;">Observação: ${l.obs||'—'}</span>`;
+    <strong>📋 ${esc(l.nome)}</strong><br>
+    <span style="font-size:12px;color:var(--gray-600);">Observação: ${esc(l.obs) || '—'}</span>`;
 
-  // Renderiza tabela somente leitura + coluna editável
   const body = document.getElementById('chefiaBody');
-  if(!S.chefiaItems.length){
+  if (!S.chefiaItems.length) {
     body.innerHTML = `<tr><td colspan="4"><div class="empty"><div class="ico">📦</div><h4>Lista vazia</h4></div></td></tr>`;
-  }else{
-    body.innerHTML = S.chefiaItems.map(r=>`<tr>
-      <td><strong style="color:var(--text);">${r.item}</strong></td>
-      <td style="background:rgba(26,47,107,0.15);text-align:center;">
-        <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--frost);font-size:15px;">${r.atual!==''?r.atual:'—'}</span>
+  } else {
+    body.innerHTML = S.chefiaItems.map(r => `<tr>
+      <td><strong>${esc(r.item)}</strong></td>
+      <td class="td-estoque" style="text-align:center;">
+        <span style="font-weight:800;font-size:16px;">${r.atual !== '' && r.atual != null ? esc(r.atual) : '—'}</span>
       </td>
-      <td class="chefia-td-gold">
-        <input type="number" min="0" value="${r.qtdComprar||''}" placeholder="?"
-          oninput="atualizarChefia('${r.id}',this.value)"
-          title="Preencha a quantidade a comprar">
+      <td class="td-qtd" style="text-align:center;">
+        <input type="number" min="0" value="${esc(r.qtdComprar)}" placeholder="?"
+          class="num-input" oninput="atualizarChefia('${r.id}', this.value)">
       </td>
-      <td style="font-size:12px;color:var(--text-3);">${r.obs||'—'}</td>
+      <td style="font-size:12px;color:var(--gray-600);">${esc(r.obs) || '—'}</td>
     </tr>`).join('');
   }
 
@@ -1814,159 +1219,115 @@ window.abrirModoChefe = id=>{
   document.getElementById('chefiaOverlay').style.display = 'flex';
 };
 
-window.atualizarChefia = (id, val)=>{
-  const item = S.chefiaItems.find(r=>r.id===id);
-  if(item) item.qtdComprar = val;
+window.atualizarChefia = (id, val) => {
+  const item = S.chefiaItems.find(r => r.id === id);
+  if (item) item.qtdComprar = val;
 };
 
-window.fecharModoChefe = ()=>{
+window.fecharModoChefe = () => {
   document.getElementById('chefiaOverlay').style.display = 'none';
   document.getElementById('modeBadge').classList.remove('visible');
   S.chefiaListaId = null;
   S.chefiaItems = [];
 };
 
-window.salvarAprovacaoChefe = async()=>{
-  if(!S.chefiaListaId){ toast('Nenhuma lista ativa.','error'); return; }
+window.salvarAprovacaoChefe = async () => {
+  if (!S.chefiaListaId) { toast('Nenhuma lista ativa.', 'error'); return; }
   const l = S.listas[S.chefiaListaId];
-  if(!l){ toast('Lista não encontrada.','error'); return; }
+  if (!l) { toast('Lista não encontrada.', 'error'); return; }
 
-  // Coleta valores dos inputs do modo chefia
-  const rows = document.querySelectorAll('#chefiaBody tr');
-  rows.forEach((row, idx)=>{
-    if(!S.chefiaItems[idx]) return;
-    const input = row.querySelector('td.chefia-td-gold input');
-    if(input) S.chefiaItems[idx].qtdComprar = input.value;
+  const updatedItems = (l.items || []).map(orig => {
+    const c = S.chefiaItems.find(x => x.id === orig.id);
+    return c ? { ...orig, qtdComprar: c.qtdComprar ?? '' } : orig;
   });
 
-  const updatedItems = (l.items||[]).map(orig=>{
-    const fromChefia = S.chefiaItems.find(c=>c.id===orig.id);
-    return fromChefia ? {...orig, qtdComprar: fromChefia.qtdComprar} : orig;
-  });
-
-  try{
-    await set(ref(db,'listas/'+S.chefiaListaId), {
+  try {
+    await set(ref(db, 'listas/' + S.chefiaListaId), {
       ...l,
       items: updatedItems,
-      status: 'Aprovado pela Chefia',
+      status: 'Aprovada pela Chefia',
       atualizadoEm: new Date().toISOString()
     });
     toast('Aprovação salva com sucesso! ✅');
     fecharModoChefe();
-  }catch(e){ toast('Erro ao salvar: '+e.message,'error'); }
+  } catch (e) { toast('Erro ao salvar: ' + e.message, 'error'); }
 };
 
-// ── CARREGAR LISTA ──
-window.carregarLista = id=>{
+// ══════════════════════════════════════
+// PDF / RELATÓRIO
+// ══════════════════════════════════════
+window.pdfLista = id => {
   const l = S.listas[id];
-  if(!l){ toast('Lista não encontrada.','error'); return; }
-  document.getElementById('c_data').value = l.data||'';
-  document.getElementById('c_responsavel').value = l.responsavel||'';
-  document.getElementById('c_nome').value = l.nome||'';
-  document.getElementById('c_obs').value = l.obs||'';
-  S.checklistItems = (l.items||[]).map(i=>({...i}));
-  S.editingLista = id;
-  S._localEditing = false;
-  setStatus(l.status||'Cássia preencheu');
-  renderChecklist();
-  document.getElementById('gimbaFormTitle').textContent = `✏️ Editando: ${l.nome}`;
-  document.getElementById('editingBadge').style.display = 'inline-flex';
-  document.getElementById('gimbaSubtitle').textContent = 'Lista carregada. Preencha o estoque e salve.';
-  renderListasGrid();
-  setTimeout(()=>{ document.getElementById('gimbaForm').scrollIntoView({behavior:'smooth',block:'start'}); }, 120);
-  toast(`Lista "${l.nome}" aberta para edição.`, 'info');
+  if (!l) return;
+  gerarPDF(l.responsavel, l.nome, l.obs, l.status, l.items || [], l.data);
 };
 
-window.excluirLista = async id=>{
-  const l = S.listas[id];
-  const nome = l?l.nome:'esta lista';
-  if(!confirm(`Excluir "${nome}" permanentemente?\n\nEsta ação não pode ser desfeita.`)) return;
-  try{
-    await remove(ref(db,'listas/'+id));
-    if(S.editingLista===id){
-      S.editingLista = null; S.checklistItems = []; S._localEditing = false;
-      document.getElementById('gimbaFormTitle').textContent = '📦 Nova Lista de Compras';
-      document.getElementById('editingBadge').style.display = 'none';
-      renderChecklist();
-    }
-    toast('Lista excluída.');
-  }catch(e){ toast('Erro: '+e.message,'error'); }
-};
-
-// ── PDF ──
-window.pdfLista = id=>{
-  const l = S.listas[id]; if(!l) return;
-  gerarPDF(l.responsavel, l.nome, l.obs, l.status, l.items||[], l.data);
-};
-window.exportarPDFAtual = ()=>{
-  if(!S.checklistItems.length){ toast('Nenhum produto na lista.','error'); return; }
+window.exportarPDFAtual = () => {
+  if (!S.checklistItems.length) { toast('Nenhum produto na lista.', 'error'); return; }
   coletarQtdsDosInputs();
   gerarPDF(
-    document.getElementById('c_responsavel').value||'—',
-    document.getElementById('c_nome').value||'Lista de Compras',
-    document.getElementById('c_obs').value||'—',
-    S.checklistStatus, S.checklistItems,
+    document.getElementById('c_responsavel').value || '—',
+    document.getElementById('c_nome').value || 'Lista de Compras',
+    document.getElementById('c_obs').value || '—',
+    S.checklistStatus,
+    S.checklistItems,
     document.getElementById('c_data').value
   );
 };
 
-function gerarPDF(resp, nome, obs, status, items, data){
-  const hoje = new Date().toLocaleDateString('pt-br');
-  const dataFmt = data?new Date(data+'T12:00').toLocaleDateString('pt-br'):'—';
-  const totalComprar = items.reduce((s,r)=>s+(parseInt(r.qtdComprar)||0),0);
+function gerarPDF(resp, nome, obs, status, items, data) {
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const totalComprar = items.reduce((s, r) => s + (parseInt(r.qtdComprar) || 0), 0);
   document.getElementById('reportBody').innerHTML = `
-    <div class="report-oab-header">
-      <h2>ORDEM DOS ADVOGADOS DO BRASIL</h2>
-      <p style="font-size:13px;color:#333;margin-top:4px;">Subseção Santana de Parnaíba — 247ª</p>
-      <p style="font-size:13px;font-weight:bold;margin-top:8px;">LISTA DE COMPRAS — GIMBA</p>
-      <p style="font-size:12px;color:#666;margin-top:4px;">Data: ${dataFmt} · Responsável: ${resp} · Gerado em: ${hoje}</p>
+    <div class="report-title">
+      <h2>LISTA DE COMPRAS — GIMBA</h2>
+      <p>OAB Santana de Parnaíba · 247ª Subseção</p>
+      <p>Data: ${formatDate(data)} · Responsável: ${esc(resp)} · Gerado em: ${hoje}</p>
     </div>
-    <p style="margin-bottom:5px;font-size:13px;"><strong>Lista:</strong> ${nome}</p>
-    <p style="margin-bottom:5px;font-size:13px;"><strong>Observação:</strong> ${obs}</p>
-    <p style="margin-bottom:22px;font-size:13px;"><strong>Status:</strong> ${status}</p>
+    <p style="font-size:13px;margin-bottom:4px;"><b>Lista:</b> ${esc(nome)}</p>
+    <p style="font-size:13px;margin-bottom:4px;"><b>Observação:</b> ${esc(obs)}</p>
+    <p style="font-size:13px;margin-bottom:20px;"><b>Status:</b> ${esc(status)}</p>
     <table style="width:100%;border-collapse:collapse;">
       <thead>
-        <tr style="background:#0b1328;color:white;">
-          <th style="padding:9px 12px;text-align:left;font-size:11px;">✓</th>
+        <tr style="background:#000;color:#fff;">
           <th style="padding:9px 12px;text-align:left;font-size:11px;">Produto</th>
-          <th style="padding:9px 12px;text-align:center;font-size:11px;background:#1a2f6b;">📦 Estoque Atual</th>
-          <th style="padding:9px 12px;text-align:center;font-size:11px;background:#8a6e28;">⭐ Qtd. a Comprar</th>
+          <th style="padding:9px 12px;text-align:center;font-size:11px;background:#eef2f7;color:#000;">Quantos tem</th>
+          <th style="padding:9px 12px;text-align:center;font-size:11px;background:#ffd400;color:#000;">Qtd. a comprar</th>
           <th style="padding:9px 12px;text-align:left;font-size:11px;">Obs.</th>
         </tr>
       </thead>
       <tbody>
-        ${items.map(r=>`<tr style="border-bottom:1px solid #e0e0e0;">
-          <td style="padding:9px 12px;font-size:13px;">${r.checked?'✅':'☐'}</td>
-          <td style="padding:9px 12px;font-size:12px;"><strong>${r.item}</strong></td>
-          <td style="padding:9px 12px;font-size:14px;font-weight:700;text-align:center;background:#e8f0fc;color:#1a2f6b;">${r.atual!==''?r.atual:'—'}</td>
-          <td style="padding:9px 12px;font-size:14px;font-weight:700;text-align:center;background:#fdf8e8;">${r.qtdComprar||'—'}</td>
-          <td style="padding:9px 12px;font-size:12px;">${r.obs||'—'}</td>
+        ${items.map(r => `<tr style="border-bottom:1px solid #e0e0e0;">
+          <td style="padding:9px 12px;font-size:12px;"><b>${esc(r.item)}</b></td>
+          <td style="padding:9px 12px;font-size:14px;font-weight:700;text-align:center;">${r.atual !== '' && r.atual != null ? esc(r.atual) : '—'}</td>
+          <td style="padding:9px 12px;font-size:14px;font-weight:700;text-align:center;background:#fffbe0;">${esc(r.qtdComprar) || '—'}</td>
+          <td style="padding:9px 12px;font-size:12px;">${esc(r.obs) || '—'}</td>
         </tr>`).join('')}
       </tbody>
     </table>
-    <p style="margin-top:16px;font-size:13px;"><strong>Total a comprar: ${totalComprar} unidades</strong></p>
-    <div style="margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;">
+    <p style="margin-top:16px;font-size:13px;"><b>Total a comprar: ${totalComprar} unidades</b></p>
+    <div style="margin-top:50px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;">
       <div>
         <p>________________________________</p>
-        <p style="font-size:12px;margin-top:6px;"><strong>Responsável pela Solicitação</strong></p>
-        <p style="font-size:11px;color:#666;">${resp}</p>
+        <p style="font-size:12px;margin-top:6px;"><b>Responsável pela solicitação</b></p>
+        <p style="font-size:11px;color:#666;">${esc(resp)}</p>
       </div>
       <div>
         <p>________________________________</p>
-        <p style="font-size:12px;margin-top:6px;"><strong>Aprovação — Chefia</strong></p>
+        <p style="font-size:12px;margin-top:6px;"><b>Aprovação — Chefia</b></p>
         <p style="font-size:11px;color:#666;">Data: ___/___/______</p>
       </div>
-    </div>
-    <p style="font-size:10px;color:#666;text-align:center;margin-top:30px;">Painel Integrado de Orçamentos · OAB Santana de Parnaíba</p>`;
+    </div>`;
   document.getElementById('reportModal').style.display = 'block';
 }
 
-// ── Inicialização ──
+// ══════════════════════════════════════
+// INICIALIZAÇÃO
+// ══════════════════════════════════════
 const now = new Date();
 document.getElementById('headerDate').textContent =
-  now.toLocaleDateString('pt-br',{weekday:'short',year:'numeric',month:'long',day:'numeric'});
+  now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 document.getElementById('c_data').value = now.toISOString().split('T')[0];
-document.getElementById('s_data').value = now.toISOString().split('T')[0];
 renderChecklist();
 </script>
 </body>
