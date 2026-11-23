@@ -50,11 +50,7 @@ body {
   top: 0;
   z-index: 100;
 }
-.logo {
-  font-weight: 900;
-  font-size: 24px;
-  letter-spacing: 0.04em;
-}
+.logo { font-weight: 900; font-size: 24px; letter-spacing: 0.04em; }
 .logo span { color: var(--yellow); }
 .topbar-sub {
   font-size: 11px;
@@ -65,17 +61,8 @@ body {
   border-left: 1px solid #333;
   padding-left: 18px;
 }
-.topbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.header-date {
-  font-size: 11px;
-  color: #bdbdbd;
-  text-transform: capitalize;
-}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+.header-date { font-size: 11px; color: #bdbdbd; text-transform: capitalize; }
 .mode-badge {
   display: none;
   padding: 6px 14px;
@@ -110,25 +97,11 @@ body {
 @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
 
 /* ═════════ MAIN ═════════ */
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 36px 60px;
-}
-.page-title {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-.page-sub {
-  color: var(--gray-600);
-  font-size: 13px;
-  margin-top: 6px;
-  margin-bottom: 28px;
-}
+.main { max-width: 1200px; margin: 0 auto; padding: 32px 36px 60px; }
+.page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; }
+.page-sub { color: var(--gray-600); font-size: 13px; margin-top: 6px; margin-bottom: 28px; }
 .page-sub b { color: var(--ink); }
 
-/* Passo a passo */
 .steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -174,10 +147,7 @@ body {
   justify-content: space-between;
   gap: 12px;
 }
-.card-head h3 {
-  font-size: 16px;
-  font-weight: 800;
-}
+.card-head h3 { font-size: 16px; font-weight: 800; }
 .card-body { padding: 24px; }
 
 .editing-pill {
@@ -202,11 +172,7 @@ body {
   align-items: center;
   gap: 8px;
 }
-.section-title small {
-  font-weight: 500;
-  color: var(--gray-400);
-  font-size: 13px;
-}
+.section-title small { font-weight: 500; color: var(--gray-400); font-size: 13px; }
 .listas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -220,14 +186,8 @@ body {
   box-shadow: var(--shadow);
   transition: all .2s;
 }
-.lista-card:hover {
-  border-color: var(--black);
-  transform: translateY(-2px);
-}
-.lista-card.editing {
-  border-color: var(--yellow);
-  box-shadow: 0 0 0 3px var(--yellow-soft);
-}
+.lista-card:hover { border-color: var(--black); transform: translateY(-2px); }
+.lista-card.editing { border-color: var(--yellow); box-shadow: 0 0 0 3px var(--yellow-soft); }
 .lista-top {
   display: flex;
   justify-content: space-between;
@@ -235,16 +195,8 @@ body {
   gap: 10px;
   margin-bottom: 10px;
 }
-.lista-name {
-  font-size: 15px;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-.lista-meta {
-  font-size: 11px;
-  color: var(--gray-400);
-  font-weight: 500;
-}
+.lista-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+.lista-meta { font-size: 11px; color: var(--gray-400); font-weight: 500; }
 .lista-info {
   display: flex;
   flex-wrap: wrap;
@@ -254,11 +206,7 @@ body {
   font-weight: 600;
   color: var(--gray-600);
 }
-.lista-info span {
-  background: var(--gray-100);
-  padding: 4px 9px;
-  border-radius: 6px;
-}
+.lista-info span { background: var(--gray-100); padding: 4px 9px; border-radius: 6px; }
 .lista-obs {
   font-size: 12px;
   color: var(--gray-600);
@@ -266,12 +214,7 @@ body {
   padding-top: 10px;
   margin-bottom: 4px;
 }
-.lista-actions {
-  display: flex;
-  gap: 6px;
-  margin-top: 14px;
-  flex-wrap: wrap;
-}
+.lista-actions { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
 
 /* ═════════ BADGES ═════════ */
 .badge {
@@ -316,12 +259,7 @@ body {
 .btn-ghost:hover { color: var(--ink); background: var(--gray-100); }
 .btn-sm { padding: 7px 13px; font-size: 11px; }
 .btn-xs { padding: 5px 9px; font-size: 11px; }
-.btn-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-}
+.btn-row { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
 
 /* ═════════ FORM ═════════ */
 .form-grid {
@@ -528,6 +466,7 @@ tr:hover td { background: var(--gray-50); }
   overflow-y: auto;
 }
 .chefia-box h2 { font-size: 22px; font-weight: 900; }
+.chefe-hint { font-size: 12px; color: var(--gray-600); margin-top: 6px; }
 .chefia-info {
   background: var(--yellow-soft);
   border-radius: 10px;
@@ -542,7 +481,6 @@ tr:hover td { background: var(--gray-50); }
   overflow: hidden;
 }
 
-/* Relatório (impressão) */
 .report-modal {
   display: none;
   position: fixed;
@@ -577,7 +515,7 @@ tr:hover td { background: var(--gray-50); }
 .report-title h2 { font-size: 18px; font-weight: 900; }
 .report-title p { font-size: 12px; color: #555; margin-top: 4px; }
 
-/* Toast */
+/* ═════════ TOAST ═════════ */
 .toast-container {
   position: fixed;
   bottom: 26px;
@@ -603,12 +541,6 @@ tr:hover td { background: var(--gray-50); }
 .toast.error { border-left-color: var(--red); }
 .toast.success { border-left-color: var(--green); }
 @keyframes slideIn { from { transform: translateX(80px); opacity: 0 } to { transform: none; opacity: 1 } }
-
-.chefe-hint {
-  font-size: 12px;
-  color: var(--gray-600);
-  margin-top: 6px;
-}
 
 /* ═════════ RESPONSIVO ═════════ */
 @media (max-width: 900px) {
@@ -807,14 +739,15 @@ tr:hover td { background: var(--gray-50); }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+// ══ CONFIGURAÇÃO DO FIREBASE (projeto gimba-oab-santana) ══
 const _cfg = {
-  apiKey: atob("QUl6YVN5Q19sZkJTUzJqWkJOY0UzZlZFQVBILTRuWlR5RllhV0o4"),
-  authDomain: "oab-santana.firebaseapp.com",
-  databaseURL: "https://oab-santana-default-rtdb.firebaseio.com",
-  projectId: "oab-santana",
-  storageBucket: "oab-santana.firebasestorage.app",
-  messagingSenderId: "587189470292",
-  appId: "1:587189470292:web:20fa9c00329b8afc5559c1"
+  apiKey: "AIzaSyAhs6NC4g5PMNcgiKiK7dZoc8-E4jTFjQA",
+  authDomain: "gimba-oab-santana.firebaseapp.com",
+  databaseURL: "https://gimba-oab-santana-default-rtdb.firebaseio.com",
+  projectId: "gimba-oab-santana",
+  storageBucket: "gimba-oab-santana.firebasestorage.app",
+  messagingSenderId: "222103602794",
+  appId: "1:222103602794:web:2d8a4f8ef2233c42e32c13"
 };
 
 const app = initializeApp(_cfg);
@@ -853,7 +786,7 @@ function statusBadge(status) {
     'Aprovada pela Chefia': 'b-aprovada',
     'Finalizada': 'b-finalizada'
   };
-  return `<span class="badge ${map[status] || 'b-preenchida'}">${status || 'Preenchida'}</span>`;
+  return `<span class="badge ${map[status] || 'b-preenchida'}">${esc(status || 'Preenchida')}</span>`;
 }
 
 function formatDate(iso) {
